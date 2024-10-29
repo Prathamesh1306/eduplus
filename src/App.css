@@ -5,10 +5,9 @@
 
 /* Student 1 CSS */
 .container {
-  
   flex: 1;
   background-color: #ffffff;
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAnG8bkwUXDAoYvvgd3SXxcT3T-Fb-2FNWLg&s');
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAnG8bkwUXDAoYvvgd3SXxcT3T-Fb-2FNWLg&s");
   background-size: cover;
   min-height: 15vh;
 }
@@ -16,24 +15,37 @@
 .header {
   background-color: #d2e6e4;
   width: "100%";
-  flex-direction:row;
+  flex-direction: row;
   display: flex;
 }
 
-
-.tabs{
-    display: flex;
-    width: 20%;
-    flex-direction: row;
-    background-color: red;
-    align-:;
-
+.tabs {
+  display: flex;
+  width: 60%;
+  flex-direction: row;
+  background-color: red;
+  justify-content: center;
+  align-items: center;
 }
 
-.tab{
-    color: #000000;
-    text-decoration: none;
-
+.tab {
+  color: #000000;
+  text-decoration: none;
+  padding-left: 5%;
+  font-size: 25px;
 }
 
+.logout {
+  width: 10%;
+  display: flex;
+  background-color: #0b7077;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  border-radius: 12px;
+  color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px; 
+}
 /* Student 1 Ends */
