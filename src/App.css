@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Student 1 CSS */
+.container {
+  
+  flex: 1;
+  background-color: #ffffff;
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAnG8bkwUXDAoYvvgd3SXxcT3T-Fb-2FNWLg&s');
+  background-size: cover;
+  min-height: 15vh;
+}
+
+.header {
+  background-color: #d2e6e4;
+  width: "100%";
+  flex-direction:row;
+  display: flex;
+}
+
+
+.tabs{
+    display: flex;
+    width: 20%;
+    flex-direction: row;
+    background-color: red;
+    align-:;
+
+}
+
+.tab{
+    color: #000000;
+    text-decoration: none;
+
+}
+
+/* Student 1 Ends */
