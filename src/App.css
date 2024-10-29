@@ -23,7 +23,7 @@
   display: flex;
   width: 60%;
   flex-direction: row;
-  background-color: red;
+  /* background-color: red; */
   justify-content: center;
   align-items: center;
 }
@@ -47,5 +47,20 @@
   justify-content: center;
   cursor: pointer;
   font-size: 18px; 
+}
+
+.profile{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profileP{
+
+  background-color: red;
+  width: 35px;
+  border-radius: 100px;
+}
+.name{
 }
 /* Student 1 Ends */
