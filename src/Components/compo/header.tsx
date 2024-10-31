@@ -3,10 +3,17 @@ import Logo from "../../assets/logo.svg";
 import ProfilePhoto from "../../assets/profile.png";
 
 
-function Header({name,year,role}) {
-    const Logout = () => {
-        console.log("Logout was pressed");
-      };
+interface HeaderProps {
+  name: string;
+  year: string;
+  role: string;
+}
+
+function Header({ name, year, role }: HeaderProps) {
+  const Logout = () => {
+    console.log("Logout was pressed");
+  };
+
       
   return (
     <div className="BHeader">
@@ -26,6 +33,12 @@ function Header({name,year,role}) {
             </a>
           </div>
           <div className="collab">
+          <div className="explore-btn">
+          <div className="circle-text">
+    <span>Explore More </span>
+  </div>
+  <span className="play-icon">▶</span> 
+          </div>
             <div className="logout" onClick={Logout}>
               LOGOUT
             </div>
@@ -39,8 +52,11 @@ function Header({name,year,role}) {
           </div>
         </div>
         <div className="role">{role}</div>
+
       </div>
+      
   )
+  
 }
 
 export default Header
