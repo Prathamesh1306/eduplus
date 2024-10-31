@@ -1,0 +1,86 @@
+.card-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px; /* Space between each card */
+  justify-content: center; /* Center the cards within the container */
+  align-items: stretch; /* Make cards the same height */
+  flex-wrap: wrap; /* Wrap cards to a new line if the screen is too small */
+  padding: 0px;
+}
+
+.card {
+  width: 350px; /* Adjust width for the side-by-side layout */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.admin-card-image {
+  width: 100%; /* Set to 100% to take full width of the card */
+  height: 260px; /* Adjust height as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-card-image img {
+  width: 100%; /* Make the image responsive */
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-student-avatars {
+  width: 260px; 
+  height: 40px; 
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Hide overflow */
+}
+
+.admin-student-avatars img {
+  width: 100%; 
+  height: 100%;
+  object-fit: cover; 
+}
+
+.admin-card-content {
+  padding: 5px;
+  display: flex; /* Add flex to center the button */
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.view-button {
+  background-color: #02897a;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 10px; /* Add margin for spacing */
+}
+
+.view-button:hover {
+  background-color: #026b60;
+}
+
+.admin-card-content h2 {
+  padding-top: 35px;
+  color: #026b60; /* Updated color */
+  font-size: 1.7em;
+  margin: 0;
+}
+
+.admin-card-content p {
+  color: #555; /* Updated color */
+  font-size: 1.2em;
+  margin: 0;
+}
+
