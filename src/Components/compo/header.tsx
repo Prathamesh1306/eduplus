@@ -33,12 +33,12 @@ function Header({ name, year, role }: HeaderProps) {
             </a>
           </div>
           <div className="collab">
-          <div className="explore-btn">
+          {/* <div className="explore-btn">
           <div className="circle-text">
     <span>Explore More </span>
   </div>
   <span className="play-icon">▶</span> 
-          </div>
+          </div> */}
             <div className="logout" onClick={Logout}>
               LOGOUT
             </div>

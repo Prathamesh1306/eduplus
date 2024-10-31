@@ -6,7 +6,7 @@ import studentManagementImage from "../../../assets/Studentmanage.png";
 import deployedStudentsImage from "../../../assets/Deployedstud.png";
 import credentialValidationImage from "../../../assets/Createvalida.png";
 import cardimage from "../../../assets/card.png"; 
-import { Navigate, useNavigate } from "react-router-dom";
+
 
 function Admin() {
   return (

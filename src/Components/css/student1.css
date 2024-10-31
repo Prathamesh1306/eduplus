@@ -1,0 +1,362 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Student 1 CSS */
+.container {
+  flex: 1;
+  background-color: #ffffff;
+  background-size: cover;
+  min-height: 15vh;
+}
+.BHeader {
+  background-color: #d2e6e4;
+  width: "100%";
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 150px;
+}
+.header {
+  flex-direction: row;
+  display: flex;
+  justify-content:space-around ;
+}
+
+.tabs {
+  display: flex;
+  width: 60%;
+  flex-direction: row;
+  /* background-color: red; */
+  justify-content: center;
+  align-items: center;
+}
+
+.tab {
+  color: #000000;
+  text-decoration: none;
+  padding-left: 5%;
+  font-size: 25px;
+}
+
+.logout {
+  display: flex;
+  background-color: #0b7077;
+  border-radius: 12px;
+  color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 60%;
+  align-self: center;
+}
+
+.profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profileP {
+  background-color: red;
+  width: 35px;
+  border-radius: 100px;
+}
+.name {
+  padding-left: 5px;
+}
+.role {
+  justify-self: center;
+  color: #0b7077;
+  font-size: 100px;
+  font-weight: 700;
+}
+
+#student-role {
+  font-size: 100px; 
+  color: #0b7077;
+  font-weight: 700;
+  text-align: center;
+}
+
+
+.collab {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-around;
+  width: 15%;
+}
+
+/* Circular Button */
+.explore-btn {
+  position: absolute;
+  bottom: 290px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background-color: #0b7077;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  z-index: 1;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+
+.circle-text {
+  position: absolute;
+  width: 240px; 
+  height: 200px; 
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.circle-text span {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: bold;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  position: absolute;
+  width: 100%;
+}
+
+
+
+.play-icon {
+  font-size: 65px;
+  color: #ffffff;
+  position: relative;
+  z-index: 2; 
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+.page-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+
+.footer {
+  margin-top: 50px;
+  background-color: #d2e6e4;
+  color: #2b5c60;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin: 10px;
+  color: #2b5c60;
+  text-align: left;
+}
+
+.footer-section h4 {
+  font-size: 16px;
+  color: #0e3257;
+  margin-bottom: 10px;
+}
+
+.footer-section p, .footer-section a {
+  font-size: 14px;
+  color: #2b5c60;
+  text-decoration: none;
+  margin: 5px 0;
+}
+
+.footer-section a:hover {
+  text-decoration: underline;
+}
+
+.query-form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+}
+
+.query-form input {
+  padding: 8px;
+  width: 180px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.query-form button {
+  padding: 8px 16px;
+  background-color: #3ca6a6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.query-form button:hover {
+  background-color: #2b5c60;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #6a7a7a;
+}
+
+.footer-bottom a {
+  color: #2b5c60;
+  margin: 0 5px;
+  text-decoration: none;
+}
+
+.footer-bottom a:hover {
+  text-decoration: underline;
+}
+
+
+.hub-section {
+  text-align: center;
+  margin: 120px 0;
+}
+
+.hub-section h1 {
+  font-size: 2.2em;
+  color: #006666; 
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.hub-section h1::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 2px;
+  background-color: #ff6600; 
+  margin: 9px auto 0;
+}
+
+.hub-section p {
+  font-size: 1.3em;
+  color: #666666;
+}
+
+.card-container {
+  display: flex;                
+  flex-direction: row;       
+  align-items: center;          
+  gap: 20px;                    
+  padding: 20px;                
+  height: auto;                 
+}
+
+
+.card {
+  width: 100%;                  
+  max-width: 600px;            
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.card-image {
+  flex: 1;
+  background-color: #02897a;
+  padding: 40px;               
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;               
+}
+
+.card-image img {
+  max-width: 200%;             
+  max-height: 190%;         
+  border-radius: 8px;
+  object-fit: cover;          
+}
+
+.card-content {
+  flex: 2;
+  padding: 20px;
+}
+
+.card-content h2 {
+  color: #0c3e4e;
+  font-size: 1.7em;
+  margin: 0;
+}
+
+.card-content p {
+  color: #555;
+  font-size: 1em;
+  margin: 10px 0 15px;
+}
+
+.view-button {
+  background-color: #02897a;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.view-button:hover {
+  background-color: #026b60;
+}
+
+
+.student-avatars {
+  display: flex;
+  align-items: center;
+  margin-top: 17px;
+}
+
+.student-avatars img {
+  width: 200px;   
+  height: 40px;  
+  border-radius: 30%;
+  margin-right: 5px;
+}
+
+.student-avatars span {
+  color: #555;
+  font-size: 0.9em;
+}
+
+
+
+/* Student 1 CSS end */

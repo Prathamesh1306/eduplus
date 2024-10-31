@@ -1,0 +1,42 @@
+.mainStatusDiv{
+    justify-self: center;
+    height: 100%;
+    width: 30%;
+    border-radius: 35px;
+    border: 2px solid black;
+    background-color: #17958A;
+    color: white;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    padding: 50px;
+    margin: 50px;
+  }
+  .statusResult{
+    height: 90px;
+    width: 260px;
+    margin-top: 70px;
+    border-radius: 5px;
+    text-align: center; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D9D9D999;
+  }
+  .statusImage{
+    height: 100%;
+    width: 100%;
+    padding: 10%; 
+  
+    background-size: cover;
+  }
+
+
+  .image-pana{
+    width: 100%;
+    height: 100%;
+  }

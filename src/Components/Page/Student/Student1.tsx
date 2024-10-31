@@ -1,10 +1,9 @@
-import "../../../App.css";
+import "../../css/student1.css";
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
-import image from "../../../assets/image.png"; // Corrected path
-import personcard from "../../../assets/personcard.png"; // Corrected path
-import card from "../../../assets/card.png"; // Corrected path
-
+import image from "../../../assets/image.png"; 
+import personcard from "../../../assets/personcard.png"; 
+import card from "../../../assets/card.png"; 
 function Student1() {
   return (
     <div className="container">
