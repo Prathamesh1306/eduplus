@@ -1,5 +1,5 @@
 .admin-student-list-container {
-    flex:1
+    flex:1;
 }
 
 .admin-student-list-renderList {
@@ -13,10 +13,12 @@
   justify-items: center;
 }
 .admin-student-list-main {
-  justify-items: center;
-  color: #fd661f;
-  font-size: xx-large;
-  font-weight: bold;
+    justify-items: center;
+    color: #fd661f;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-top:4%;
+    
 }
 
 .admin-student-list-renderList-search{
@@ -34,5 +36,6 @@
     font-size: 50%;
     justify-self: flex-end;
     text-align: center;
+    cursor: pointer;
     
 }
