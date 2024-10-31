@@ -15,8 +15,8 @@ function Student1() {
         <p>With EduPlus, managing and sharing your academic achievements has never been easier. Explore the benefits and features below!</p>
       </div>
 
-      <div className="card-container">
-        <div className="card">
+      <div className="card-container-harsh">
+        <div className="card-harsh">
           <div className="card-image">
             <img src={personcard} alt="Avatar" />
           </div>
@@ -30,7 +30,7 @@ function Student1() {
           </div>
         </div>
 
-        <div className="card">
+        <div className="card-harsh">
           <div className="card-image">
             <img src={image} alt="Verification" />
           </div>
