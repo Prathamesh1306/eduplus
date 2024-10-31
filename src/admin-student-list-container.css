@@ -1,0 +1,38 @@
+.admin-student-list-container {
+    flex:1
+}
+
+.admin-student-list-renderList {
+  background-color: #0b7077;
+  width: 50%;
+  margin: 2%;
+  padding: 1% 10% 2% 10%;
+  align-self: center;
+  border-radius: 30px;
+  color: #ffffff;
+  justify-items: center;
+}
+.admin-student-list-main {
+  justify-items: center;
+  color: #fd661f;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.admin-student-list-renderList-search{
+    width: 100%;
+    padding: 5%;
+    margin-top: 2%;
+}
+
+.admin-student-list-btn{
+    color: #ffffff;
+    background-color: #46C2A9;
+    padding: 1% 1% 1% 1% ;
+    width: 9%;
+    border-radius: 10px;
+    font-size: 50%;
+    justify-self: flex-end;
+    text-align: center;
+    
+}
