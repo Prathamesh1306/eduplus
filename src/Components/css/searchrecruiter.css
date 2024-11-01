@@ -1,0 +1,42 @@
+.form-container {
+    background-color: #00695c;
+    padding: 50px 20px; 
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: -10px;
+    color: white;
+    width: 400px;
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+.credential-form {
+    background-color: #e0f2f1;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.credential-form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+.initiate-button {
+    background-color: #4db6ac;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+}
