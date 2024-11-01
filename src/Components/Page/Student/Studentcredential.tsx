@@ -12,7 +12,7 @@ function Studentcredential() {
                 <h2>Credentials</h2>
                 
                 <div className="credential-card">
-                    <img src={ ' '} alt=" " className="id-card-image" />
+                    <img src={ ' '} alt="pdf will be render" className="id-card-image" />
                 </div>
                 
                 <div className="unique-id">
