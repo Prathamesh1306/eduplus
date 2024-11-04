@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Admin from "./Components/Page/Admin/admin.tsx";
 import AdminStudentList from "./Components/Page/Admin/adminStudentList.tsx";
+
 import Admindeployedstudent from './Components/Page/Admin/deployedstudent.tsx'
+
 
 import Student1 from "./Components/Page/Student/Student1.tsx";
 import Student2 from './Components/Page/Student/Studentverify.tsx'
@@ -24,6 +26,7 @@ function App() {
           <Route path='/' element={<Admin />} />
           <Route path='/admin-student-list' element={<AdminStudentList />} />
           <Route path='/admin-deployedstudent' element={<Admindeployedstudent />} />
+          
           
           <Route path='/student' element={<Student1 />} />
           <Route path='/student-verify' element={<Student2 />} />

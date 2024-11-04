@@ -1,6 +1,6 @@
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
-import "../../../admin-student-list-container.css";
+import "../../css/admin-student-list-container.css"
 import Name from "../../compo/name";
 function AdminStudentList() {
   const handleSubmit = () => {
