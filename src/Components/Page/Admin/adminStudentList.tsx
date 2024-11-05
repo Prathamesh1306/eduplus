@@ -4,21 +4,24 @@ import "../../css/admin-student-list-container.css"
 import Name from "../../compo/name";
 function AdminStudentList() {
   const handleSubmit = () => {
-    console.log("Next is pressed");
+    studentList.filter((value)=>{
+      console.log(value)  
+    })
   };
 
   const studentList = [
     {
       name: "Harsh Mohite",
+      verified:"false"
     },
     {
-      name: "Prathamesh",
+      name: "Prathamesh",verified:"false"
     },
     {
-      name: "Soham",
+      name: "Soham",verified:"false"
     },
     {
-      name: "Priya",
+      name: "Priya",verified:"false"
     },
   ];
   return (
