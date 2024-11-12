@@ -17,6 +17,9 @@ import Recruiter1 from "./Components/Page/Recruiter/searchrecruiter";
 import Recruiter1a from  "./Components/Page/Recruiter/searchrecruiter1";
 import Recruiter1b from  "./Components/Page/Recruiter/searchrecruiter2";
 import Recruiter2 from  "./Components/Page/Recruiter/verifyrecruiter.tsx";
+import About from "./Components/Page/About.tsx";
+import Home from "./Components/Page/home.tsx";
+import Blog from "./Components/Page/Blog.tsx";
 
 
 function App() {
@@ -36,13 +39,14 @@ function App() {
           <Route path='/student' element={<Student1 />} />
           <Route path='/student-verify' element={<Student2 />} />
           <Route path="/studentcredential" element={<StudentCredential />} />
-          
           <Route path="/recruiter" element={<Recruiter />} />
           <Route path="/searchrecruiter" element={<Recruiter1 />} />
           <Route path="/searchrecruiter1" element={<Recruiter1a />} />
           <Route path="/searchrecruiter2" element={<Recruiter1b />} />
           <Route path="/verifyrecruiter" element={<Recruiter2 />} />
-
+          <Route  path="/about" element={<About/>}></Route>
+          <Route path="/home" element={<Home/>}></Route>
+          <Route path="/blog" element={<Blog/>}></Route>
         </Routes>
       </div>  
     </Router>

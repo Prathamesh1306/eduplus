@@ -17,13 +17,13 @@ function Header({ role }: HeaderProps) {
           <img src={Logo} />
         </div>
         <div className="tabs">
-          <a className="tab" href="./home.tsx">
+          <a className="tab" href="./home">
             Home
           </a>
-          <a className="tab" href="./blog.tsx">
+          <a className="tab" href="./blog">
             Blog
           </a>
-          <a className="tab" href="./about.tsx">
+          <a className="tab" href="./about">
             About Us
           </a>
         </div>
