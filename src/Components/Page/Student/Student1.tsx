@@ -4,7 +4,13 @@ import Footer from "../../compo/footer";
 import image from "../../../assets/image.png"; 
 import personcard from "../../../assets/personcard.png"; 
 import card from "../../../assets/card.png"; 
+import { useNavigate } from "react-router-dom";
+
 function Student1() {
+
+  const navigate=useNavigate();
+  
+
   return (
     <div className="container">
       <Header name="Harsh" year="3rd year" role="STUDENT" />
@@ -22,7 +28,7 @@ function Student1() {
           <div className="card-content">
             <h2>My Credentials</h2>
             <p>Access your academic credentials securely and share them with potential employers.</p>
-            <button className="view-button">View</button>
+            <button className="view-button" onClick={()=>navigate('/studentcredential')} >View</button>
             <div className="student-avatars">
               <img src={card} alt="Student 1" />
             </div>
@@ -36,7 +42,7 @@ function Student1() {
           <div className="card-content">
             <h2>Verification Status</h2>
             <p>Track the status of your credential verifications requested by recruiters or institutions.</p>
-            <button className="view-button">View</button>
+            <button className="view-button1"  onClick={()=>navigate('/student-verify')} >View</button>
             <div className="student-avatars">
               <img src={card} alt="Student 1" />
             </div>

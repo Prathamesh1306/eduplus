@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Card.css';
 
 interface CardProps {
@@ -9,6 +10,27 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ image, image2, title, description }) => {
+  const navigate = useNavigate();
+
+  // Function to handle navigation based on the card title
+  const handleNavigation = () => {
+    let path = '';
+    switch (title) {
+      case 'Student Management':
+        path = '/admin-student-list';
+        break;
+      case 'Deployed Students':
+        path = '/admin-deployedstudent';
+        break;
+      // case 'Credential Validation':
+      //   path = '/admin-recruiter-list';
+      //   break;
+      default:
+        break;
+    }
+    if (path) navigate(path);
+  };
+
   return (
     <div className="card">
       <div className="admin-card-image">
@@ -20,7 +42,9 @@ const Card: React.FC<CardProps> = ({ image, image2, title, description }) => {
         </div>
         <h2>{title}</h2>
         <p>{description}</p>
-        <button className="view-button">View</button>
+        <button className="view-button" onClick={handleNavigation}>
+          View
+        </button>
       </div>
     </div>
   );

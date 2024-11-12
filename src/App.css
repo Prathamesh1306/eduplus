@@ -40,11 +40,11 @@
   font-size: 25px;
 }
 
-.logout {
+.login {
   display: flex;
-  background-color: #0b7077;
+  background-color: #fff;
   border-radius: 12px;
-  color: #ffffff;
+  color: #0b7077;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -370,3 +370,16 @@
 /* Student 1 CSS end */
 
 
+.metamask-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #f6851b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.metamask-button:hover {
+  background-color: #e2761b;
+}

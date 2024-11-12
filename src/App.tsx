@@ -1,11 +1,12 @@
 import "./App.css"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
+import Landing from './Components/Page/Landingpage.tsx'
+
 import Admin from "./Components/Page/Admin/admin.tsx";
 import AdminStudentList from "./Components/Page/Admin/adminStudentList.tsx";
-
+import AdminRecruiterList from "./Components/Page/Admin/AdminRecruiter.tsx";
 import Admindeployedstudent from './Components/Page/Admin/deployedstudent.tsx'
-
 
 import Student1 from "./Components/Page/Student/Student1.tsx";
 import Student2 from './Components/Page/Student/Studentverify.tsx'
@@ -23,10 +24,14 @@ function App() {
     <Router>
       <div>
         <Routes>
+
+          <Route path='/front' element={<Landing />} />
+
           <Route path='/' element={<Admin />} />
+          {/* <Route path='/' element={<div>dsadasd</div> } /> */}
           <Route path='/admin-student-list' element={<AdminStudentList />} />
           <Route path='/admin-deployedstudent' element={<Admindeployedstudent />} />
-          
+          <Route path='/admin-recruiter-list' element={<AdminRecruiterList />} />
           
           <Route path='/student' element={<Student1 />} />
           <Route path='/student-verify' element={<Student2 />} />

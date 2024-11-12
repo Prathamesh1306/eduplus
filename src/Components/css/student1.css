@@ -334,7 +334,21 @@
   cursor: pointer;
 }
 
+.view-button1 {
+  background-color: #02897a;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
 .view-button:hover {
+  background-color: #026b60;
+}
+
+.view-button1:hover {
   background-color: #026b60;
 }
 
