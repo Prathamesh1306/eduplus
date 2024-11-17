@@ -1,0 +1,67 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_uniqueHashValue",
+				"type": "string"
+			}
+		],
+		"name": "issueCredentials",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getIssuedCredentials",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "uniqueHashValue",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Blockchain.Student[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "hashValue",
+				"type": "string"
+			}
+		],
+		"name": "verifyCredentials",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "found",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
