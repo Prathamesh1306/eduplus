@@ -1,6 +1,6 @@
 import "../../App.css";
 import Logo from "../../assets/logo.svg";
-
+import Phot from "../../assets/landingpage.png"
 
 function Header() {
   const Login = () => {
@@ -39,6 +39,15 @@ function Header() {
           </div>
         </div>
       </div>
+      <div className="eduplus-container">
+  <div className="eduplus-image">
+    <img src={Phot} alt="EduPlus" />
+  </div>
+  <div className="eduplustag">
+    <h1>EDUPLUS ACADEMIC BLOCKCHAIN CREDENTIAL PLATFORM</h1>
+  </div>
+</div>
+
     </div>
   );
 }

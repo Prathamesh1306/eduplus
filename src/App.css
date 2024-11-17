@@ -383,3 +383,28 @@
 .metamask-button:hover {
   background-color: #e2761b;
 }
+
+
+/* Main container for side-by-side layout */
+.eduplus-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px; /* Space between image and text */
+}
+
+/* Image styling */
+.eduplus-image img {
+  max-width: 300px; /* Adjust the size of the image */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px; /* Optional: Add rounded corners */
+}
+
+/* Text styling */
+.eduplustag h1 {
+  font-size: 2.5rem; /* Increase font size as needed */
+  color: #0b7077; /* Set text color */
+  margin: 0;
+  padding-left: 10px;
+}
