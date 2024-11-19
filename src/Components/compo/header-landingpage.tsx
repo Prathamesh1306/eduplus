@@ -1,14 +1,14 @@
 import "../../App.css";
 import Logo from "../../assets/logo.svg";
-
-
+// import Image1 from "../../assets/image11.svg"
+import Image11 from "../../assets/image11";
 function Header() {
   const Login = () => {
     console.log("Login was pressed");
   };
 
   return (
-    <div className="BHeader">
+    <div style={{ backgroundColor: "#d2e6e4",paddingTop:20 }}>
       <div className="header">
         <div>
           <img src={Logo} />
@@ -38,6 +38,49 @@ function Header() {
             LOGIN
           </div>
         </div>
+      </div>
+
+      <div
+        style={{
+          flexDirection: "row",
+          display: "flex",
+          justifyContent: "space-between",
+          paddingLeft: 80,
+        }}
+      >
+        <div>
+          <div
+            style={{
+              color: "#0B7077",
+              fontWeight: "bold",
+              fontSize: 60,
+              width: "30%",
+              fontFamily: "Raleway",
+              marginTop: 30,
+            }}
+          >
+            EDUPLUS ACADEMIC BLOCKCHAIN CREDENTIAL PLATFORM
+          </div>
+          <div
+            style={{
+              backgroundColor: "#FD661F",
+              width: "20%",
+              paddingTop: 15,
+              paddingBottom: 15,
+              textAlign: "center",
+              color: "#ffffff",
+              fontFamily: "Raleway",
+              borderRadius: 10,
+              paddingLeft: 5,
+              paddingRight: 5,
+              marginTop:20,
+              marginBottom:20
+            }}
+          >
+            Explore path
+          </div>
+        </div>
+        <Image11 />
       </div>
     </div>
   );
