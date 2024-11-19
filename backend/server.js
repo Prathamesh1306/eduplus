@@ -337,6 +337,8 @@ app.listen(3000, () => {
 // 5. localhost:3000/freezed
 // 6. localhost:3000/deployed
 // 7. localhost:3000/studentup
+// 8. localhost:3000/generate-pdf/:prn
+// 9. localhost:3000/download-pdf/:prn
 
 //Points to be covered:
 //koni tari ekda department wise, class wise, year wise, kasa segration karaychay te bgha pls.
