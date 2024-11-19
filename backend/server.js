@@ -349,3 +349,54 @@ app.listen(3000, () => {
 // Update student info(Done).
 // add new students login details(done);
 // Ajun konala kahi watla tr changes kara cause me bhi sikh hi raha hu basics se.
+
+
+// database name: edu
+// dummy data students collection:
+// db.students.insertOne({
+//   prn: "2280030653",
+//   seatNo: "2280030653",
+//   name: "TEST",
+//   motherName: "TEST",
+//   programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
+//   year: "Second Year",
+//   registrationYear: "2022-23",
+//   cgpa: 0.00,
+//   status: true,
+//   deployed:false,
+//   semesters: [
+//     {
+//       semester: 4,
+//       examDate: "MAY 2024",
+//       sgpa: 8.84,
+//       courses: [
+//         { code: "BTECECE22401", title: "THEORY OF COMPUTATION", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
+//         { code: "BTECECE22402", title: "DBMS", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
+
+//       ]
+//     },
+//   ]
+// });
+
+
+// *dummy data authentication collection:
+
+// db.authentications. insertMany ([
+// username: "Aryan Giri",
+// email: "aryan@test.com",
+// password: "aryan@test.com",
+// role: "student"
+// },
+// {
+// username: "Mustafa Nasikwala",
+// email: "mustafa@test.com",
+// password: "mustafa@test.com",
+// role: "student"
+// },
+// {
+// username: "admin",
+// email: "admin@test.com",
+// password: "admin@test.com", // Replace with
+// role: "admin"
+// }
+// ]);
