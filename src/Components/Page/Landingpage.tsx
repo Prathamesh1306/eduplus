@@ -1,7 +1,7 @@
 import Header from "../compo/header-landingpage";
 import Footer from "../compo/footer";
 
-import william from "../../../assets/William cdegree.png"
+// import william from "../../../assets/William cdegree.png"
 
 function Landingpage(){
     return(

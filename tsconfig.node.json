@@ -4,9 +4,11 @@
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true, // Add this line
 
     /* Bundler mode */
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",

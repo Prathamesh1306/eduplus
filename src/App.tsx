@@ -21,6 +21,8 @@ import About from "./Components/Page/About.tsx";
 import Home from "./Components/Page/home.tsx";
 import Blog from "./Components/Page/Blog.tsx";
 
+import BlockchainComponent from "./Components/Page/BlockchainComponent.tsx"
+
 
 function App() {
   return (
@@ -47,6 +49,7 @@ function App() {
           <Route  path="/about" element={<About/>}></Route>
           <Route path="/home" element={<Home/>}></Route>
           <Route path="/blog" element={<Blog/>}></Route>
+          <Route path="/test" element={<BlockchainComponent/>}></Route>
         </Routes>
       </div>  
     </Router>
