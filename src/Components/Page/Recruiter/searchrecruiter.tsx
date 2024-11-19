@@ -1,8 +1,10 @@
 import "../../css/searchrecruiter.css";
 import Header from "../../compo/header_recruiter.tsx";
 import Footer from "../../compo/footer";
+import { useNavigate } from "react-router-dom";
 
 function Recruiter() {
+  const navigate = useNavigate(); 
   return (
     <div className="container">
       <Header  role="RECRUITER" />
@@ -22,7 +24,7 @@ function Recruiter() {
             <input type="text" placeholder="Unique ID" />
           </label>
         </form>
-        <button className="initiate-button">INITIATE PAYMENT</button>
+        <button className="initiate-button" onClick={()=>navigate('/searchrecruiter1')} >INITIATE PAYMENT</button>
       </div>
 
   
