@@ -381,22 +381,23 @@ app.listen(3000, () => {
 
 // *dummy data authentication collection:
 
-// db.authentications. insertMany ([
-// username: "Aryan Giri",
-// email: "aryan@test.com",
-// password: "aryan@test.com",
-// role: "student"
-// },
-// {
-// username: "Mustafa Nasikwala",
-// email: "mustafa@test.com",
-// password: "mustafa@test.com",
-// role: "student"
-// },
-// {
-// username: "admin",
-// email: "admin@test.com",
-// password: "admin@test.com", // Replace with
-// role: "admin"
-// }
+// db.authentications.insertMany([
+//   {
+//     username: "Aryan Giri",
+//     email: "aryan@test.com",
+//     password: "aryan@test.com",
+//     role: "student"
+//   },
+//   {
+//     username: "Mustafa Nasikwala",
+//     email: "mustafa@test.com",
+//     password: "mustafa@test.com",
+//     role: "student"
+//   },
+//   {
+//     username: "admin",
+//     email: "admin@test.com",
+//     password: "admin@test.com",
+//     role: "admin"
+//   }
 // ]);
