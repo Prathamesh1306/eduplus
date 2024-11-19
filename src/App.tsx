@@ -5,6 +5,7 @@ import Landing from './Components/Page/Landingpage.tsx'
 
 import Admin from "./Components/Page/Admin/admin.tsx";
 import AdminStudentList from "./Components/Page/Admin/adminStudentList.tsx";
+import Verifiedstudent from './Components/Page/Admin/deploy-student.tsx'
 import AdminRecruiterList from "./Components/Page/Admin/AdminRecruiter.tsx";
 import Admindeployedstudent from './Components/Page/Admin/deployedstudent.tsx'
 
@@ -35,17 +36,22 @@ function App() {
           <Route path='/' element={<Admin />} />
           {/* <Route path='/' element={<div>dsadasd</div> } /> */}
           <Route path='/admin-student-list' element={<AdminStudentList />} />
+          <Route path='/verified-students' element={<Verifiedstudent />} />
           <Route path='/admin-deployedstudent' element={<Admindeployedstudent />} />
+
           <Route path='/admin-recruiter-list' element={<AdminRecruiterList />} />
           
           <Route path='/student' element={<Student1 />} />
           <Route path='/student-verify' element={<Student2 />} />
           <Route path="/studentcredential" element={<StudentCredential />} />
+          
           <Route path="/recruiter" element={<Recruiter />} />
           <Route path="/searchrecruiter" element={<Recruiter1 />} />
           <Route path="/searchrecruiter1" element={<Recruiter1a />} />
           <Route path="/searchrecruiter2" element={<Recruiter1b />} />
           <Route path="/verifyrecruiter" element={<Recruiter2 />} />
+
+          
           <Route  path="/about" element={<About/>}></Route>
           <Route path="/home" element={<Home/>}></Route>
           <Route path="/blog" element={<Blog/>}></Route>

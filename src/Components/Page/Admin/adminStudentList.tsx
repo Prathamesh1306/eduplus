@@ -1,29 +1,32 @@
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
-import "../../css/admin-student-list-container.css"
-import Name from "../../compo/name";
+import "../../css/admin-student-list-container.css";
+import { useState } from "react"; // Import useState for managing state
+import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
+
 function AdminStudentList() {
-  const handleSubmit = () => {
-    studentList.filter((value)=>{
-      console.log(value)  
-    })
+  const navigate = useNavigate(); // useNavigate to navigate to the next page
+
+  // Use useState to manage student list with verification status
+  const [studentList, setStudentList] = useState([
+    { name: "Harsh Mohite", verified: false },
+    { name: "Prathamesh", verified: false },
+    { name: "Soham", verified: false },
+    { name: "Priya", verified: false },
+  ]);
+
+  const handleVerify = (index) => {
+    // Update the verified status of the selected student
+    const updatedList = [...studentList];
+    updatedList[index].verified = true;
+    setStudentList(updatedList);
   };
 
-  const studentList = [
-    {
-      name: "Harsh Mohite",
-      verified:"false"
-    },
-    {
-      name: "Prathamesh",verified:"false"
-    },
-    {
-      name: "Soham",verified:"false"
-    },
-    {
-      name: "Priya",verified:"false"
-    },
-  ];
+  const handleSubmit = () => {
+    const verifiedStudents = studentList.filter((student) => student.verified);
+    navigate("/verified-students", { state: { verifiedStudents } }); // Pass data to the new page
+  };
+
   return (
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
@@ -32,9 +35,22 @@ function AdminStudentList() {
         <div className="admin-student-list-renderList">
           Validation Page
           <div className="admin-student-list-renderList-search">
-            {studentList.map((val) => (
-              <Name key={val.name} name={val.name} />
-            ))}
+          {studentList.map((student, index) => (
+  <div key={student.name} className="student-item">
+    <span className="student-item-name">{student.name}</span>
+    {student.verified ? (
+      <span className="verified-status">Verified</span>
+    ) : (
+      <button
+        className="verify-button"
+        onClick={() => handleVerify(index)}
+      >
+        Verify
+      </button>
+    )}
+  </div>
+))}
+
             <div className="admin-student-list-btn" onClick={handleSubmit}>
               NEXT
             </div>
