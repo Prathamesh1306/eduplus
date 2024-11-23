@@ -330,15 +330,15 @@ app.listen(3000, () => {
 
 
 //apis:
-// 1. localhost:3000/login?email=admin@test.com&password=admin@test.com
-// 2. localhost:3000/logout
-// 3. localhost:3000/students
-// 4. localhost:3000/student/:prn
-// 5. localhost:3000/freezed
-// 6. localhost:3000/deployed
-// 7. localhost:3000/studentup
-// 8. localhost:3000/generate-pdf/:prn
-// 9. localhost:3000/download-pdf/:prn
+// 1. localhost:3000/login?email=admin@test.com&password=admin@test.com  post
+// 2. localhost:3000/logout  post
+// 3. localhost:3000/students get
+// 4. localhost:3000/student/:prn get
+// 5. localhost:3000/freezed get
+// 6. localhost:3000/deployed get 
+// 7. localhost:3000/studentup put 
+// 8. localhost:3000/generate-pdf/:prn get 
+// 9. localhost:3000/download-pdf/:prn get
 
 //Points to be covered:
 //koni tari ekda department wise, class wise, year wise, kasa segration karaychay te bgha pls.
@@ -353,30 +353,124 @@ app.listen(3000, () => {
 
 // database name: edu
 // dummy data students collection:
-// db.students.insertOne({
-//   prn: "2280030653",
-//   seatNo: "2280030653",
-//   name: "TEST",
-//   motherName: "TEST",
-//   programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
-//   year: "Second Year",
-//   registrationYear: "2022-23",
-//   cgpa: 0.00,
-//   status: true,
-//   deployed:false,
-//   semesters: [
-//     {
-//       semester: 4,
-//       examDate: "MAY 2024",
-//       sgpa: 8.84,
-//       courses: [
-//         { code: "BTECECE22401", title: "THEORY OF COMPUTATION", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
-//         { code: "BTECECE22402", title: "DBMS", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
-
-//       ]
-//     },
-//   ]
-// });
+// Insert multiple dummy data
+// db.students.insertMany([
+//   {
+//     prn: "1",
+//     seatNo: "1",
+//     name: "John Doe",
+//     motherName: "Jane Doe",
+//     programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
+//     year: "Second Year",
+//     registrationYear: "2022-23",
+//     cgpa: 8.50,
+//     status: true,
+//     deployed: false,
+//     semesters: [
+//       {
+//         semester: 4,
+//         examDate: "MAY 2024",
+//         sgpa: 8.84,
+//         courses: [
+//           { code: "BTECECE22401", title: "THEORY OF COMPUTATION", credits: 3, cie: "A", ese: "A", finalGrade: "A" },
+//           { code: "BTECECE22402", title: "DBMS", credits: 3, cie: "O", ese: "O", finalGrade: "O" }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     prn: "2",
+//     seatNo: "2",
+//     name: "Alice Smith",
+//     motherName: "Maria Smith",
+//     programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
+//     year: "Third Year",
+//     registrationYear: "2021-22",
+//     cgpa: 9.10,
+//     status: true,
+//     deployed: true,
+//     semesters: [
+//       {
+//         semester: 6,
+//         examDate: "MAY 2024",
+//         sgpa: 9.20,
+//         courses: [
+//           { code: "BTECECE22601", title: "ARTIFICIAL INTELLIGENCE", credits: 4, cie: "O", ese: "O", finalGrade: "O" },
+//           { code: "BTECECE22602", title: "COMPUTER NETWORKS", credits: 3, cie: "A", ese: "A", finalGrade: "A" }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     prn: "3",
+//     seatNo: "3",
+//     name: "Bob Johnson",
+//     motherName: "Emily Johnson",
+//     programme: "BACHELOR OF TECHNOLOGY (MECHANICAL ENGINEERING)",
+//     year: "First Year",
+//     registrationYear: "2023-24",
+//     cgpa: 7.50,
+//     status: false,
+//     deployed: false,
+//     semesters: [
+//       {
+//         semester: 2,
+//         examDate: "DEC 2023",
+//         sgpa: 7.30,
+//         courses: [
+//           { code: "BTMECE22301", title: "ENGINEERING MECHANICS", credits: 3, cie: "B", ese: "B", finalGrade: "B" },
+//           { code: "BTMECE22302", title: "MATERIAL SCIENCE", credits: 3, cie: "B", ese: "B", finalGrade: "B" }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     prn: "4",
+//     seatNo: "4",
+//     name: "Charlie Davis",
+//     motherName: "Laura Davis",
+//     programme: "BACHELOR OF TECHNOLOGY (ELECTRONICS ENGINEERING)",
+//     year: "Final Year",
+//     registrationYear: "2020-21",
+//     cgpa: 8.00,
+//     status: true,
+//     deployed: true,
+//     semesters: [
+//       {
+//         semester: 8,
+//         examDate: "MAY 2024",
+//         sgpa: 8.50,
+//         courses: [
+//           { code: "BTEECE22801", title: "DIGITAL SIGNAL PROCESSING", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
+//           { code: "BTEECE22802", title: "CONTROL SYSTEMS", credits: 3, cie: "A", ese: "A", finalGrade: "A" }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     prn: "5",
+//     seatNo: "5",
+//     name: "Diana Perez",
+//     motherName: "Sophia Perez",
+//     programme: "BACHELOR OF TECHNOLOGY (INFORMATION TECHNOLOGY)",
+//     year: "Second Year",
+//     registrationYear: "2022-23",
+//     cgpa: 8.75,
+//     status: true,
+//     deployed: false,
+//     semesters: [
+//       {
+//         semester: 4,
+//         examDate: "MAY 2024",
+//         sgpa: 8.90,
+//         courses: [
+//           { code: "BTITCE22401", title: "OPERATING SYSTEMS", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
+//           { code: "BTITCE22402", title: "SOFTWARE ENGINEERING", credits: 3, cie: "A", ese: "A", finalGrade: "A" }
+//         ]
+//       }
+//     ]
+//   }
+// ]);
 
 
 // *dummy data authentication collection:
