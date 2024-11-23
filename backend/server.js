@@ -330,15 +330,15 @@ app.listen(3000, () => {
 
 
 //apis:
-// 1. localhost:3000/login?email=admin@test.com&password=admin@test.com
-// 2. localhost:3000/logout
-// 3. localhost:3000/students
-// 4. localhost:3000/student/:prn
-// 5. localhost:3000/freezed
-// 6. localhost:3000/deployed
-// 7. localhost:3000/studentup
-// 8. localhost:3000/generate-pdf/:prn
-// 9. localhost:3000/download-pdf/:prn
+// 1. localhost:3000/login?email=admin@test.com&password=admin@test.com  post
+// 2. localhost:3000/logout  post
+// 3. localhost:3000/students get
+// 4. localhost:3000/student/:prn get
+// 5. localhost:3000/freezed get
+// 6. localhost:3000/deployed get 
+// 7. localhost:3000/studentup put 
+// 8. localhost:3000/generate-pdf/:prn get 
+// 9. localhost:3000/download-pdf/:prn get
 
 //Points to be covered:
 //koni tari ekda department wise, class wise, year wise, kasa segration karaychay te bgha pls.
