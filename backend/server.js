@@ -4,7 +4,12 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const cors = require("cors");
+const { PDFDocument, rgb } = require("pdf-lib");
+const fs = require("fs");
+const path = require("path");
+app.use(cors());
+app.use(express.json());
 
 const studentModel = require("./models/student");
 const authModel = require("./models/authentication");
@@ -197,8 +202,7 @@ app.put("/studentup/:prn", isLoggedin, isAdmin, async (req, res) => {
             { prn },
             { $set: updateData }, 
             { new: true } 
-        );
-        
+        );        
         if (!updatedStudent) {
             return res.status(404).json({ message: "Student not found" });
         }
@@ -211,9 +215,118 @@ app.put("/studentup/:prn", isLoggedin, isAdmin, async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-    console.log("Working!");
+app.get("/generate-pdf/:prn", async (req, res) => {
+  const { prn } = req.params;
+  try {
+    const student = await studentModel.findOne({ prn });
+    if (!student) {
+      return res.status(404).send("Student not found");
+    }
+
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([600, 800]);
+    const { width, height } = page.getSize();
+
+    page.drawText("Grade Card", {
+      x: 50,
+      y: height - 50,
+      size: 20,
+      color: rgb(0, 0, 0),
+    });
+    page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 12 });
+    page.drawText(`Seat No: ${student.seatNo}`, {
+      x: 50,
+      y: height - 100,
+      size: 12,
+    });
+    page.drawText(`Name: ${student.name}`, {
+      x: 50,
+      y: height - 120,
+      size: 12,
+    });
+    page.drawText(`Mother's Name: ${student.motherName}`, {
+      x: 50,
+      y: height - 140,
+      size: 12,
+    });
+    page.drawText(`Programme: ${student.programme}`, {
+      x: 50,
+      y: height - 160,
+      size: 12,
+    });
+
+    let yOffset = height - 190;
+    student.semesters.forEach((semester) => {
+      page.drawText(`Semester ${semester.semester}`, {
+        x: 50,
+        y: yOffset,
+        size: 14,
+      });
+      page.drawText(`Exam Date: ${semester.examDate}`, {
+        x: 50,
+        y: yOffset - 20,
+        size: 12,
+      });
+      page.drawText(`SGPA: ${semester.sgpa}`, {
+        x: 50,
+        y: yOffset - 40,
+        size: 12,
+      });
+
+      page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 12 });
+      page.drawText("Course Title", { x: 150, y: yOffset - 60, size: 12 });
+      page.drawText("Credits", { x: 300, y: yOffset - 60, size: 12 });
+      page.drawText("CIE", { x: 350, y: yOffset - 60, size: 12 });
+      page.drawText("ESE", { x: 400, y: yOffset - 60, size: 12 });
+      page.drawText("Final Grade", { x: 450, y: yOffset - 60, size: 12 });
+
+      yOffset -= 80;
+      semester.courses.forEach((course) => {
+        page.drawText(course.code, { x: 50, y: yOffset, size: 12 });
+        page.drawText(course.title, { x: 150, y: yOffset, size: 12 });
+        page.drawText(course.credits.toString(), {
+          x: 300,
+          y: yOffset,
+          size: 12,
+        });
+        page.drawText(course.cie, { x: 350, y: yOffset, size: 12 });
+        page.drawText(course.ese, { x: 400, y: yOffset, size: 12 });
+        page.drawText(course.finalGrade, { x: 450, y: yOffset, size: 12 });
+        yOffset -= 20;
+      });
+
+      yOffset -= 30;
+    });
+
+    page.drawText(`CGPA: ${student.cgpa}`, { x: 50, y: yOffset, size: 14 });
+
+    const pdfBytes = await pdfDoc.save();
+    const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
+    fs.writeFileSync(filePath, pdfBytes);
+
+    res.json({ pdfUrl: `http://localhost:3000/download-pdf/${prn}` });
+  } catch (error) {
+    res.status(500).send("Error generating PDF");
+  }
 });
+
+app.get("/download-pdf/:prn", (req, res) => {
+  const { prn } = req.params;
+  const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
+  res.download(filePath, `GradeCard_${prn}.pdf`, (err) => {
+    if (err) {
+      res.status(500).send("Error downloading PDF");
+    }
+  });
+});
+
+app.listen(3000, () => {
+  console.log("Working!");
+});
+
+// app.listen(3000, () => {
+//     console.log("Working!");
+// });
 
 
 //apis:
@@ -224,6 +337,8 @@ app.listen(3000, () => {
 // 5. localhost:3000/freezed
 // 6. localhost:3000/deployed
 // 7. localhost:3000/studentup
+// 8. localhost:3000/generate-pdf/:prn
+// 9. localhost:3000/download-pdf/:prn
 
 //Points to be covered:
 //koni tari ekda department wise, class wise, year wise, kasa segration karaychay te bgha pls.
@@ -234,3 +349,55 @@ app.listen(3000, () => {
 // Update student info(Done).
 // add new students login details(done);
 // Ajun konala kahi watla tr changes kara cause me bhi sikh hi raha hu basics se.
+
+
+// database name: edu
+// dummy data students collection:
+// db.students.insertOne({
+//   prn: "2280030653",
+//   seatNo: "2280030653",
+//   name: "TEST",
+//   motherName: "TEST",
+//   programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
+//   year: "Second Year",
+//   registrationYear: "2022-23",
+//   cgpa: 0.00,
+//   status: true,
+//   deployed:false,
+//   semesters: [
+//     {
+//       semester: 4,
+//       examDate: "MAY 2024",
+//       sgpa: 8.84,
+//       courses: [
+//         { code: "BTECECE22401", title: "THEORY OF COMPUTATION", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
+//         { code: "BTECECE22402", title: "DBMS", credits: 3, cie: "O", ese: "O", finalGrade: "O" },
+
+//       ]
+//     },
+//   ]
+// });
+
+
+// *dummy data authentication collection:
+
+// db.authentications.insertMany([
+//   {
+//     username: "Aryan Giri",
+//     email: "aryan@test.com",
+//     password: "aryan@test.com",
+//     role: "student"
+//   },
+//   {
+//     username: "Mustafa Nasikwala",
+//     email: "mustafa@test.com",
+//     password: "mustafa@test.com",
+//     role: "student"
+//   },
+//   {
+//     username: "admin",
+//     email: "admin@test.com",
+//     password: "admin@test.com",
+//     role: "admin"
+//   }
+// ]);
