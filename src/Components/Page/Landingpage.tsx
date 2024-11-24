@@ -7,11 +7,13 @@ import Certificate from "../../assets/certificate";
 import Image12 from "../../assets/image12";
 import Image13 from "../../assets/image13";
 import Image14 from "../../assets/image14";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Landingpage() {
   const [email, setEmail] = useState<string>(''); 
   const [password, setPassword] = useState<string>(''); 
-  const [emailError, setEmailError] = useState<string>(''); 
+  const navigate=useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -21,14 +23,41 @@ function Landingpage() {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = () => {
-    
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!email.match(emailRegex)) {
-      setEmailError('Please enter a valid email');
-    } else {
-      setEmailError('');
+  const handlesubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/login", {
+        email: email,
+        password: password,
+      });
       
+      alert("Login Successful!");
+      
+      const {role} = response.data
+      console.log("Response:", response.data);
+      
+      // Redirect or save token if necessary
+      if (role === "admin") {
+        navigate("/admin-home");
+      } else if (role === "student") {
+        navigate("/student");
+      } else if (role === "employer") {
+        navigate("/employer-dashboard");
+      } else {
+        alert("Invalid role. Please contact support.");
+      }
+    } catch (error:any) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          alert("No User Found! Please check your email.");
+        } else if (error.response.status === 401) {
+          alert("Invalid Credentials! Please check your password.");
+        } else {
+          alert("An error occurred: " + error.response.data);
+        }
+      } else {
+        alert("Unable to connect to the server. Please try again later.");
+      }
+      console.error("Error during login:", error.response ? error.response.data : error.message);
     }
   };
 
@@ -172,7 +201,7 @@ function Landingpage() {
             style={{ marginRight: 15, color: "#0B7077" }}
           />
           <input
-            type="text"
+            type="email"
             placeholder="Enter Email"
             value={email}
             onChange={handleEmailChange}
@@ -186,11 +215,7 @@ function Landingpage() {
             }}
           />
         </div>
-        {emailError && (
-          <div style={{ color: "red", marginTop: 5, fontSize: 14 }}>
-            {emailError}
-          </div>
-        )}
+        
         <div
           style={{
             display: "flex",
@@ -223,7 +248,7 @@ function Landingpage() {
         </div>
 
         <div
-          onClick={handleSubmit}
+          onClick={handlesubmit}
           style={{
             color: "#000",
             backgroundColor: "#D2E6E4",

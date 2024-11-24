@@ -125,7 +125,7 @@ app.post("/login", async (req, res) => {
         );
         
         res.cookie("token", token);
-        res.status(200).send("Logged In Successfully");
+        res.status(200).send({message:"Logged In Successfully", role:user.role});
     } catch (error) {
         console.error("Error during login:", error);
         res.status(500).send("Internal Server Error");
@@ -139,7 +139,7 @@ app.get("/logout", (req, res) => {
 });
 
 // route 3(all students)
-app.get("/students", isLoggedin, isAdmin, async (req, res) => {
+app.get("/students", async (req, res) => {
     try {
         const students = await studentModel.find(); 
         res.status(200).json(students);

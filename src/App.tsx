@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Landing from './Components/Page/Landingpage.tsx'
 
 
-
 import Admin from "./Components/Page/Admin/admin.tsx";
 import AdminStudentList from "./Components/Page/Admin/adminStudentList.tsx";
 import Verifiedstudent from './Components/Page/Admin/deploy-student.tsx'
@@ -31,9 +30,9 @@ function App() {
       <div>
         <Routes>
 
-          <Route path='/front' element={<Landing />} />
+          <Route path='/' element={<Landing />} />
 
-          <Route path='/' element={<Admin />} />
+          <Route path='/admin-home' element={<Admin />} />
           {/* <Route path='/' element={<div>dsadasd</div> } /> */}
           <Route path='/admin-student-list' element={<AdminStudentList />} />
           <Route path='/verified-students' element={<Verifiedstudent />} />
