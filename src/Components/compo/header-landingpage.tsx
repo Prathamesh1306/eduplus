@@ -1,41 +1,60 @@
 import "../../App.css";
 import Logo from "../../assets/logo.svg";
-// import Image1 from "../../assets/image11.svg"
 import Image11 from "../../assets/image11";
+
 function Header() {
+  // Add a type annotation for 'id'
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const Login = () => {
     console.log("Login was pressed");
   };
 
   return (
-    <div style={{ backgroundColor: "#d2e6e4",paddingTop:20 }}>
+    <div style={{ backgroundColor: "#d2e6e4", paddingTop: 20 }}>
       <div className="header">
         <div>
-          <img src={Logo} />
+          <img src={Logo} alt="Eduplus Logo" />
         </div>
         <div className="tabs">
-          <a className="tab" href="./home.tsx">
+          <a
+            className="tab"
+            href="#"
+            onClick={() => scrollToSection("home")}
+          >
             Home
           </a>
-          <a className="tab" href="./supportcenter.tsx">
-            Support center
+          <a
+            className="tab"
+            href="#"
+            onClick={() => scrollToSection("support-center")}
+          >
+            Support Center
           </a>
-          <a className="tab" href="./blog.tsx">
+          <a
+            className="tab"
+            href="#"
+            onClick={() => scrollToSection("blog")}
+          >
             Blog
           </a>
-          <a className="tab" href="./about.tsx">
+          <a
+            className="tab"
+            href="#"
+            onClick={() => scrollToSection("why-eduplus")}
+          >
             About Us
           </a>
         </div>
         <div className="collab">
-          {/* <div className="explore-btn">
-            <div className="circle-text">
-              <span>Explore More </span>
-            </div>
-            <span className="play-icon">▶</span>
-          </div> */}
-          <div className="login" onClick={Login}>
-            LOGIN
+            
+          <div className="login" onClick={() => scrollToSection("sign-in")}>
+          Sign-in
           </div>
         </div>
       </div>
@@ -73,8 +92,8 @@ function Header() {
               borderRadius: 10,
               paddingLeft: 5,
               paddingRight: 5,
-              marginTop:20,
-              marginBottom:20
+              marginTop: 20,
+              marginBottom: 20,
             }}
           >
             Explore path

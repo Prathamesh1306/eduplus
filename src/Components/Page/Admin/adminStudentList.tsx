@@ -69,7 +69,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ethers, Contract } from "ethers";
-import contractABI from "../../../contracts/Blockchain.json";
+import contractABI from "../../../contract/abi.json";
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/admin-student-list-container.css";

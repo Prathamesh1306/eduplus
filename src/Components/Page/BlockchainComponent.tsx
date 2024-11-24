@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ethers, Contract } from "ethers";
-import contractABI from "../../contracts/Blockchain.json"; // Import ABI (ensure the file path is correct)
+import contractABI from "../../contract/abi.json"; // Import ABI (ensure the file path is correct)
 // import contractABI from "../../contracts/Blockchain.json";
 console.log(contractABI); // Ensure it logs the JSON object
 

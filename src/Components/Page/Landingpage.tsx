@@ -1,10 +1,37 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from "react";
 import Header from "../compo/header-landingpage";
 import Footer from "../compo/footer";
 import Certificate from "../../assets/certificate";
 import Image12 from "../../assets/image12";
 import Image13 from "../../assets/image13";
 import Image14 from "../../assets/image14";
+
 function Landingpage() {
+  const [email, setEmail] = useState<string>(''); 
+  const [password, setPassword] = useState<string>(''); 
+  const [emailError, setEmailError] = useState<string>(''); 
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!email.match(emailRegex)) {
+      setEmailError('Please enter a valid email');
+    } else {
+      setEmailError('');
+      
+    }
+  };
+
   return (
     <div className="landing-page">
       <Header />
@@ -18,7 +45,7 @@ function Landingpage() {
           paddingRight: 30,
         }}
       >
-        <div style={{}}>
+        <div>
           <div
             style={{
               color: "#0B7077",
@@ -35,7 +62,7 @@ function Landingpage() {
           >
             Benefits
           </div>
-          <div style={{ fontSize: 50, color: "#0B7077", fontWeight: "bolder" }}>
+          <div id="why-eduplus" style={{ fontSize: 50, color: "#0B7077", fontWeight: "bolder" }}>
             Why Choose EduPlus?
           </div>
           <div
@@ -111,31 +138,106 @@ function Landingpage() {
       <div
         style={{
           backgroundColor: "#0B7077",
-          marginTop: 10,
+          marginTop: 20,
           width: "30%",
-          justifySelf: "center",
-          paddingTop:20,
-          paddingBottom:20,
-          justifyItems:"center",
-          borderRadius:10
+          paddingTop: 30,
+          paddingBottom: 30,
+          paddingLeft: 40,
+          paddingRight: 40,
+          borderRadius: 15,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          marginLeft: "auto",
+          marginRight: "auto",
         }}
       >
-        <div style={{color:"#ffffff",fontSize:20}}>Sign up as Recruiter</div>
-        <div>
-
-        <input type="text" name="" id="" placeholder="Enter Email" />
+        <div id="sign-in" style={{ color: "#ffffff", fontSize: 24, fontWeight: "bold" }}>
+          Sign in
         </div>
-        <div>
-
-        <input type="text" name="" id="" placeholder="Enter Password" />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 20,
+            width: "100%",
+            backgroundColor: "#fff",
+            borderRadius: 5,
+            padding: 10,
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faEnvelope}
+            style={{ marginRight: 15, color: "#0B7077" }}
+          />
+          <input
+            type="text"
+            placeholder="Enter Email"
+            value={email}
+            onChange={handleEmailChange}
+            style={{
+              border: "none",
+              outline: "none",
+              width: "100%",
+              padding: 10,
+              fontSize: 16,
+              borderRadius: 5,
+            }}
+          />
+        </div>
+        {emailError && (
+          <div style={{ color: "red", marginTop: 5, fontSize: 14 }}>
+            {emailError}
+          </div>
+        )}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 20,
+            width: "100%",
+            backgroundColor: "#fff",
+            borderRadius: 5,
+            padding: 10,
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faLock}
+            style={{ marginRight: 15, color: "#0B7077" }}
+          />
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={handlePasswordChange}
+            style={{
+              border: "none",
+              outline: "none",
+              width: "100%",
+              padding: 10,
+              fontSize: 16,
+              borderRadius: 5,
+            }}
+          />
         </div>
 
-        <div style={{color:"#000" ,backgroundColor:"#D2E6E4",paddingRight:10,paddingLeft:10,paddingTop:5,paddingBottom:5,borderRadius:15}}>
-            Sign in
-        </div>
-
-        <div style={{color:"#ffffff"}}>
-          sign in as <a href="/" style={{color:"#fff"}}>admin</a>   or <a href="" style={{color:"#fff"}}>recruiter</a> ? 
+        <div
+          onClick={handleSubmit}
+          style={{
+            color: "#000",
+            backgroundColor: "#D2E6E4",
+            padding: "10px 20px",
+            marginTop: 20,
+            borderRadius: 15,
+            textAlign: "center",
+            width: "100%",
+            cursor: "pointer",
+            fontSize: 18,
+            fontWeight: "bold",
+          }}
+        >
+          Sign in
         </div>
       </div>
 
