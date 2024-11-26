@@ -19,6 +19,9 @@ const Card: React.FC<CardProps> = ({ image, image2, title, description }) => {
       case 'Student Management':
         path = '/admin-student-list';
         break;
+        case 'Verified student':
+          path = '/verified-students';
+          break;
       case 'Deployed Students':
         path = '/admin-deployedstudent';
         break;

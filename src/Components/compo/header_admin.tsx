@@ -1,13 +1,14 @@
 import "../../App.css";
 import Logo from "../../assets/logo.svg";
-
+import { useNavigate } from "react-router-dom";
 interface HeaderProps {
   role: string;
 }
 
 function Header({ role }: HeaderProps) {
+  const navigate= useNavigate();
   const Logout = () => {
-    console.log("Logout was pressed");
+    navigate("/");
   };
 
   return (

@@ -67,7 +67,8 @@ app.get("/", (req, res) => {
 
 
 //route1(Adding new data if few, in case needed in future)
-app.post("/add", isLoggedin, isAdmin, async (req, res) => {
+// app.post("/add", isLoggedin, isAdmin, async (req, res) => {
+app.post("/add",  async (req, res) => {
     const { username, email, password, role } = req.body;
     try {        
         const existingUser = await authModel.findOne({ email });
@@ -124,12 +125,14 @@ app.post("/login", async (req, res) => {
             { expiresIn: "1h" } 
         );
         
-        res.cookie("token", token);
+        res.cookie("token", token, {httpOnly: false, secure: false, sameSite: 'lax'});
         res.status(200).send({message:"Logged In Successfully", role:user.role});
+        
     } catch (error) {
         console.error("Error during login:", error);
         res.status(500).send("Internal Server Error");
     }
+    console.log("login succesful")
 });
 
 
@@ -139,7 +142,8 @@ app.get("/logout", (req, res) => {
 });
 
 // route 3(all students)
-app.get("/students", async (req, res) => {
+// app.get("/students", isLoggedin, isAdmin, async (req, res) => {
+  app.get("/students",  async (req, res) => {
     try {
         const students = await studentModel.find(); 
         res.status(200).json(students);
@@ -147,12 +151,73 @@ app.get("/students", async (req, res) => {
         console.error("Error fetching students:", error);
         res.status(500).send("An error occurred while fetching students.");
     }
+    console.log("/students ")
 });
 
 
 
+app.get('/view/students', async (req, res) => {
+  try {
+    const students = await studentModel.find({}, 'prn name status'); 
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
+});
+
+
+
+app.post('/students/update-status',  async (req, res) => {
+  const { prns } = req.body;
+  if (!prns || prns.length === 0) {
+    return res.status(400).json({ error: 'No PRNs provided' });
+  }
+  try {    
+    const updatedStudents = await studentModel.updateMany(
+      { prn: { $in: prns } },
+      [{ $set: { status: { $not: '$status' } } }] 
+    );
+    if (updatedStudents.matchedCount === 0) {
+      return res.status(404).json({ error: 'No students found with the provided PRNs' });
+    }
+    res.json({ success: true, message: 'Statuses updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update status' });
+    }
+  });
+
+
+app.get('/view/students/updated', async (req, res) => {
+  try {
+    const students = await studentModel.find({status: true, deployed: false}, 'prn name status deployed'); 
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
+});
+
+app.post('/students/update-deployed',  async (req, res) => {
+  const { prns } = req.body;
+  if (!prns || prns.length === 0) {
+    return res.status(400).json({ error: 'No PRNs provided' });
+  }
+  try {    
+    const updatedStudents = await studentModel.updateMany(
+      { prn: { $in: prns } },
+      [{ $set: { status: { $not: '$deployed' } } }] 
+    );
+    if (updatedStudents.matchedCount === 0) {
+      return res.status(404).json({ error: 'No students found with the provided PRNs' });
+    }
+    res.json({ success: true, message: 'deployed updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update deployed' });
+    }
+  });
+
 // Route to get student by PRN
-app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
+// app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
+  app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
     const { prn } = req.params;    
     try {        
         const student = await studentModel.findOne({ prn });    
@@ -169,7 +234,8 @@ app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
 
 
 // route 4(all freezed students)
-app.get('/freezed', isLoggedin, isAdmin, async (req, res) => {
+// app.get('/freezed', isLoggedin, isAdmin, async (req, res) => {
+  app.get('/freezed', isLoggedin, isAdmin, async (req, res) => {
     try {        
         const freezedStudents = await studentModel.find({ status: true }); 
         res.status(200).json(freezedStudents);
@@ -182,7 +248,8 @@ app.get('/freezed', isLoggedin, isAdmin, async (req, res) => {
 
 
 // route 6(all deployed students)  
-  app.get('/deployed', isLoggedin, isAdmin, async (req, res) => {
+  // app.get('/deployed', isLoggedin, isAdmin, async (req, res) => {
+    app.get('/deployed', async (req, res) => {
     try {
       const deployedStudents = await studentModel.find({ deployed: true });
       res.json(deployedStudents);
@@ -193,7 +260,8 @@ app.get('/freezed', isLoggedin, isAdmin, async (req, res) => {
   
 
   // Route to update student details by PRN
-app.put("/studentup/:prn", isLoggedin, isAdmin, async (req, res) => {
+// app.put('/studentup/:prn', isLoggedin, isAdmin, async (req, res) => {
+  app.put("/studentup/:prn",  async (req, res) => {
     const { prn } = req.params; 
     const updateData = req.body;
     

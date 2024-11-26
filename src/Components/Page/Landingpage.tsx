@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../compo/header-landingpage";
 import Footer from "../compo/footer";
 import Certificate from "../../assets/certificate";
@@ -11,9 +11,27 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Landingpage() {
-  const [email, setEmail] = useState<string>(''); 
-  const [password, setPassword] = useState<string>(''); 
-  const navigate=useNavigate();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Initialize the history stack for this page
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      // Prevent navigation back or forward
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    // Listen for browser back/forward buttons
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      // Clean up listener on unmount
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -29,13 +47,13 @@ function Landingpage() {
         email: email,
         password: password,
       });
-      
+
       alert("Login Successful!");
-      
-      const {role} = response.data
+
+      const { role } = response.data;
       console.log("Response:", response.data);
-      
-      // Redirect or save token if necessary
+
+      // Redirect based on role
       if (role === "admin") {
         navigate("/admin-home");
       } else if (role === "student") {
@@ -45,7 +63,7 @@ function Landingpage() {
       } else {
         alert("Invalid role. Please contact support.");
       }
-    } catch (error:any) {
+    } catch (error: any) {
       if (error.response) {
         if (error.response.status === 404) {
           alert("No User Found! Please check your email.");
@@ -55,115 +73,19 @@ function Landingpage() {
           alert("An error occurred: " + error.response.data);
         }
       } else {
-        alert("Unable to connect to the server. Please try again later.");
+        alert("Unable to connect to the server. Please try again later." + error);
       }
-      console.error("Error during login:", error.response ? error.response.data : error.message);
+      console.error(
+        "Error during login:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
   return (
     <div className="landing-page">
       <Header />
-      <div
-        style={{
-          marginTop: 50,
-          flexDirection: "row",
-          display: "flex",
-          justifyContent: "space-around",
-          paddingLeft: 30,
-          paddingRight: 30,
-        }}
-      >
-        <div>
-          <div
-            style={{
-              color: "#0B7077",
-              backgroundColor: "#F5F5F5",
-              paddingLeft: 20,
-              paddingRight: 20,
-              paddingTop: 12,
-              paddingBottom: 12,
-              borderRadius: 15,
-              width: "15%",
-              textAlign: "center",
-              marginBottom: 10,
-            }}
-          >
-            Benefits
-          </div>
-          <div id="why-eduplus" style={{ fontSize: 50, color: "#0B7077", fontWeight: "bolder" }}>
-            Why Choose EduPlus?
-          </div>
-          <div
-            style={{
-              fontSize: 20,
-              color: "#0B7077",
-              fontWeight: "bold",
-              marginTop: 20,
-              paddingLeft: 20,
-            }}
-          >
-            Trusted Credentials, Verified in Seconds.
-          </div>
-          <div>
-            <div
-              style={{
-                flexDirection: "row",
-                display: "flex",
-                alignItems: "center",
-                width: "60%",
-                marginTop: 20,
-              }}
-            >
-              <Image12 size={360} />
-              <div style={{ color: "#696984", width: "80%", fontSize: 25 }}>
-                Unbreakable Trust: Credentials are securely locked on the
-                blockchain, making them 100% tamper-proof for ultimate peace of
-                mind.
-              </div>
-            </div>
-
-            <div
-              style={{
-                flexDirection: "row",
-                display: "flex",
-                alignItems: "center",
-                width: "60%",
-                marginTop: 10,
-                justifyContent: "space-around",
-              }}
-            >
-              <Image13 size={360} />
-              <div style={{ color: "#696984", width: "100%", fontSize: 25 }}>
-                Lightning-Fast Verification: Recruiters can verify academic
-                records instantly, saving time and hiring costs.
-              </div>
-            </div>
-
-            <div
-              style={{
-                flexDirection: "row",
-                display: "flex",
-                alignItems: "center",
-                width: "60%",
-                marginTop: 10,
-                justifyContent: "space-around",
-              }}
-            >
-              <Image14 size={360} />
-              <div style={{ color: "#696984", width: "80%", fontSize: 25 }}>
-                All-in-One Access: Students have everything in one place to
-                easily share with employers, while recruiters enjoy a smooth,
-                centralized verification process.
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style={{ alignContent: "center" }}>
-          <Certificate size={500} />
-        </div>
-      </div>
-
+      {/* Your Landing Page UI */}
       <div
         style={{
           backgroundColor: "#0B7077",
@@ -215,7 +137,7 @@ function Landingpage() {
             }}
           />
         </div>
-        
+
         <div
           style={{
             display: "flex",

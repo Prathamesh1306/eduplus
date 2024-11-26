@@ -1,7 +1,7 @@
 import "../../App.css"
 import Logo from "../../assets/logo.svg";
 import ProfilePhoto from "../../assets/profile.png";
-
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   name: string;
@@ -10,8 +10,9 @@ interface HeaderProps {
 }
 
 function Header({ name, year, role }: HeaderProps) {
+  const navigate= useNavigate();
   const Logout = () => {
-    console.log("Logout was pressed");
+    navigate("/");
   };
 
       

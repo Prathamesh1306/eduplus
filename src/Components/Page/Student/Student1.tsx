@@ -5,11 +5,29 @@ import image from "../../../assets/image.png";
 import personcard from "../../../assets/personcard.png"; 
 import card from "../../../assets/card.png"; 
 import { useNavigate } from "react-router-dom";
-
+import { useState, useEffect } from "react";
 function Student1() {
 
   const navigate=useNavigate();
   
+  useEffect(() => {
+    // Initialize the history stack for this page
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      // Prevent navigation back or forward
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    // Listen for browser back/forward buttons
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      // Clean up listener on unmount
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
 
   return (
     <div className="container">

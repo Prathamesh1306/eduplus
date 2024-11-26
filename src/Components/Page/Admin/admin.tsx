@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../../App.css";
 import Header from "../../compo/header_admin.tsx";
 import Footer from "../../compo/footer.tsx";
@@ -19,6 +19,9 @@ function Admin() {
           method: "eth_requestAccounts",
         });
         setAccount(accounts[0]);
+
+        // Replace history to prevent navigation back
+        window.history.replaceState(null, "", window.location.href);
       } catch (error) {
         console.error("MetaMask connection failed:", error);
       }
@@ -27,13 +30,36 @@ function Admin() {
     }
   }
 
+  // Prevent back navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      if (!account) {
+        // Push the current location back into the history stack
+        window.history.pushState(null, "", window.location.href);
+      }
+    };
+
+    // Initialize the history stack for this page
+    window.history.pushState(null, "", window.location.href);
+
+    // Listen for browser back/forward buttons
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [account]);
+
   return (
     <div className="container">
       <Header role="ADMIN" />
 
       <div className="hub-section">
         <h1>Your One-Stop Hub for Verified Academic Credentials</h1>
-        <p>With EduPlus, managing and sharing your academic achievements has never been easier. Explore the benefits and features below!</p>
+        <p>
+          With EduPlus, managing and sharing your academic achievements has
+          never been easier. Explore the benefits and features below!
+        </p>
 
         <button onClick={connectWallet} className="metamask-button">
           {account ? `Connected: ${account}` : "Connect to MetaMask"}
@@ -46,6 +72,12 @@ function Admin() {
           image2={cardimage}
           title="Student Management"
           description="Manage student credentials and deployment status"
+        />
+        <Card
+          image={studentManagementImage}
+          image2={cardimage}
+          title="Verified student"
+          description="Manage student verifications and deployment status"
         />
         <Card
           image={deployedStudentsImage}
