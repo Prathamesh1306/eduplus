@@ -13,8 +13,9 @@ app.use(express.json());
 
 const studentModel = require("./models/student");
 const authModel = require("./models/authentication");
+const Transaction = require("./models/Transaction"); // MongoDB model
 
-
+// =================================================================
 const generateAndSaveHashes = require('./models/generateAllStudentsHash'); // Import the function
 
 app.get('/hash/generate-and-save', async (req, res) => {
@@ -26,6 +27,58 @@ app.get('/hash/generate-and-save', async (req, res) => {
         res.status(500).send('Error generating and saving hashes');
     }
 });
+
+
+// Define the POST endpoint to handle the update
+app.post('/update-transaction', async (req, res) => {
+  const { prn, transactionHash } = req.body;
+
+  if (!prn || !transactionHash) {
+    return res.status(400).send("Missing required fields.");
+  }
+
+
+  try {
+    // Find the student by PRN and update the deployed status to true
+    const student = await studentModel.findOneAndUpdate(
+      { prn: prn },
+      { deployed: true }
+    );
+
+    if (!student) {
+      return res.status(404).send("Student not found.");
+    }
+
+    // Save the transaction hash to the Transaction collection
+    const newTransaction = new Transaction({
+      prn: prn,
+      transactionHash: transactionHash,
+    });
+
+    await newTransaction.save();
+
+    res.status(200).send("Transaction saved and student status updated.");
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
+
+
+
+// export default app;
+// =================================================================
+app.get("/get-deployed-prns", async (req, res) => {
+  try {
+    const transactions = await Transaction.find();
+    const prns = transactions.map((transaction) => transaction.prn);
+    res.status(200).json(prns);
+  } catch (error) {
+    console.error("Error fetching deployed PRNs:", error);
+    res.status(500).json({ message: "Failed to fetch deployed PRNs." });
+  }
+});
+
 
 
 
@@ -172,7 +225,7 @@ app.get("/logout", (req, res) => {
 
 app.get('/view/students', async (req, res) => {
   try {
-    const students = await studentModel.find({}, 'prn name status'); 
+    const students = await studentModel.find({}, 'prn name status dataHash'); 
     res.json(students);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch students' });
@@ -203,7 +256,7 @@ app.post('/students/update-status',  async (req, res) => {
 
 app.get('/view/students/updated', async (req, res) => {
   try {
-    const students = await studentModel.find({status: true, deployed: false}, 'prn name status deployed'); 
+    const students = await studentModel.find({status: true, deployed: false}, 'prn name status dataHash deployed'); 
     res.json(students);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch students' });
