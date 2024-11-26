@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade Card</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      color: #333;
+      font-size: 14px;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 32px;
+      color: #003366; /* Navy Blue */
+      margin: 0;
+      font-weight: 600;
+    }
+    .header hr {
+      border: 0;
+      border-top: 2px solid #ff6600; /* Orange */
+      width: 50%;
+      margin: 10px auto;
+    }
+    .student-info {
+      margin-bottom: 30px;
+      padding: 10px;
+      background-color: #f4f7fc; /* Soft Blue */
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .student-info p {
+      font-size: 14px;
+      margin: 6px 0;
+    }
+    .semester-info {
+      margin-bottom: 20px;
+    }
+    .semester-info h2 {
+      font-size: 20px;
+      color: #003366;
+      border-bottom: 2px solid #ff6600;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #003366; /* Navy Blue */
+      color: white;
+      font-weight: bold;
+    }
+    td {
+      background-color: #f9f9f9;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 16px;
+      color: #003366;
+      font-weight: bold;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+      .header h1 {
+        font-size: 28px;
+      }
+      table {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header">
+      <h1>Grade Card</h1>
+      <hr />
+    </div>
+    
+    <!-- Student Information Section -->
+    <div class="student-info">
+      <p><strong>PRN:</strong> {{prn}}</p>
+      <p><strong>Seat No:</strong> {{seatNo}}</p>
+      <p><strong>Name:</strong> {{name}}</p>
+      <p><strong>Mother's Name:</strong> {{motherName}}</p>
+      <p><strong>Programme:</strong> {{programme}}</p>
+    </div>
+
+    <!-- Semesters Section -->
+    {{#each semesters}}
+    <div class="semester-info">
+      <h2>Semester {{this.semester}}</h2>
+      <p><strong>Exam Date:</strong> {{this.examDate}}</p>
+      <p><strong>SGPA:</strong> {{this.sgpa}}</p>
+
+      <!-- Course Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Title</th>
+            <th>Credits</th>
+            <th>CIE</th>
+            <th>ESE</th>
+            <th>Final Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each this.courses}}
+          <tr>
+            <td>{{this.code}}</td>
+            <td>{{this.title}}</td>
+            <td>{{this.credits}}</td>
+            <td>{{this.cie}}</td>
+            <td>{{this.ese}}</td>
+            <td>{{this.finalGrade}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{/each}}
+
+    <!-- Footer Section -->
+    <div class="footer">
+      <p><strong>CGPA:</strong> {{cgpa}}</p>
+    </div>
+  </div>
+</body>
+</html>

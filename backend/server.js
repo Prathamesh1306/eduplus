@@ -14,6 +14,8 @@ app.use(express.json());
 const studentModel = require("./models/student");
 const authModel = require("./models/authentication");
 const Transaction = require("./models/Transaction"); // MongoDB model
+// const PDFDocument = require('pdfkit');
+
 
 // =================================================================
 const generateAndSaveHashes = require('./models/generateAllStudentsHash'); // Import the function
@@ -350,100 +352,154 @@ app.post('/students/update-deployed',  async (req, res) => {
 });
 
 
+
+
+// app.get("/generate-pdf/:prn", async (req, res) => {
+//   const { prn } = req.params;
+//   try {
+//     const student = await studentModel.findOne({ prn });
+//     if (!student) {
+//       console.error(`Student with PRN ${prn} not found`);
+//       return res.status(404).send("Student not found");
+//     }
+
+//     const pdfDoc = await PDFDocument.create();
+//     const page = pdfDoc.addPage([600, 800]); // Page size is 600x800
+//     const width = 600; // Width of the page
+//     const height = 800; // Height of the page
+
+//     // Example of how to debug - log the student data
+//     console.log(student);
+
+//     page.drawText(`Grade Card`, { x: 50, y: height - 50, size: 20, color: rgb(0, 0, 0) });
+//     page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 12 });
+//     page.drawText(`Seat No: ${student.seatNo}`, { x: 50, y: height - 100, size: 12 });
+//     page.drawText(`Name: ${student.name}`, { x: 50, y: height - 120, size: 12 });
+//     page.drawText(`Mother's Name: ${student.motherName}`, { x: 50, y: height - 140, size: 12 });
+//     page.drawText(`Programme: ${student.programme}`, { x: 50, y: height - 160, size: 12 });
+
+//     let yOffset = height - 190;
+//     student.semesters.forEach((semester) => {
+//       page.drawText(`Semester ${semester.semester}`, { x: 50, y: yOffset, size: 14 });
+//       page.drawText(`Exam Date: ${semester.examDate}`, { x: 50, y: yOffset - 20, size: 12 });
+//       page.drawText(`SGPA: ${semester.sgpa}`, { x: 50, y: yOffset - 40, size: 12 });
+
+//       page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 12 });
+//       page.drawText("Course Title", { x: 150, y: yOffset - 60, size: 12 });
+//       page.drawText("Credits", { x: 300, y: yOffset - 60, size: 12 });
+//       page.drawText("CIE", { x: 350, y: yOffset - 60, size: 12 });
+//       page.drawText("ESE", { x: 400, y: yOffset - 60, size: 12 });
+//       page.drawText("Final Grade", { x: 450, y: yOffset - 60, size: 12 });
+
+//       yOffset -= 80;
+//       semester.courses.forEach((course) => {
+//         page.drawText(course.code, { x: 50, y: yOffset, size: 12 });
+//         page.drawText(course.title, { x: 150, y: yOffset, size: 12 });
+//         page.drawText(course.credits.toString(), { x: 300, y: yOffset, size: 12 });
+//         page.drawText(course.cie, { x: 350, y: yOffset, size: 12 });
+//         page.drawText(course.ese, { x: 400, y: yOffset, size: 12 });
+//         page.drawText(course.finalGrade, { x: 450, y: yOffset, size: 12 });
+//         yOffset -= 20;
+//       });
+
+//       yOffset -= 30;
+//     });
+
+//     page.drawText(`CGPA: ${student.cgpa}`, { x: 50, y: yOffset, size: 14 });
+
+//     const pdfBytes = await pdfDoc.save();
+//     const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
+//     fs.writeFileSync(filePath, pdfBytes);
+
+//     console.log(`PDF generated successfully for PRN: ${prn}`);
+//     res.json({ pdfUrl: `http://localhost:3000/download-pdf/${prn}` });
+//   } catch (error) {
+//     console.error("Error generating PDF:", error);
+//     res.status(500).send("Error generating PDF");
+//   }
+// });
+
+
+
+
+const puppeteer = require('puppeteer');
+const handlebars = require('handlebars');
+
+
 app.get("/generate-pdf/:prn", async (req, res) => {
   const { prn } = req.params;
   try {
     const student = await studentModel.findOne({ prn });
+
     if (!student) {
+      console.error(`Student with PRN ${prn} not found`);
       return res.status(404).send("Student not found");
     }
 
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([600, 800]);
-    const { width, height } = page.getSize();
+    // Read the HTML template
+    const templateHtml = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf-8');
+    const template = handlebars.compile(templateHtml);
 
-    page.drawText("Grade Card", {
-      x: 50,
-      y: height - 50,
-      size: 20,
-      color: rgb(0, 0, 0),
-    });
-    page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 12 });
-    page.drawText(`Seat No: ${student.seatNo}`, {
-      x: 50,
-      y: height - 100,
-      size: 12,
-    });
-    page.drawText(`Name: ${student.name}`, {
-      x: 50,
-      y: height - 120,
-      size: 12,
-    });
-    page.drawText(`Mother's Name: ${student.motherName}`, {
-      x: 50,
-      y: height - 140,
-      size: 12,
-    });
-    page.drawText(`Programme: ${student.programme}`, {
-      x: 50,
-      y: height - 160,
-      size: 12,
-    });
+    // Prepare the data to inject into the template
+    // const data = {
+    //   prn: student.prn,
+    //   seatNo: student.seatNo,
+    //   name: student.name,
+    //   motherName: student.motherName,
+    //   programme: student.programme,
+    //   cgpa: student.cgpa,
+    //   semesters: student.semesters
+    // };
 
-    let yOffset = height - 190;
-    student.semesters.forEach((semester) => {
-      page.drawText(`Semester ${semester.semester}`, {
-        x: 50,
-        y: yOffset,
-        size: 14,
-      });
-      page.drawText(`Exam Date: ${semester.examDate}`, {
-        x: 50,
-        y: yOffset - 20,
-        size: 12,
-      });
-      page.drawText(`SGPA: ${semester.sgpa}`, {
-        x: 50,
-        y: yOffset - 40,
-        size: 12,
-      });
+    const data = {
+      prn: student.prn,
+      seatNo: student.seatNo,
+      name: student.name,
+      motherName: student.motherName,
+      programme: student.programme,
+      cgpa: student.cgpa,
+      semesters: student.semesters.map(semester => ({
+        semester: semester.semester,
+        examDate: semester.examDate,
+        sgpa: semester.sgpa,
+        courses: semester.courses.map(course => ({
+          code: course.code,
+          title: course.title,
+          credits: course.credits,
+          cie: course.cie,
+          ese: course.ese,
+          finalGrade: course.finalGrade
+        }))
+      }))
+    };
+    
 
-      page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 12 });
-      page.drawText("Course Title", { x: 150, y: yOffset - 60, size: 12 });
-      page.drawText("Credits", { x: 300, y: yOffset - 60, size: 12 });
-      page.drawText("CIE", { x: 350, y: yOffset - 60, size: 12 });
-      page.drawText("ESE", { x: 400, y: yOffset - 60, size: 12 });
-      page.drawText("Final Grade", { x: 450, y: yOffset - 60, size: 12 });
 
-      yOffset -= 80;
-      semester.courses.forEach((course) => {
-        page.drawText(course.code, { x: 50, y: yOffset, size: 12 });
-        page.drawText(course.title, { x: 150, y: yOffset, size: 12 });
-        page.drawText(course.credits.toString(), {
-          x: 300,
-          y: yOffset,
-          size: 12,
-        });
-        page.drawText(course.cie, { x: 350, y: yOffset, size: 12 });
-        page.drawText(course.ese, { x: 400, y: yOffset, size: 12 });
-        page.drawText(course.finalGrade, { x: 450, y: yOffset, size: 12 });
-        yOffset -= 20;
-      });
+    const populatedHtml = template(data);
 
-      yOffset -= 30;
+    // Launch Puppeteer to generate PDF from HTML
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(populatedHtml);
+    await page.pdf({
+      path: path.join(__dirname, `GradeCard_${prn}.pdf`),
+      format: 'A4', // A4 size
+      printBackground: true,
     });
 
-    page.drawText(`CGPA: ${student.cgpa}`, { x: 50, y: yOffset, size: 14 });
+    await browser.close();
 
-    const pdfBytes = await pdfDoc.save();
-    const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
-    fs.writeFileSync(filePath, pdfBytes);
-
+    // Send the PDF URL to the client
+    console.log(`PDF generated successfully for PRN: ${prn}`);
     res.json({ pdfUrl: `http://localhost:3000/download-pdf/${prn}` });
   } catch (error) {
+    console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
   }
 });
+
+
+
 
 app.get("/download-pdf/:prn", (req, res) => {
   const { prn } = req.params;
