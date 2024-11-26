@@ -7,6 +7,8 @@ import studentManagementImage from "../../../assets/Studentmanage.png";
 import deployedStudentsImage from "../../../assets/Deployedstud.png";
 import credentialValidationImage from "../../../assets/Createvalida.png";
 import cardimage from "../../../assets/card.png";
+import verified from "../../../assets/verifiedstudent.png";
+
 
 function Admin() {
   const [account, setAccount] = useState<string | null>(null);
@@ -74,7 +76,7 @@ function Admin() {
           description="Manage student credentials and deployment status"
         />
         <Card
-          image={studentManagementImage}
+          image={verified}
           image2={cardimage}
           title="Verified student"
           description="Manage student verifications and deployment status"
