@@ -1,89 +1,91 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
-import "../../css/verified-student.css";
+import "../../css/deployedstudent.css";
 
-interface Student {
-  prn: string;
-  name: string;
-  deployed: boolean;
-}
-
-function VerifiedStudentList() {
-  const [verifiedStudents, setVerifiedStudents] = useState<Student[]>([]);
+function Deploystudent() {
+  const [deployedStudents, setDeployedStudents] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(true); // For initial data fetching state
 
-  // Fetch students from the API
+  // Fetch deployed students from the backend
   useEffect(() => {
-    const fetchVerifiedStudents = async () => {
+    const fetchDeployedStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/view/students/updated");
-        const students = response.data.map((student: any) => ({
-          ...student,
-          deployed: false, // Default deployed state is false
-        }));
-        setVerifiedStudents(students);
+        const response = await axios.get("http://localhost:3000/deployed");
+        setDeployedStudents(response.data);
+        setFilteredStudents(response.data); // Initialize filtered list
       } catch (error) {
-        console.error("Error fetching verified students:", error);
-      } finally {
-        setIsFetching(false);
+        console.error("Error fetching deployed students:", error);
       }
     };
-    fetchVerifiedStudents();
+    fetchDeployedStudents();
   }, []);
 
-  // Handle deploy action
-  const handleDeploy = async (index: number) => {
-    const student = verifiedStudents[index];
+  // Handle search input change
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
 
+    // Filter the student list based on the search query
+    const filtered = deployedStudents.filter((student) =>
+      student.name.toLowerCase().includes(query)
+    );
+    setFilteredStudents(filtered);
+  };
+
+  // Handle View Link Click
+  const handleViewClick = async (prn) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axios.post("http://localhost:3000/students/update-deployed", {
-        prns: [student.prn],
-      });
+      const response = await axios.get(`http://localhost:3000/generate-pdf/${prn}`);
+      const { pdfUrl } = response.data;
 
-      if (response.data.success) {
-        const updatedStudents = [...verifiedStudents];
-        updatedStudents[index].deployed = true; // Update local state
-        setVerifiedStudents(updatedStudents);
-      } else {
-        alert("Failed to deploy the student.");
-      }
+      // Open the generated PDF in a new tab
+      window.open(pdfUrl, "_blank");
     } catch (error) {
-      console.error("Error deploying student:", error);
-      alert("Error deploying student.");
+      console.error("Error generating PDF:", error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="verified-student-list-container">
+    <div className="main">
       <Header role="Admin" />
-      <div className="verified-student-list-main">
-        <h1 className="verified-student-list-title">Verified Students</h1>
-        <div className="verified-student-list-background">
-          {isFetching ? (
-            <div className="loading-message">Loading students...</div>
-          ) : verifiedStudents.length > 0 ? (
-            <div className="verified-student-list">
-              {verifiedStudents.map((student, index) => (
-                <div key={student.prn} className="verified-student-item">
-                  <span className="verified-student-name">{student.name}</span>
-                  <button
-                    className="deploy-button"
-                    onClick={() => handleDeploy(index)}
-                    disabled={student.deployed || loading}
-                  >
-                    {student.deployed ? "Deployed" : "Deploy"}
-                  </button>
-                </div>
-              ))}
-            </div>
+      <h1 className="title">Deployed Student</h1>
+      <div className="deployed-container">
+        {/* Search Input */}
+        <div className="input-group">
+          <input
+            type="text"
+            id="Input-search"
+            name="input-search"
+            placeholder="Enter the name of student"
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+        </div>
+
+        {/* List of Deployed Students */}
+        <div className="student-list">
+          {loading && <p>Generating PDF... Please wait.</p>}
+          {filteredStudents.length > 0 ? (
+            filteredStudents.map((student) => (
+              <div key={student.prn} className="student-item">
+                <span className="student-name">{student.name}</span>
+                <button
+                  className="view-link"
+                  onClick={() => handleViewClick(student.prn)}
+                >
+                  View
+                </button>
+              </div>
+            ))
           ) : (
-            <div className="no-students-message">No verified students to display.</div>
+            <p className="no-students">No deployed students found.</p>
           )}
         </div>
       </div>
@@ -92,4 +94,4 @@ function VerifiedStudentList() {
   );
 }
 
-export default VerifiedStudentList;
+export default Deploystudent;
