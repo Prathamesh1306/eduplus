@@ -11,6 +11,7 @@ const studentSchema = mongoose.Schema({
     cgpa: Number, 
     status: Boolean,
     deployed: Boolean,
+    dataHash: String, //New field
     semesters: [
       {
         semester: Number,

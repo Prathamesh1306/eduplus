@@ -15,6 +15,20 @@ const studentModel = require("./models/student");
 const authModel = require("./models/authentication");
 
 
+const generateAndSaveHashes = require('./models/generateAllStudentsHash'); // Import the function
+
+app.get('/hash/generate-and-save', async (req, res) => {
+    try {
+        const result = await generateAndSaveHashes();
+        res.status(200).send(result);
+    } catch (error) {
+        console.error('Error generating and saving hashes:', error);
+        res.status(500).send('Error generating and saving hashes');
+    }
+});
+
+
+
 //middlewares:
 
 function isLoggedin(req, res, next) {
