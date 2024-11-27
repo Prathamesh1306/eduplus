@@ -5,6 +5,7 @@ import Footer from "../../compo/footer";
 import personcard from "../../../assets/personcard.png"; 
 import { useNavigate } from "react-router-dom";
 import image from "../../../assets/image.png"; 
+import image1 from "../../../assets/t.webp"
 
 
 
@@ -21,7 +22,7 @@ function Recruiter() {
       <div className="card-container-harsh">
         <div className="card-harsh">
           <div className="card-image">
-            <img src={personcard} alt="Avatar" />
+            <img src={image1} alt="Avatar" />
           </div>
           <div className="card-content">
             <h2>Search and Verify Student Credentials</h2>
