@@ -17,10 +17,9 @@ contract Blockchain {
     }
 
     // Admin will issue data
-    function issueCredentials(string memory _uniqueHashValue)
-        public
-        _onlyAdmin(msg.sender)
-    {
+    function issueCredentials(
+        string memory _uniqueHashValue
+    ) public _onlyAdmin(msg.sender) {
         studentCredentialHash[counter] = Student({
             uniqueHashValue: _uniqueHashValue
         });
@@ -37,9 +36,15 @@ contract Blockchain {
     }
 
     // HR will verify the data
-    function verifyCredentials(string memory hashValue) public view returns (bool found) {
+    function verifyCredentials(
+        string memory hashValue
+    ) public view returns (bool found) {
         for (uint256 i = 0; i < counter; i++) {
-            if (keccak256(abi.encodePacked(studentCredentialHash[i].uniqueHashValue)) == keccak256(abi.encodePacked(hashValue))) {
+            if (
+                keccak256(
+                    abi.encodePacked(studentCredentialHash[i].uniqueHashValue)
+                ) == keccak256(abi.encodePacked(hashValue))
+            ) {
                 return true;
             }
         }
