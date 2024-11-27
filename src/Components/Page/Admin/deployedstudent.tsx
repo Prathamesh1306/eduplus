@@ -40,7 +40,9 @@ function Deploystudent() {
   const handleViewClick = async (prn) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/generate-pdf/${prn}`);
+      const response = await axios.get(
+        `http://localhost:3000/generate-pdf/${prn}`
+      );
       const { pdfUrl } = response.data;
 
       // Open the generated PDF in a new tab
@@ -67,6 +69,9 @@ function Deploystudent() {
             value={searchQuery}
             onChange={handleSearch}
           />
+          {/* <div className="input-group">
+            <button type="submit" className="icon"></button>
+          </div> */}
         </div>
 
         {/* List of Deployed Students */}

@@ -264,6 +264,19 @@ app.get('/view/students/updated', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch students' });
   }
 });
+app.get('/view/students/updated-to-verify-student', async (req, res) => {
+  try {
+    // Fetch all students without filters
+    const students = await studentModel.find({}, 'prn name seatNo motherName programme cgpa semesters dataHash deployed status');
+
+    // Respond with the full student data
+    res.json(students);
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
+});
+
 
 app.post('/students/update-deployed',  async (req, res) => {
   const { prns } = req.body;
