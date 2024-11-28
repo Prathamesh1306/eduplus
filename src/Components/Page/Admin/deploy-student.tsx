@@ -213,7 +213,8 @@ interface Student {
   deployed: boolean;
 }
 
-const CONTRACT_ADDRESS = "0xd2a5bC10698FD955D1Fe6cb468a17809A08fd005";
+// const CONTRACT_ADDRESS = "0xd2a5bC10698FD955D1Fe6cb468a17809A08fd005";
+const CONTRACT_ADDRESS = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627";
 const CONTRACT_ABI = abi;
 
 function VerifiedStudentList() {
