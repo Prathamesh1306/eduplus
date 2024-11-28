@@ -59,7 +59,7 @@ function Landingpage() {
       } else if (role === "student") {
         navigate("/student");
       } else if (role === "employer") {
-        navigate("/employer-dashboard");
+        navigate("/recruiter");
       } else {
         alert("Invalid role. Please contact support.");
       }

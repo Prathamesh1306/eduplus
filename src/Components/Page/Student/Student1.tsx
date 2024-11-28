@@ -1,15 +1,14 @@
 import "../../css/student1.css";
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
-import image from "../../../assets/image.png"; 
-import personcard from "../../../assets/personcard.png"; 
-import card from "../../../assets/card.png"; 
+import image from "../../../assets/image.png";
+import personcard from "../../../assets/personcard.png";
+import card from "../../../assets/card.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 function Student1() {
+  const navigate = useNavigate();
 
-  const navigate=useNavigate();
-  
   useEffect(() => {
     // Initialize the history stack for this page
     window.history.pushState(null, "", window.location.href);
@@ -28,14 +27,25 @@ function Student1() {
     };
   }, []);
 
-
   return (
     <div className="container">
       <Header name="Harsh" year="3rd year" role="STUDENT" />
 
-      <div className="hub-section">
-        <h1>Your One-Stop Hub for Verified Academic Credentials</h1>
-        <p>With EduPlus, managing and sharing your academic achievements has never been easier. Explore the benefits and features below!</p>
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <h1
+          style={{
+            fontSize: "2.2em",
+            color: "#006666",
+            marginBottom: "10px",
+            position: "relative",
+          }}
+        >
+          Your One-Stop Hub for Verified Academic Credentials
+        </h1>
+        <p style={{ fontSize: " 1.3em", color: "#666666" }}>
+          With EduPlus, managing and sharing your academic achievements has
+          never been easier. Explore the benefits and features below!
+        </p>
       </div>
 
       <div className="card-container-harsh">
@@ -45,8 +55,16 @@ function Student1() {
           </div>
           <div className="card-content">
             <h2>My Credentials</h2>
-            <p>Access your academic credentials securely and share them with potential employers.</p>
-            <button className="view-button" onClick={()=>navigate('/studentcredential')} >View</button>
+            <p>
+              Access your academic credentials securely and share them with
+              potential employers.
+            </p>
+            <button
+              className="view-button"
+              onClick={() => navigate("/studentcredential")}
+            >
+              View
+            </button>
             <div className="student-avatars">
               <img src={card} alt="Student 1" />
             </div>
@@ -59,8 +77,16 @@ function Student1() {
           </div>
           <div className="card-content">
             <h2>Verification Status</h2>
-            <p>Track the status of your credential verifications requested by recruiters or institutions.</p>
-            <button className="view-button1"  onClick={()=>navigate('/student-verify')} >View</button>
+            <p>
+              Track the status of your credential verifications requested by
+              recruiters or institutions.
+            </p>
+            <button
+              className="view-button1"
+              onClick={() => navigate("/student-verify")}
+            >
+              View
+            </button>
             <div className="student-avatars">
               <img src={card} alt="Student 1" />
             </div>
