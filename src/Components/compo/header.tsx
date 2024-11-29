@@ -24,10 +24,11 @@ function Header({ name, year, role }: HeaderProps) {
       paddingRight: "20px",
       paddingTop: "20px",
       paddingBottom: "20px",
+      userSelect:"none"
     }}>
         <div className="header">
           <div>
-            <img src={Logo} style={{width: "350px", height: "75px",marginTop:"10px"}}/>
+            <img src={Logo} style={{width: "350px", height: "75px",marginTop:"10px"}} onClick={()=>{navigate('/')}}/>
           </div>
           <div className="tabs">
             <a className="tab" href="./home.tsx">
