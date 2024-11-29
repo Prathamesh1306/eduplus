@@ -9,7 +9,6 @@ import credentialValidationImage from "../../../assets/Createvalida.png";
 import cardimage from "../../../assets/card.png";
 import verified from "../../../assets/verifiedstudent.png";
 
-
 function Admin() {
   const [account, setAccount] = useState<string | null>(null);
 
@@ -43,7 +42,7 @@ function Admin() {
 
     // Initialize the history stack for this page
     window.history.pushState(null, "", window.location.href);
-
+    
     // Listen for browser back/forward buttons
     window.addEventListener("popstate", handlePopState);
 
@@ -56,9 +55,20 @@ function Admin() {
     <div className="container">
       <Header role="ADMIN" />
 
-      <div className="hub-section">
-        <h1>Your One-Stop Hub for Verified Academic Credentials</h1>
-        <p>
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <h1
+          style={{
+            fontSize: "2.2em",
+            color: "#006666",
+            marginBottom: "10px",
+            position: "relative",
+          }}
+        >
+          Your One-Stop Hub for Verified Academic Credentials
+        </h1>
+        <p
+          style={{ fontSize: " 1.3em", color: "#666666", marginBottom: "15px" }}
+        >
           With EduPlus, managing and sharing your academic achievements has
           never been easier. Explore the benefits and features below!
         </p>

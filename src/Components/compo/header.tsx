@@ -1,5 +1,5 @@
 import "../../App.css"
-import Logo from "../../assets/logo.svg";
+import Logo from "../../assets/vishwakram transparent.png";
 import ProfilePhoto from "../../assets/profile.png";
 import { useNavigate } from "react-router-dom";
 
@@ -17,10 +17,17 @@ function Header({ name, year, role }: HeaderProps) {
 
       
   return (
-    <div className="BHeader">
+    <div style={{
+      backgroundColor: "#d2e6e4",
+      width: "100%",
+      paddingLeft: "20px",
+      paddingRight: "20px",
+      paddingTop: "20px",
+      paddingBottom: "20px",
+    }}>
         <div className="header">
           <div>
-            <img src={Logo} />
+            <img src={Logo} style={{width: "350px", height: "75px",marginTop:"10px"}}/>
           </div>
           <div className="tabs">
             <a className="tab" href="./home.tsx">
