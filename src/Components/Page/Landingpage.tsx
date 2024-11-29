@@ -3,10 +3,10 @@ import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
 import Header from "../compo/header-landingpage";
 import Footer from "../compo/footer";
-import Certificate from "../../assets/certificate";
-import Image12 from "../../assets/image12";
-import Image13 from "../../assets/image13";
-import Image14 from "../../assets/image14";
+// import Certificate from "../../assets/certificate";
+// import Image12 from "../../assets/image12";
+// import Image13 from "../../assets/image13";
+// import Image14 from "../../assets/image14";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
