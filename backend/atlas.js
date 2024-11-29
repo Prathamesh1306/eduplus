@@ -12,6 +12,9 @@ const crypto = require("crypto");
 const path = require("path");
 app.use(cors());
 app.use(express.json());
+const port = 3000;
+//ipconfig run krun wifi cha ipv4 add taka hostname madhe
+const hostname = "192.168.31.28";
 const { MongoClient } = require("mongodb");
 const uri =
   "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -129,10 +132,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-mongoose.connect("mongodb://localhost:27017/edu", {
+/*mongoose.connect("mongodb://localhost:27017/edu", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+});*/
 
 app.get("/", (req, res) => {
   res.send("Page 1");
@@ -458,7 +461,7 @@ app.get("/generate-pdf/:prn", async (req, res) => {
     }
     const { iv: encryptedIv, encryptedData } = encryptData(prn);
 
-    const qrCodeText = `http://localhost:3000/scan-qrcode/${encryptedData}`;
+    const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
 
     const qrCodeDataUrl = await QRCode.toDataURL(qrCodeText);
     const pdfDoc = await PDFDocument.create();
@@ -557,7 +560,7 @@ app.get("/generate-pdf/:prn", async (req, res) => {
     const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
     fs.writeFileSync(filePath, pdfBytes);
     console.log(`PDF generated successfully for PRN: ${prn}`);
-    res.json({ pdfUrl: `http://localhost:3000/download-pdf/${prn}` });
+    res.json({ pdfUrl: `http://${hostname}:3000/download-pdf/${prn}` });
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
@@ -650,10 +653,14 @@ app.get("/download-pdf/:prn", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
+/*app.listen(3000, () => {
   console.log("Working!");
 });
+*/
 
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}`);
+});
 //apis:
 // 1. localhost:3000/login?email=admin@test.com&password=admin@test.com  post
 // 2. localhost:3000/logout  post
