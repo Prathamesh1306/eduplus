@@ -11,6 +11,13 @@ function Header({ role }: HeaderProps) {
     navigate("/");
   };
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div
       style={{
@@ -39,13 +46,15 @@ function Header({ role }: HeaderProps) {
           />
         </div>
         <div className="tabs">
-          <a className="tab" href="./home">
+          <a className="tab">
             Home
           </a>
-          <a className="tab" href="./blog">
-            Blog
-          </a>
-          <a className="tab" href="./about">
+          
+            <a
+            className="tab"
+            href="#"
+            onClick={() => scrollToSection("footer")}style={{ userSelect:"none"}}
+          >
             About Us
           </a>
         </div>

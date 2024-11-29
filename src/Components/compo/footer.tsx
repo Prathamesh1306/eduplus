@@ -8,24 +8,14 @@ function Footer() {
           <h4>Contact Us</h4>
           <p>Tel: +91 9590300911</p>
           <p>
-<<<<<<< HEAD
             Address:<br />
             Survey No 2, 3,4, Kondhwa Main Rd, Laxmi Nagar,<br />
             Kondhwa, Pune, Maharashtra 411048
-=======
-            Address:
-            <br />
-            REGISTERED OFFICE: Vishwakarma University Survey No. 2, 3, 4 Laxmi
-            Nagar, Kondhwa Budruk,<br/> Pune - 411 048. Maharashtra, India.
->>>>>>> 8dc350cfe1bf2b06b949120dd2e8bb08b5467efe
           </p>
+          <p>Response hours: 8:00 AM to 5:00 PM</p>
           <p>
             Email:{" "}
-<<<<<<< HEAD
             <a href="mailto:admissions@vupune.ac.in ">admissions@vupune.ac.in </a>
-=======
-            <a href="mailto:connect@vupune.ac.in">connect@vupune.ac.in</a>
->>>>>>> 8dc350cfe1bf2b06b949120dd2e8bb08b5467efe
           </p>
         </div>
         <div className="footer-section categories">
@@ -61,6 +51,7 @@ function Footer() {
         <p>© Copyright Vishwakarma University 2024. All Rights Reserved.</p>
         <p>
           <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+          <p> powered by eduplus</p>
         </p>
       </div>
     </footer>
