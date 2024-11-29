@@ -21,34 +21,37 @@ function Header() {
         <div>
           <img
             src={Logo}
-            style={{ width: "350px", height: "75px" }}
+            style={{ width: "350px", height: "75px",cursor:"pointer" }}
             alt="Eduplus Logo"
+            onClick={() => {
+              location.reload();
+            }}
           />
         </div>
         <div className="tabs">
-          <a className="tab" href="#" onClick={() => scrollToSection("home")}>
+          <a className="tab" href="#" style={{ userSelect:"none"}} onClick={() => scrollToSection("home")}>
             Home
           </a>
           <a
             className="tab"
-            href="#"
+            href="#" style={{ userSelect:"none"}}
             onClick={() => scrollToSection("support-center")}
           >
             Support Center
           </a>
-          <a className="tab" href="#" onClick={() => scrollToSection("blog")}>
+          <a className="tab" href="#" style={{ userSelect:"none"}} onClick={() => scrollToSection("blog")}>
             Blog
           </a>
           <a
             className="tab"
             href="#"
-            onClick={() => scrollToSection("why-eduplus")}
+            onClick={() => scrollToSection("why-eduplus")}style={{ userSelect:"none"}}
           >
             About Us
           </a>
         </div>
         <div className="collab">
-          <div className="login" onClick={() => scrollToSection("sign-in")}>
+          <div className="login"  style={{ userSelect:"none"}} onClick={() => scrollToSection("sign-in")}>
             Sign-in
           </div>
         </div>
@@ -56,27 +59,26 @@ function Header() {
 
       <div
         style={{
-           fontFamily: "Trebuchet MS",
+          fontFamily: "Trebuchet MS",
           flexDirection: "row",
           display: "flex",
-          textAlign:"center",
-          paddingBottom:"20px"
+          textAlign: "center",
+          paddingBottom: "20px",
         }}
       >
-          <div
-            style={{
-             
-              color: "#0B7077",
-              fontWeight: "bold",
-              fontSize: "45px",
-              width: "100%",
-              fontFamily: "Trebuchet MS",
-              marginTop: 30,
-            }}
-          >
-            ACADEMIC BLOCKCHAIN CREDENTIAL PLATFORM
-          </div>
+        <div
+          style={{
+            color: "#0B7077",
+            fontWeight: "bold",
+            fontSize: "45px",
+            width: "100%",
+            fontFamily: "Trebuchet MS",
+            marginTop: 30,
+          }}
+        >
+          ACADEMIC BLOCKCHAIN CREDENTIAL PLATFORM
         </div>
+      </div>
     </div>
   );
 }

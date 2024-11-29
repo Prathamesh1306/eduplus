@@ -52,7 +52,7 @@ function Admin() {
   }, [account]);
 
   return (
-    <div className="container">
+    <div className="container" >
       <Header role="ADMIN" />
 
       <div style={{ textAlign: "center", margin: "20px 0" }}>

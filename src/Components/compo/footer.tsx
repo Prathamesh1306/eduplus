@@ -8,14 +8,14 @@ function Footer() {
           <h4>Contact Us</h4>
           <p>Tel: +9226262590</p>
           <p>
-            Address:<br />
-            34/b1, Suyog Centre, Shivneri Peth,<br />
-            Gultekadi, Pune, Maharashtra 411037
+            Address:
+            <br />
+            REGISTERED OFFICE: Vishwakarma University Survey No. 2, 3, 4 Laxmi
+            Nagar, Kondhwa Budruk,<br/> Pune - 411 048. Maharashtra, India.
           </p>
-          <p>Response hours: 8:00 AM to 5:00 PM</p>
           <p>
             Email:{" "}
-            <a href="mailto:sales@edupluscampus.com">sales@edupluscampus.com</a>
+            <a href="mailto:connect@vupune.ac.in">connect@vupune.ac.in</a>
           </p>
         </div>
         <div className="footer-section categories">
