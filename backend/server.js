@@ -194,8 +194,8 @@ app.post("/login", async (req, res) => {
             { expiresIn: "1h" } 
         );
         
-        res.cookie("token", token, {httpOnly: false, secure: false, sameSite: 'lax'});
-        res.status(200).send({message:"Logged In Successfully", role:user.role});
+        // res.cookie("token", token, {httpOnly: false, secure: false, sameSite: 'lax'});
+        res.status(200).send({message:"Logged In Successfully", role:user.role, token});
         
     } catch (error) {
         console.error("Error during login:", error);
@@ -431,6 +431,7 @@ app.post('/students/update-deployed',  async (req, res) => {
 //     res.status(500).send("Error generating PDF");
 //   }
 // });
+
 
 
 

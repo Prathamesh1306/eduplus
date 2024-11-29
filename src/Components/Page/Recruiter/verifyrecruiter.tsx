@@ -36,7 +36,8 @@ import "../../css/searchrecruiter.css";
 import Header from "../../compo/header_recruiter";
 import Footer from "../../compo/footer";
 
-const contractAddress: string = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627"; // Replace with your contract address
+// const contractAddress: string = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627"; // Replace with your contract address
+const contractAddress: string = "0x5f44edf49edf6014d791e327ef57045f99ea83b2";
 // const contractABI = [
 //   {
 //     inputs: [
