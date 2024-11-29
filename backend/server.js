@@ -135,10 +135,12 @@ app.get("/", (req, res) => {
 });
 
 
+
+
 //route1(Adding new data if few, in case needed in future)
 // app.post("/add", isLoggedin, isAdmin, async (req, res) => {
 app.post("/add",  async (req, res) => {
-    const { username, email, password, role } = req.body;
+    const { username, email, password } = req.body;
     try {        
         const existingUser = await authModel.findOne({ email });
         if (existingUser) return res.status(400).send("User Already Exists!");        
@@ -148,23 +150,14 @@ app.post("/add",  async (req, res) => {
             username,
             email,
             password,
-            role,
         });
        
-        const token = jwt.sign(
-            { email: email, user: createdUser._id, username: username, role: createdUser.role },
-            "shhh"
-        );
-        
-        res.cookie("token", token);
         res.status(201).send("Registered Successfully");
     } catch (error) {
         console.error("Error during registration:", error);
         res.status(500).send("Internal Server Error");
     }
 });
-
-
 
 
 
@@ -251,8 +244,8 @@ app.post('/students/update-status',  async (req, res) => {
     }
     res.json({ success: true, message: 'Statuses updated successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to update status' });
-    }
+    res.status(500).json({ error: 'Failed to update status' }); 
+    }
   });
 
 

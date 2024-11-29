@@ -6,7 +6,11 @@ import personcard from "../../../assets/personcard.png";
 import card from "../../../assets/card.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+
 function Student1() {
+  const [name,setName]= useState<string>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,11 +30,22 @@ function Student1() {
       window.removeEventListener("popstate", handlePopState);
     };
   }, []);
+useEffect(()=>{
+  const value = Cookies.get("eduplus");
+  console.log(value);
 
+  const decoded=jwtDecode(value);
+  console.log(decoded);
+  setName(decoded.username);
+
+ },[])
+  
+  
+ 
   return (
     <div className="container">
-      <Header name="Harsh" year="3rd year" role="STUDENT" />
-
+      <Header name={name} year="3rd year" role="STUDENT" />
+      
       <div style={{ textAlign: "center", margin: "20px 0" }}>
         <h1
           style={{

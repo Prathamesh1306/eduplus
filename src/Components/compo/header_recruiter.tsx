@@ -1,6 +1,7 @@
 import "../../App.css";
 import Logo from "../../assets/vishwakram transparent.png";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 interface HeaderProps {
   role: string;
 }
@@ -8,6 +9,7 @@ interface HeaderProps {
 function Header({ role }: HeaderProps) {
   const navigate = useNavigate();
   const Logout = () => {
+    Cookies.remove("eduplus",{ path: "/" });
     navigate("/");
   };
   return (

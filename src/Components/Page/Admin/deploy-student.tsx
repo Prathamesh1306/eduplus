@@ -306,7 +306,7 @@ const handleDeploy = async (index: number) => {
     <div className="verified-student-list-container">
       <Header role="Admin" />
       <div className="verified-student-list-main">
-        <h1 className="verified-student-list-title">Verified Students</h1>
+        <h1 className="verified-student-list-title">Requested Students</h1>
         <div className="verified-student-list-background">
           {isFetching ? (
             <div className="loading-message">Loading students...</div>

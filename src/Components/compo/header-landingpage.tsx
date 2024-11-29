@@ -29,23 +29,19 @@ function Header() {
           />
         </div>
         <div className="tabs">
-          <a className="tab" href="#" style={{ userSelect:"none"}} onClick={() => scrollToSection("home")}>
-            Home
-          </a>
+          
           <a
             className="tab"
             href="#" style={{ userSelect:"none"}}
-            onClick={() => scrollToSection("support-center")}
+            onClick={() => scrollToSection("footer")}
           >
             Support Center
           </a>
-          <a className="tab" href="#" style={{ userSelect:"none"}} onClick={() => scrollToSection("blog")}>
-            Blog
-          </a>
+        
           <a
             className="tab"
             href="#"
-            onClick={() => scrollToSection("why-eduplus")}style={{ userSelect:"none"}}
+            onClick={() => scrollToSection("footer")}style={{ userSelect:"none"}}
           >
             About Us
           </a>

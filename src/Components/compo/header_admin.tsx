@@ -1,6 +1,7 @@
 import "../../App.css";
 import Logo from "../../assets/vishwakram transparent.png";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 interface HeaderProps {
   role: string;
 }
@@ -8,7 +9,15 @@ interface HeaderProps {
 function Header({ role }: HeaderProps) {
   const navigate = useNavigate();
   const Logout = () => {
+    Cookies.remove("eduplus",{ path: "/" });
     navigate("/");
+  };
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -39,13 +48,15 @@ function Header({ role }: HeaderProps) {
           />
         </div>
         <div className="tabs">
-          <a className="tab" href="./home">
+          <a className="tab">
             Home
           </a>
-          <a className="tab" href="./blog">
-            Blog
-          </a>
-          <a className="tab" href="./about">
+          
+            <a
+            className="tab"
+            href="#"
+            onClick={() => scrollToSection("footer")}style={{ userSelect:"none"}}
+          >
             About Us
           </a>
         </div>

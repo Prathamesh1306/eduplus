@@ -7,7 +7,7 @@ import image from '../../../assets/pana.png'
 function Studentverify(){
     return(
     <div>
-    <Header name="Harsh" year="3rd year" role="STUDENT" />
+    <Header />
     <div className="mainStatusDiv">
     <h3>STATUS</h3>
     <div className="statusResult">

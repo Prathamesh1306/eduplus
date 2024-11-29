@@ -6,7 +6,7 @@ const authSchema = mongoose.Schema({
     username: String,
     email:String,        
     password: String,
-    role: String
+    role: { type: String, default: 'employer' }
 });
 
 module.exports = mongoose.model("authentication", authSchema);
