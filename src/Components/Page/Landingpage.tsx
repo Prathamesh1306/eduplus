@@ -3,10 +3,7 @@ import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
 import Header from "../compo/header-landingpage";
 import Footer from "../compo/footer";
-// import Certificate from "../../assets/certificate";
-// import Image12 from "../../assets/image12";
-// import Image13 from "../../assets/image13";
-// import Image14 from "../../assets/image14";
+import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +11,10 @@ function Landingpage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-
+ 
+  // const setCookie=(name,value)=>{
+  //   Cookies.set(name,value,{ expires: 1});
+  // }
   useEffect(() => {
     // Initialize the history stack for this page
     window.history.pushState(null, "", window.location.href);
@@ -50,8 +50,10 @@ function Landingpage() {
 
       alert("Login Successful!");
 
-      const { role } = response.data;
+      const { role,token } = response.data;
       console.log("Response:", response.data);
+    
+      Cookies.set("edupllus",token,{ expires: 1});
 
       // Redirect based on role
       if (role === "admin") {
