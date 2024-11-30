@@ -14,7 +14,7 @@ app.use(cors());
 const multer = require("multer");
 app.use(express.json());
 const port = 3000;
-const hostname = "192.168.149.73";
+const hostname = "0.0.0.0";
 const { MongoClient } = require("mongodb");
 const uri =
   "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -77,23 +77,19 @@ app.post("/update-transaction", async (req, res) => {
   }
 
   try {
-    // Find the student by PRN and update the deployed status to true
+    // Update student `deployed` status
     const student = await studentModel.findOneAndUpdate(
       { prn: prn },
-      { deployed: true }
+      { $set: { deployed: true } },
+      { returnDocument: "after" }
     );
 
-    if (!student) {
+    if (!student.value) {
       return res.status(404).send("Student not found.");
     }
 
-    // Save the transaction hash to the Transaction collection
-    const newTransaction = new Transaction({
-      prn: prn,
-      transactionHash: transactionHash,
-    });
-
-    await newTransaction.save();
+    // Save the transaction
+    await Transaction.insertOne({ prn, transactionHash });
 
     res.status(200).send("Transaction saved and student status updated.");
   } catch (error) {
@@ -106,8 +102,12 @@ app.post("/update-transaction", async (req, res) => {
 // =================================================================
 app.get("/get-deployed-prns", async (req, res) => {
   try {
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find(
+      {},
+      { projection: { prn: 1 } }
+    ).toArray();
     const prns = transactions.map((transaction) => transaction.prn);
+
     res.status(200).json(prns);
   } catch (error) {
     console.error("Error fetching deployed PRNs:", error);
@@ -358,10 +358,11 @@ app.get("/students", async (req, res) => {
 app.get("/view/students", async (req, res) => {
   try {
     const students = await studentModel
-      .find({}, "prn name status dataHash")
+      .find({}, { projection: { prn: 1, name: 1, status: 1, dataHash: 1 } })
       .toArray();
     res.json(students);
   } catch (err) {
+    console.error("Error fetching students:", err);
     res.status(500).json({ error: "Failed to fetch students" });
   }
 });
@@ -374,8 +375,9 @@ app.post("/students/update-status", async (req, res) => {
   try {
     const updatedStudents = await studentModel.updateMany(
       { prn: { $in: prns } },
-      [{ $set: { status: { $not: "$status" } } }]
+      { $set: { status: true } }
     );
+
     if (updatedStudents.matchedCount === 0) {
       return res
         .status(404)
@@ -392,9 +394,10 @@ app.get("/view/students/updated", async (req, res) => {
     const students = await studentModel
       .find(
         { status: true, deployed: false },
-        "prn name status dataHash deployed"
+        { projection: { prn: 1, name: 1, status: 1, dataHash: 1, deployed: 1 } }
       )
       .toArray();
+
     res.json(students);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch students" });
@@ -404,10 +407,25 @@ app.get("/view/students/updated", async (req, res) => {
 app.get("/view/students/updated-to-verify-student", async (req, res) => {
   try {
     // Fetch all students without filters
-    const students = await studentModel.find(
-      {},
-      "prn name seatNo motherName programme cgpa semesters dataHash deployed status"
-    );
+    const students = await studentModel
+      .find(
+        {},
+        {
+          projection: {
+            prn: 1,
+            name: 1,
+            seatNo: 1,
+            motherName: 1,
+            programme: 1,
+            cgpa: 1,
+            semesters: 1,
+            dataHash: 1,
+            deployed: 1,
+            status: 1,
+          },
+        }
+      )
+      .toArray();
 
     // Respond with the full student data
     res.json(students);
@@ -425,8 +443,9 @@ app.post("/students/update-deployed", async (req, res) => {
   try {
     const updatedStudents = await studentModel.updateMany(
       { prn: { $in: prns } },
-      [{ $set: { status: { $not: "$deployed" } } }]
+      { $set: { deployed: true } } 
     );
+    
     if (updatedStudents.matchedCount === 0) {
       return res
         .status(404)
@@ -499,7 +518,10 @@ app.post("/freeze-student", async (req, res) => {
 // app.get('/deployed', isLoggedin, isAdmin, async (req, res) => {
 app.get("/deployed", async (req, res) => {
   try {
-    const deployedStudents = await studentModel.find({ deployed: true });
+    const deployedStudents = await studentModel
+  .find({ deployed: true }, { projection: { prn: 1, name: 1, dataHash: 1 } })
+  .toArray();
+
     res.json(deployedStudents);
   } catch (err) {
     res.status(500).json({ message: "Error fetching deployed students" });
