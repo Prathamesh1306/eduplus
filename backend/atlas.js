@@ -14,7 +14,7 @@ app.use(cors());
 const multer = require("multer");
 app.use(express.json());
 const port = 3000;
-const hostname = "0.0.0.0";
+const hostname = "192.168.149.73";
 const { MongoClient } = require("mongodb");
 const uri =
   "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -41,6 +41,32 @@ const Transaction = db.collection("transactions");
         res.status(500).send("Error generating and saving hashes");
       }
     });*/
+
+app.post("/change-verifier", async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).send("Verifier email is required.");
+    }
+
+    // Find the verifier by email and update their status
+    const result = await verifierModel.updateOne(
+      { email }, // Filter by email
+      { $set: { verify: true } } // Update `verify` status to true
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).send("Verifier not found.");
+    }
+
+    res.status(200).send("Verifier status updated to true.");
+  } catch (error) {
+    console.error("Error updating verifier status:", error);
+    res.status(500).send("Internal Server Error.");
+  }
+});
 
 // Define the POST endpoint to handle the update
 app.post("/update-transaction", async (req, res) => {
@@ -131,7 +157,7 @@ function isverifier(req, res, next) {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+//app.use(cookieParser());
 
 /*mongoose.connect("mongodb://localhost:27017/edu", {
       useNewUrlParser: true,
@@ -187,27 +213,46 @@ app.post("/login", async (req, res) => {
     if (password !== user.password) {
       return res.status(401).send("Invalid Credentials");
     }
-
-    const token = jwt.sign(
-      {
-        email: user.email,
-        user: user._id,
-        prn: student.prn,
-        username: user.username,
-        role: user.role,
-      },
-      "shhh",
-      { expiresIn: "1h" }
-    );
-
-    res.cookie("token", token, {
-      httpOnly: false,
-      secure: false,
-      sameSite: "lax",
-    });
-    res
-      .status(200)
-      .send({ message: "Logged In Successfully", role: user.role});
+    if (student) {
+      const token = jwt.sign(
+        {
+          email: user.email,
+          user: user._id,
+          prn: student.prn,
+          username: user.username,
+          role: user.role,
+        },
+        "shhh",
+        { expiresIn: "1h" }
+      );
+      res.cookie("token", token, {
+        httpOnly: false,
+        secure: true,
+        sameSite: "lax",
+      });
+      res
+        .status(200)
+        .send({ message: "Logged In Successfully", role: user.role, token });
+    } else {
+      const token = jwt.sign(
+        {
+          email: user.email,
+          user: user._id,
+          username: user.username,
+          role: user.role,
+        },
+        "shhh",
+        { expiresIn: "1h" }
+      );
+      res.cookie("token", token, {
+        httpOnly: false,
+        secure: true,
+        sameSite: "lax",
+      });
+      res
+        .status(200)
+        .send({ message: "Logged In Successfully", role: user.role, token });
+    }
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).send("Internal Server Error");
@@ -229,9 +274,72 @@ app.get("/get-verifier", async (req, res) => {
   }
 });
 
+app.get("/get-not-verifier", async (req, res) => {
+  try {
+    const verifier = await authModel
+      .find({ role: "verifier", status: false })
+      .toArray();
+
+    if (!verifier || verifier.length === 0) {
+      return res.status(404).send("No verifier");
+    }
+
+    res.status(200).json(verifier);
+  } catch (error) {
+    console.error("Error fetching verifier:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 app.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.redirect("/login");
+});
+
+app.post("/add-all-verifiers", async (req, res) => {
+  try {
+    // Fetch all users with the role "verifier" from authModel
+    const verifiers = await authModel.find({ role: "verifier" }).toArray();
+
+    if (!verifiers || verifiers.length === 0) {
+      return res.status(404).send("No verifiers found in authModel.");
+    }
+
+    // Loop through verifiers and add to verifierModel if not already present
+    console.log(verifiers);
+    for (const verifier of verifiers) {
+      const existingVerifier = await verifierModel.findOne({
+        email: verifier.email,
+      });
+
+      if (!existingVerifier) {
+        await verifierModel.insertOne({
+          email: verifier.email,
+          verify: false, // Default value for verify field
+          students: [], // Initialize students array as empty
+        });
+      }
+    }
+
+    res.status(201).send("Verifiers added to verifierModel successfully.");
+  } catch (error) {
+    console.error("Error adding verifiers to verifierModel:", error);
+    res.status(500).send("Internal Server Error.");
+  }
+});
+app.get("/get-all-verifiers", async (req, res) => {
+  try {
+    // Fetch all verifiers from the verifierModel
+    const verifiers = await verifierModel.find({}).toArray();
+
+    if (!verifiers || verifiers.length === 0) {
+      return res.status(404).send("No verifiers found in verifierModel.");
+    }
+
+    res.status(200).json(verifiers);
+  } catch (error) {
+    console.error("Error fetching verifiers from verifierModel:", error);
+    res.status(500).send("Internal Server Error.");
+  }
 });
 
 // route 3(all students)
@@ -292,6 +400,7 @@ app.get("/view/students/updated", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch students" });
   }
 });
+
 app.get("/view/students/updated-to-verify-student", async (req, res) => {
   try {
     // Fetch all students without filters
@@ -331,7 +440,7 @@ app.post("/students/update-deployed", async (req, res) => {
 
 // Route to get student by PRN
 // app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
-app.get("/student/:prn", async (req, res) => {
+app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
   const { prn } = req.params;
   try {
     const student = await studentModel.findOne({ prn });
@@ -349,7 +458,10 @@ app.get("/student/:prn", async (req, res) => {
 
 app.get("/freezed", async (req, res) => {
   try {
-    const freezedStudents = await studentModel.findOne({ status: true });
+    const freezedStudents = await studentModel.findOne({
+      status: true,
+      deployed: false,
+    });
     res.status(200).json(freezedStudents);
   } catch (err) {
     console.error("Error fetching freezed students:", err);
@@ -509,7 +621,7 @@ app.post("/generate-pdf", async (req, res) => {
       const qrCodeDims = qrCodeImage.scale(0.5);
 
       page.drawImage(qrCodeImage, {
-        x: 300,
+        x: 500,
         y: 100,
         width: qrCodeDims.width,
         height: qrCodeDims.height,
@@ -649,7 +761,56 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
     res.status(200).json({ hash });
   });
 });
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
 
+  try {
+    const user = await authModel.findOne({ email });
+    const student = await studentModel.findOne({ email });
+    if (!user) {
+      return res.status(404).send("No User Found!");
+    }
+
+    if (password !== user.password) {
+      return res.status(401).send("Invalid Credentials");
+    }
+    if (student) {
+      const token = jwt.sign(
+        {
+          email: user.email,
+          user: user._id,
+          prn: student.prn,
+          username: user.username,
+          role: user.role,
+        },
+        "shhh",
+        { expiresIn: "1h" }
+      );
+    }
+    const token = jwt.sign(
+      {
+        email: user.email,
+        user: user._id,
+        username: user.username,
+        role: user.role,
+      },
+      "shhh",
+      { expiresIn: "1h" }
+    );
+    res.cookie("token", token, {
+      httpOnly: false,
+      secure: true,
+      sameSite: "lax",
+    });
+    res
+      .status(200)
+      .send({ message: "Logged In Successfully", role: user.role, token });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).send("Internal Server Error");
+  }
+  console.log("login succesful");
+});
 //get hash of prn
 app.get("/get-hash/:prn", async (req, res) => {
   const { prn } = req.params;
@@ -677,12 +838,12 @@ app.get("/get-hash/:prn", async (req, res) => {
 
 // Route to apply with email and PRN
 app.post("/apply", async (req, res) => {
-  const { email, prn, status } = req.body;
+  const { email, prn } = req.body;
 
-  if (!email || !prn || typeof status !== "boolean") {
+  if (!email || !prn) {
     return res.status(400).send("Missing required fields or invalid data.");
   }
-
+  const status = false;
   try {
     // Check if the email exists in verifierModel
     let verifier = await verifierModel.findOne({ email });
@@ -720,8 +881,8 @@ app.post("/apply", async (req, res) => {
 });
 
 // Route for verifier to see applied students
-app.get("/verifier-students/:email", async (req, res) => {
-  const { email } = req.params;
+app.post("/verifier-students", async (req, res) => {
+  const { email } = req.body;
 
   try {
     // Fetch the verifier's students using the email
@@ -783,8 +944,8 @@ app.post("/upload-pdf-student", upload.single("pdf"), (req, res) => {
   });
 });
 
-app.get("/download-pdf-verifier/:prn", (req, res) => {
-  const { prn } = req.params;
+app.post("/download-pdf-verifier", (req, res) => {
+  const { prn } = req.body;
   const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
   res.download(filePath, `user${prn}.pdf`, (err) => {
     if (err) {
