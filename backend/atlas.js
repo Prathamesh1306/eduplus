@@ -44,23 +44,24 @@ const Transaction = db.collection("transactions");
 
 app.post("/change-verifier", async (req, res) => {
   try {
-    // Extract email from request body
     const { email } = req.body;
 
     if (!email) {
       return res.status(400).send("Verifier email is required.");
     }
 
-    // Find the verifier by email and update their status
-    const result = await verifierModel.updateOne(
-      { email }, // Filter by email
-      { $set: { verify: true } } // Update `verify` status to true
-    );
+    const currentDocument = await verifierModel.findOne({ email });
 
-    if (result.matchedCount === 0) {
-      return res.status(404).send("Verifier not found.");
+    if (currentDocument) {
+      const result = await verifierModel.updateOne(
+        { email },
+        { $set: { verify: !currentDocument.verify } }
+      );
+
+      if (result.matchedCount === 0) {
+        return res.status(404).send("Verifier not found.");
+      }
     }
-
     res.status(200).send("Verifier status updated to true.");
   } catch (error) {
     console.error("Error updating verifier status:", error);
