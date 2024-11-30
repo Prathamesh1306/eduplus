@@ -37,19 +37,19 @@ import { jwtDecode } from "jwt-decode";
 
 function Studentcredential() {
   const [students, setStudents] = useState([]); // State to hold fetched student data
-  const [filteredStudent, setFilteredStudent] = useState(null); // State for search results
-  const [searchPRN, setSearchPRN] = useState(""); // State for the search input
   const [error, setError] = useState(""); // State for handling errors
-  
-  const cookies=Cookies.get("eduplus");
+
+  // Decode JWT from cookie
+  const cookies = Cookies.get("eduplus");
   const decoded = jwtDecode(cookies);
-  const prn=decoded.prn;
+  const prn = decoded.prn; // Extracted PRN from JWT
+  const name= decoded.username;
   // Fetch all students from the API
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const response = await fetch(
-          "http://192.168.94.79:3000/view/students/updated-to-verify-student"
+          "http://192.168.149.73:3000/view/students/updated-to-verify-student"
         );
         const data = await response.json();
         setStudents(data); // Set the fetched students
@@ -62,44 +62,24 @@ function Studentcredential() {
     fetchStudents();
   }, []);
 
-  // Handle PRN search
-  const handleSearch = () => {
-    const student = students.find((stu) => stu.prn === searchPRN);
-    if (student) {
-      setFilteredStudent(student);
-      setError("");
-    } else {
-      setFilteredStudent(null);
-      setError("No student found with the entered PRN.");
-    }
-  };
+  // Handle submit action
   const handleSubmit = async () => {
     try {
-      await axios.post("http://192.168.94.79:3000/freeze-student", {
-         
+      // Sending PRN from JWT to the API
+      await axios.post("http://192.168.149.73:3000/freeze-student", {
+        prn: prn, // Use the PRN fetched from decoded JWT
       });
-      alert("request send successfully!");
-
+      alert("Request sent successfully!");
     } catch (error) {
       console.error("Error sending student request:", error);
-      alert("Failed to send requests. Please try again.");
+      alert("Failed to send request. Please try again.");
     }
   };
   
 
-
-
-  // Handle Verification
-  const handleVerify = () => {
-    if (filteredStudent) {
-      const hash = sha256(JSON.stringify(filteredStudent)).toString();
-      setFilteredStudent({ ...filteredStudent, dataHash: hash }); // Update filtered student with hash
-    }
-  };
-
   return (
     <div className="student-credential">
-      <Header name="Harsh" year="3rd year" role="STUDENT" />
+      <Header name={name} year="3rd year" role="STUDENT" />
 
       <div className="credential-content">
         <h2>Student Credentials</h2>

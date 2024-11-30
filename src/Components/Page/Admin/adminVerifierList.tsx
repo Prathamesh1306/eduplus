@@ -24,17 +24,22 @@ const AdminRecutierList = () => {
     fetchVerifier();
   }, []);
 
+
+  const changeStatus =()=>{
+    console.log("Pressed")
+    
+  }
   return (
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
       <div className="admin-student-list-main">
         <div className="admin-student-list-title">Verifier List</div>
-        <div className="admin-student-list-renderList">
+        <div style={{backgroundColor:"#028978",width:"80%",justifyItems:"center",borderRadius:"20px",padding:"20px 0px"}}>
           {recrutier.length > 0 ? (
             recrutier.map((verifier) => (
-              <div key={verifier._id} style={{display:"flex",justifyContent:"space-around"}}>
-                <p style={{color:"#fff"}}><strong>Name:</strong> {verifier.username}</p>
-                <div>verify</div>
+              <div key={verifier._id} style={{display:"flex",marginBottom:"10px"}}>
+                <p style={{color:"#fff",padding:"0px 20px"}}><strong>Name:</strong> {verifier.username}</p>
+                <div onClick={()=>{console.log( verifier._id , "Pressed")}} style={{backgroundColor:"blue",padding:"5px 10px" ,color:"#fff",borderRadius:"10px",userSelect:"none",cursor:"pointer"}}>Verify</div>
               </div>
             ))
           ) : (
