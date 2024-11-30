@@ -32,19 +32,24 @@ import Footer from "../../compo/footer";
 import "../../css/studentcredential.css";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 function Studentcredential() {
   const [students, setStudents] = useState([]); // State to hold fetched student data
   const [filteredStudent, setFilteredStudent] = useState(null); // State for search results
   const [searchPRN, setSearchPRN] = useState(""); // State for the search input
   const [error, setError] = useState(""); // State for handling errors
-
+  
+  const cookies=Cookies.get("eduplus");
+  const decoded = jwtDecode(cookies);
+  const prn=decoded.prn;
   // Fetch all students from the API
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/view/students/updated-to-verify-student"
+          "http://192.168.94.79:3000/view/students/updated-to-verify-student"
         );
         const data = await response.json();
         setStudents(data); // Set the fetched students
@@ -70,7 +75,7 @@ function Studentcredential() {
   };
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:3000/freeze", {
+      await axios.post("http://192.168.94.79:3000/freeze-student", {
          
       });
       alert("request send successfully!");

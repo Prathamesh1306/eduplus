@@ -81,15 +81,13 @@ function Landingpage() {
 
   const handlesubmit = async () => {
     try {
-      const response = await axios.post("http://0.0.0.0:3000/login", {
+      const response = await axios.post("http://192.168.149.73:3000/login", {
         email: email,
         password: password,
       });
       alert("Login Successful!");
 
       const { role,token } = response.data;
-      console.log("Response:", response.data);
-    
       Cookies.set("eduplus",token,{ expires: 1});
 
       // Redirect based on role

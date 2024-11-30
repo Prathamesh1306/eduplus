@@ -14,6 +14,20 @@ function Recruiter() {
       </div>
 
 
+      <div className="form-container">
+      <h2>Search and Verify Student Credentials</h2>
+        <form className="credential-form">
+          <label>
+            <input type="text" placeholder="Enter name" />
+          </label>
+          <label>
+            <input type="text" placeholder="Unique ID" />
+          </label>
+        </form>
+        
+        <button className="initiate-button" onClick={()=>navigate('/searchrecruiter1')} >INITIATE PAYMENT</button>
+      </div>
+
   
 
       

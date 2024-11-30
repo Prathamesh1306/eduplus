@@ -6,26 +6,40 @@ import Footer from "../../compo/footer";
 import "../../css/admin-student-list-container.css";
 
 const AdminRecutierList = () => {
-  const [recrutier,setRecrutier] = useState([])
+  const [recrutier, setRecrutier] = useState([]); // State to store verifier data
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchVerifier = async () => {
+      try {
+        const response = await axios.get("http://192.168.149.73:3000/get-verifier");
+        console.log(response.data)
+        setRecrutier(response.data); 
+        console.log(response.data); // Optional: For debugging
+      } catch (error) {
+        console.error("Error fetching verifiers:", error);
+      }
+    };
 
-  useEffect(()=>{
+    fetchVerifier();
+  }, []);
 
-    const response = axios.get("")
-  },[])
-
-
-  
   return (
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
       <div className="admin-student-list-main">
         <div className="admin-student-list-title">Verifier List</div>
         <div className="admin-student-list-renderList">
-        {
-
-        }
+          {recrutier.length > 0 ? (
+            recrutier.map((verifier) => (
+              <div key={verifier._id} style={{display:"flex",justifyContent:"space-around"}}>
+                <p style={{color:"#fff"}}><strong>Name:</strong> {verifier.username}</p>
+                <div>verify</div>
+              </div>
+            ))
+          ) : (
+            <p>No verifiers found.</p>
+          )}
         </div>
       </div>
       <Footer />
@@ -34,6 +48,7 @@ const AdminRecutierList = () => {
 };
 
 export default AdminRecutierList;
+
 
 
 // import React, { useState, useEffect } from "react";

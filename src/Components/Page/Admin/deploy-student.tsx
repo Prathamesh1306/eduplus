@@ -227,12 +227,15 @@ function VerifiedStudentList() {
   useEffect(() => {
     const fetchVerifiedStudents = async () => {
       try {
-        const response = await axios.get("https://localhost:3000/students");
-        const students = response.data.map((student: any) => ({
-          ...student,
-          deployed: false,
+        const response = await axios.get("http://192.168.149.73:3000/freezed");
+        const students = response.data.map((student:any) => ({
+          ...student.name,
+
         }));
+        const studentNames = students.map((student: any) => student.name);
         setVerifiedStudents(students);
+
+        console.log(students)
       } catch (error) {
         console.error("Error fetching verified students:", error);
       } finally {
@@ -263,10 +266,10 @@ function VerifiedStudentList() {
 // After deployment success in your frontend
 const handleDeploy = async (index: number) => {
   const student = verifiedStudents[index];
-  const prnno= student.prn;
+  const prnno = reponse.prn;
   console.log(student);
 
-  const hashing =  axios.post("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/generate-pdf", {
+  const hashing =  axios.post("http://192.168.94.79:3000/generate-pdf", {
     prn:prnno
   }).then(()=>{console.log(hashing)});
 
@@ -288,7 +291,7 @@ const handleDeploy = async (index: number) => {
     await tx.wait(); // Wait for the transaction to be mined
 
     // Send the transaction details to the backend
-    await axios.post("https://5add065b-0909-4f33-9c45-38588a6dc83a-00-lrfiae3f5et4.sisko.replit.dev:3001/update-transaction", {
+    await axios.post("http://192.168.94.79:3000/update-transaction", {
       prn: student.prn,
       transactionHash: tx.hash,
     });

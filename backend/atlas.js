@@ -207,7 +207,7 @@ app.post("/login", async (req, res) => {
     });
     res
       .status(200)
-      .send({ message: "Logged In Successfully", role: user.role });
+      .send({ message: "Logged In Successfully", role: user.role});
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).send("Internal Server Error");
