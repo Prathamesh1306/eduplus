@@ -23,23 +23,24 @@ const client = new MongoClient(uri);
 const db = client.db("edu");
 //const studentModel = require("./models/student");
 const studentModel = db.collection("students");
+const verifierModel = db.collection("verifier");
 //const authModel = require("./models/authentication");
 const authModel = db.collection("authentications");
 const Transaction = db.collection("transactions");
 // const PDFDocument = require('pdfkit');
 
 // =================================================================
-const generateAndSaveHashes = require("./models/generateAllStudentsHash"); // Import the function
+// const generateAndSaveHashes = require("./models/generateAllStudentsHash"); // Import the function
 
 /*app.get("/hash/generate-and-save", async (req, res) => {
-  try {
-    const result = await generateAndSaveHashes();
-    res.status(200).send(result);
-  } catch (error) {
-    console.error("Error generating and saving hashes:", error);
-    res.status(500).send("Error generating and saving hashes");
-  }
-});*/
+      try {
+        const result = await generateAndSaveHashes();
+        res.status(200).send(result);
+      } catch (error) {
+        console.error("Error generating and saving hashes:", error);
+        res.status(500).send("Error generating and saving hashes");
+      }
+    });*/
 
 // Define the POST endpoint to handle the update
 app.post("/update-transaction", async (req, res) => {
@@ -119,13 +120,13 @@ function isAdmin(req, res, next) {
     .json({ message: "Access Denied. User is not an Admin." });
 }
 
-function isEmployer(req, res, next) {
-  if (req.user.role === "employer") {
+function isverifier(req, res, next) {
+  if (req.user.role === "verifier") {
     return next();
   }
   return res
     .status(403)
-    .json({ message: "Access Denied. User is not an Employer." });
+    .json({ message: "Access Denied. User is not an verifier." });
 }
 
 app.use(express.json());
@@ -133,9 +134,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /*mongoose.connect("mongodb://localhost:27017/edu", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});*/
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });*/
 
 app.get("/", (req, res) => {
   res.send("Page 1");
@@ -144,11 +145,11 @@ app.get("/", (req, res) => {
 //route1(Adding new data if few, in case needed in future)
 // app.post("/add", isLoggedin, isAdmin, async (req, res) => {
 app.post("/add", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
   try {
     const existingUser = await authModel.findOne({ email });
     if (existingUser) return res.status(400).send("User Already Exists!");
-    const role = "employer";
+    const role = "verifier";
     const createdUser = await authModel.insertOne({
       username,
       email,
@@ -173,7 +174,6 @@ app.post("/add", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -214,19 +214,17 @@ app.post("/login", async (req, res) => {
   }
   console.log("login succesful");
 });
-
-
-app.get("/get-employer", async (req, res) => {
+app.get("/get-verifier", async (req, res) => {
   try {
-    const employer = await authModel.find({ role: "employer" });
+    const verifier = await authModel.find({ role: "verifier" }).toArray();
 
-    if (!employer || employer.length === 0) {
-      return res.status(404).send("No employer");
+    if (!verifier || verifier.length === 0) {
+      return res.status(404).send("No verifier");
     }
 
-    res.status(200).json(employer);
+    res.status(200).json(verifier);
   } catch (error) {
-    console.error("Error fetching employer:", error);
+    console.error("Error fetching verifier:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -240,7 +238,7 @@ app.get("/logout", (req, res) => {
 // app.get("/students", isLoggedin, isAdmin, async (req, res) => {
 app.get("/students", async (req, res) => {
   try {
-    const students = await studentModel.find();
+    const students = await studentModel.find().toArray();
     res.status(200).json(students);
   } catch (error) {
     console.error("Error fetching students:", error);
@@ -251,7 +249,9 @@ app.get("/students", async (req, res) => {
 
 app.get("/view/students", async (req, res) => {
   try {
-    const students = await studentModel.find({}, "prn name status dataHash");
+    const students = await studentModel
+      .find({}, "prn name status dataHash")
+      .toArray();
     res.json(students);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch students" });
@@ -281,10 +281,12 @@ app.post("/students/update-status", async (req, res) => {
 
 app.get("/view/students/updated", async (req, res) => {
   try {
-    const students = await studentModel.find(
-      { status: true, deployed: false },
-      "prn name status dataHash deployed"
-    );
+    const students = await studentModel
+      .find(
+        { status: true, deployed: false },
+        "prn name status dataHash deployed"
+      )
+      .toArray();
     res.json(students);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch students" });
@@ -345,11 +347,9 @@ app.get("/student/:prn", async (req, res) => {
   }
 });
 
-// route 4(all freezed students)
-// app.get('/freezed', isLoggedin, isAdmin, async (req, res) => {
-app.get("/freezed", isLoggedin, isAdmin, async (req, res) => {
+app.get("/freezed", async (req, res) => {
   try {
-    const freezedStudents = await studentModel.find({ status: true });
+    const freezedStudents = await studentModel.findOne({ status: true });
     res.status(200).json(freezedStudents);
   } catch (err) {
     console.error("Error fetching freezed students:", err);
@@ -357,6 +357,32 @@ app.get("/freezed", isLoggedin, isAdmin, async (req, res) => {
   }
 });
 
+app.post("/freeze-student", async (req, res) => {
+  const { prn } = req.body;
+  if (!prn) {
+    return res.status(400).json({ error: "No PRNs provided" });
+  }
+  try {
+    /* const updatedStudents = await studentModel.updateOne(
+      { prn: { $in: prns } },
+      [{ $set: { status: { $not: "$status" } } }],
+    );*/
+
+    const updatedStudents = await studentModel.updateOne(
+      { prn },
+      { $set: { status: true } }
+    );
+    if (updatedStudents.matchedCount === 0) {
+      return res
+        .status(404)
+        .json({ error: "No students found with the provided PRN" });
+    }
+    res.json({ success: true, message: "Statuses updated successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update status" });
+  }
+});
+//findOneAndUpdate;
 // route 6(all deployed students)
 // app.get('/deployed', isLoggedin, isAdmin, async (req, res) => {
 app.get("/deployed", async (req, res) => {
@@ -453,9 +479,7 @@ app.get("/scan-qrcode/:encryptedData", async (req, res) => {
   }
 });
 
-//now pdf will only generate when student is depoloyed in blockchain, ajun kay condition asel tar add kra
-//and now each diff sem starts at a separate page
-app.post("/generate-pdf/", async (req, res) => {
+app.post("/generate-pdf", async (req, res) => {
   const { prn } = req.body;
 
   try {
@@ -589,7 +613,7 @@ app.post("/generate-pdf/", async (req, res) => {
       });
     }
     res.json({
-      pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+      pdfUrl: `http://${hostname}:3000/${prn}`,
       Hash: student.dataHash,
     });
   } catch (error) {
@@ -608,7 +632,6 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
   }
 
   const filePath = file.path;
-  //path.join(__dirname, `GradeCard_${prn}.pdf`);
   fs.readFile(filePath, (err, data) => {
     if (err) {
       console.error("Error reading file:", err);
@@ -617,49 +640,104 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
 
     const hash = crypto.createHash("sha256").update(data).digest("hex");
 
-    /*fs.unlink(filePath, (err) => {
-      if (err) {
-        console.error("Error deleting file:", er);
-      }
-    });*/
+    // fs.unlink(filePath, (err) => {
+    //   if (err) {
+    //     console.error("Error deleting file:", er);
+    //   }
+    // });
 
     res.status(200).json({ hash });
   });
 });
-/*const uploadss = multer({ dest: "uploadss/" });
-app.post("/upload-psdf", uploadss.single("pdf"), (req, res) => {
-  const file = req.file;
 
-  if (!file) {
-    return res.status(400).send("No file uploaded.");
+//get hash of prn
+app.get("/get-hash/:prn", async (req, res) => {
+  const { prn } = req.params;
+
+  try {
+    const student = await studentModel.findOne({ prn });
+
+    if (!student) {
+      console.error(`Student with PRN ${prn} not found`);
+      return res.status(404).send("Student not found");
+    }
+
+    if (!student.isHashGenerated) {
+      console.error(`Hash not generated for PRN: ${prn}`);
+      return res.status(400).send("Hash not generated for this PRN");
+    }
+
+    console.log(`Retrieved hash for PRN: ${prn}`);
+    res.json({ dataHash: student.dataHash });
+  } catch (error) {
+    console.error("Error fetching hash:", error);
+    res.status(500).send("Error fetching hash");
+  }
+});
+
+// Route to apply with email and PRN
+app.post("/apply", async (req, res) => {
+  const { email, prn, status } = req.body;
+
+  if (!email || !prn || typeof status !== "boolean") {
+    return res.status(400).send("Missing required fields or invalid data.");
   }
 
-  const filePath = file.path.join(__dirname, `GradeCard_${prn}.pdf`);
-  // const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
-  res.download(filePath, `GradeCard_${prn}.pdf`, (err) => {
-    if (err) {
-      res.status(500).send("Error downloading PDF");
-    }
-  });
-  //path.join(__dirname, `GradeCard_${prn}.pdf`);
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      console.error("Error reading file:", err);
-      return res.status(500).send("Error processing file.");
+  try {
+    // Check if the email exists in verifierModel
+    let verifier = await verifierModel.findOne({ email });
+
+    // If not, insert a new verifier document
+    if (!verifier) {
+      await verifierModel.insertOne({
+        email,
+        students: [],
+      });
     }
 
-    const hash = crypto.createHash("sha256").update(data).digest("hex");
-
-    /*fs.unlink(filePath, (err) => {
-      if (err) {
-        console.error("Error deleting file:", er);
+    // Add PRN and status to the verifier's students array
+    const result = await verifierModel.updateOne(
+      { email },
+      {
+        $push: {
+          students: {
+            prn,
+            status,
+          },
+        },
       }
-    });
+    );
 
-    res.status(200).json({ hash });
-  });
-});*/
-//const upload = multer({ dest: "uploads/" });
+    if (result.modifiedCount > 0) {
+      return res.status(200).send("PRN added successfully.");
+    } else {
+      return res.status(500).send("Failed to update the verifier document.");
+    }
+  } catch (error) {
+    console.error("Error in /apply route:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
+
+// Route for verifier to see applied students
+app.get("/verifier-students/:email", async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    // Fetch the verifier's students using the email
+    const verifier = await verifierModel.findOne({ email });
+
+    if (!verifier || !verifier.students || verifier.students.length === 0) {
+      return res.status(404).send("No students found for this verifier.");
+    }
+
+    res.status(200).json(verifier.students);
+  } catch (error) {
+    console.error("Error in /verifier-students route:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
+
 app.post("/upload-pdf-student", upload.single("pdf"), (req, res) => {
   const file = req.file;
   const { prn } = req.body; // Assuming prn is sent in the request body
@@ -705,111 +783,6 @@ app.post("/upload-pdf-student", upload.single("pdf"), (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
-
-//get hash of prn
-app.get("/get-hash/:prn", async (req, res) => {
-  const { prn } = req.params;
-
-  try {
-    const student = await studentModel.findOne({ prn });
-
-    if (!student) {
-      console.error(`Student with PRN ${prn} not found`);
-      return res.status(404).send("Student not found");
-    }
-
-    if (!student.isHashGenerated) {
-      console.error(`Hash not generated for PRN: ${prn}`);
-      return res.status(400).send("Hash not generated for this PRN");
-    }
-
-    console.log(`Retrieved hash for PRN: ${prn}`);
-    res.json({ dataHash: student.dataHash });
-  } catch (error) {
-    console.error("Error fetching hash:", error);
-    res.status(500).send("Error fetching hash");
-  }
-});
-
-//c1098a274081c7759379f5adf64b2e63ff43c18f65d7fb74f498ebe6bb172b5c
-//const puppeteer = require("puppeteer");
-//const handlebars = require("handlebars");
-
-/*app.get("/generate-pdf/:prn", async (req, res) => {
-  const { prn } = req.params;
-  try {
-    const student = await studentModel.findOne({ prn });
-
-    if (!student) {
-      console.error(`Student with PRN ${prn} not found`);
-      return res.status(404).send("Student not found");
-    }
-
-    // Read the HTML template
-    const templateHtml = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf-8');
-    const template = handlebars.compile(templateHtml);
-
-    // Prepare the data to inject into the template
-    // const data = {
-    //   prn: student.prn,
-    //   seatNo: student.seatNo,
-    //   name: student.name,
-    //   motherName: student.motherName,
-    //   programme: student.programme,
-    //   cgpa: student.cgpa,
-    //   semesters: student.semesters
-    // };
-
-    const data = {
-      prn: student.prn,
-      seatNo: student.seatNo,
-      name: student.name,
-      motherName: student.motherName,
-      programme: student.programme,
-      cgpa: student.cgpa,
-      semesters: student.semesters.map(semester => ({
-        semester: semester.semester,
-        examDate: semester.examDate,
-        sgpa: semester.sgpa,
-        courses: semester.courses.map(course => ({
-          code: course.code,
-          title: course.title,
-          credits: course.credits,
-          cie: course.cie,
-          ese: course.ese,
-          finalGrade: course.finalGrade
-        }))
-      }))
-    };
-    
-
-
-    const populatedHtml = template(data);
-
-    // Launch Puppeteer to generate PDF from HTML
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(populatedHtml);
-    await page.pdf({
-      path: path.join(__dirname, `GradeCard_${prn}.pdf`),
-      format: 'A4', // A4 size
-      printBackground: true,
-    });
-
-    await browser.close();
-
-    // Send the PDF URL to the client
-    console.log(`PDF generated successfully for PRN: ${prn}`);
-    res.json({ pdfUrl: `http://localhost:3000/download-pdf/${prn}` });
-  } catch (error) {
-    console.error("Error generating PDF:", error);
-    res.status(500).send("Error generating PDF");
-  }
-});
-*/
 app.get("/download-pdf-verifier/:prn", (req, res) => {
   const { prn } = req.params;
   const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
@@ -819,6 +792,7 @@ app.get("/download-pdf-verifier/:prn", (req, res) => {
     }
   });
 });
+
 app.get("/download-pdf/:prn", (req, res) => {
   const { prn } = req.params;
   const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
@@ -847,9 +821,9 @@ app.get("/get-all-datahashes", async (req, res) => {
 });
 
 /*app.listen(3000, () => {
-  console.log("Working!");
-});
-*/
+      console.log("Working!");
+    });
+    */
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}`);
@@ -866,12 +840,10 @@ app.listen(port, hostname, () => {
 // 9. localhost:3000/download-pdf/:prn get
 // 10. http://localhost:3000/scan-qrcode/encryptedData  get   //encryptedData you get from scanning qrcode in
 //                                                      //pdf or you can use this for test:91572cf2919f87777a4248d9e9e0627
-// 11.http://localhost:3000/get-employer get
+// 11.http://localhost:3000/get-verifier get
 //12.http://10.10.8.10:3000/get-hash/prn get
 //13. http://10.10.8.10:3000/upload-pdf post pdf key name
 //14. http://10.10.8.10:3000/get-all-datahashes
-//15.http://0.0.0.0:3000/upload-pdf-student
-//16.
 //Points to be covered:
 //koni tari ekda department wise, class wise, year wise, kasa segration karaychay te bgha pls.
 //Authentication module(Done).
@@ -886,272 +858,268 @@ app.listen(port, hostname, () => {
 // dummy data students collection:
 // Insert multiple dummy data
 /*
-db.students.insertMany([
-  {
-    prn: "2280030653",
-    seatNo: "2280030653",
-    name: "Mustafa",
-    motherName: "Alefiya",
-    programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
-    year: "Second Year",
-    registrationYear: "2022-23",
-    cgpa: 8.5,
-    status: true,
-    deployed: false,
-    semesters: [
+    db.students.insertMany([
       {
-        semester: 4,
-        examDate: "MAY 2024",
-        sgpa: 8.84,
-        courses: [
+        prn: "2280030653",
+        seatNo: "2280030653",
+        name: "Mustafa",
+        motherName: "Alefiya",
+        programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
+        year: "Second Year",
+        registrationYear: "2022-23",
+        cgpa: 8.5,
+        status: true,
+        deployed: false,
+        semesters: [
           {
-            code: "BTECECE22401",
-            title: "THEORY OF COMPUTATION",
-            credits: 3,
-            cie: "A",
-            ese: "A",
-            finalGrade: "A",
-          },
-          {
-            code: "BTECECE22402",
-            title: "DBMS",
-            credits: 3,
-            cie: "O",
-            ese: "O",
-            finalGrade: "O",
+            semester: 4,
+            examDate: "MAY 2024",
+            sgpa: 8.84,
+            courses: [
+              {
+                code: "BTECECE22401",
+                title: "THEORY OF COMPUTATION",
+                credits: 3,
+                cie: "A",
+                ese: "A",
+                finalGrade: "A",
+              },
+              {
+                code: "BTECECE22402",
+                title: "DBMS",
+                credits: 3,
+                cie: "O",
+                ese: "O",
+                finalGrade: "O",
+              },
+            ],
           },
         ],
       },
-    ],
-  },
-  {
-    prn: "2280030656",
-    seatNo: "2280030656",
-    name: "Aryan",
-    motherName: "mother",
-    programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
-    year: "Third Year",
-    registrationYear: "2021-22",
-    cgpa: 9.1,
-    status: true,
-    deployed: true,
-    semesters: [
       {
-        semester: 6,
-        examDate: "MAY 2024",
-        sgpa: 9.2,
-        courses: [
+        prn: "2280030656",
+        seatNo: "2280030656",
+        name: "Aryan",
+        motherName: "mother",
+        programme: "BACHELOR OF TECHNOLOGY (COMPUTER ENGINEERING)",
+        year: "Third Year",
+        registrationYear: "2021-22",
+        cgpa: 9.1,
+        status: true,
+        deployed: true,
+        semesters: [
           {
-            code: "BTECECE22601",
-            title: "ARTIFICIAL INTELLIGENCE",
-            credits: 4,
-            cie: "O",
-            ese: "O",
-            finalGrade: "O",
-          },
-          {
-            code: "BTECECE22602",
-            title: "COMPUTER NETWORKS",
-            credits: 3,
-            cie: "A",
-            ese: "A",
-            finalGrade: "A",
+            semester: 6,
+            examDate: "MAY 2024",
+            sgpa: 9.2,
+            courses: [
+              {
+                code: "BTECECE22601",
+                title: "ARTIFICIAL INTELLIGENCE",
+                credits: 4,
+                cie: "O",
+                ese: "O",
+                finalGrade: "O",
+              },
+              {
+                code: "BTECECE22602",
+                title: "COMPUTER NETWORKS",
+                credits: 3,
+                cie: "A",
+                ese: "A",
+                finalGrade: "A",
+              },
+            ],
           },
         ],
       },
-    ],
-  },
-  {
-    prn: "2280030657",
-    seatNo: "2280030657",
-    name: "Prathamesh",
-    motherName: "mother",
-    programme: "BACHELOR OF TECHNOLOGY (MECHANICAL ENGINEERING)",
-    year: "First Year",
-    registrationYear: "2023-24",
-    cgpa: 7.5,
-    status: false,
-    deployed: false,
-    semesters: [
       {
-        semester: 2,
-        examDate: "DEC 2023",
-        sgpa: 7.3,
-        courses: [
+        prn: "2280030657",
+        seatNo: "2280030657",
+        name: "Prathamesh",
+        motherName: "mother",
+        programme: "BACHELOR OF TECHNOLOGY (MECHANICAL ENGINEERING)",
+        year: "First Year",
+        registrationYear: "2023-24",
+        cgpa: 7.5,
+        status: false,
+        deployed: false,
+        semesters: [
           {
-            code: "BTMECE22301",
-            title: "ENGINEERING MECHANICS",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
-          },
-          {
-            code: "BTMECE22302",
-            title: "MATERIAL SCIENCE",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
-          },
-          {
-            code: "BTMECE22301",
-            title: "ENGINEERING MECHANICS",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
-          },
-          {
-            code: "BTMECE22302",
-            title: "MATERIAL SCIENCE",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
-          },
-          {
-            code: "BTMECE22301",
-            title: "ENGINEERING MECHANICS",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
-          },
-          {
-            code: "BTMECE22302",
-            title: "MATERIAL SCIENCE",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
-          },
-          {
-            code: "BTMECE22301",
-            title: "ENGINEERING MECHANICS",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
-          },
-          {
-            code: "BTMECE22302",
-            title: "MATERIAL SCIENCE",
-            credits: 3,
-            cie: "B",
-            ese: "B",
-            finalGrade: "B",
+            semester: 2,
+            examDate: "DEC 2023",
+            sgpa: 7.3,
+            courses: [
+              {
+                code: "BTMECE22301",
+                title: "ENGINEERING MECHANICS",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+              {
+                code: "BTMECE22302",
+                title: "MATERIAL SCIENCE",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+              {
+                code: "BTMECE22301",
+                title: "ENGINEERING MECHANICS",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+              {
+                code: "BTMECE22302",
+                title: "MATERIAL SCIENCE",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+              {
+                code: "BTMECE22301",
+                title: "ENGINEERING MECHANICS",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+              {
+                code: "BTMECE22302",
+                title: "MATERIAL SCIENCE",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+              {
+                code: "BTMECE22301",
+                title: "ENGINEERING MECHANICS",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+              {
+                code: "BTMECE22302",
+                title: "MATERIAL SCIENCE",
+                credits: 3,
+                cie: "B",
+                ese: "B",
+                finalGrade: "B",
+              },
+            ],
           },
         ],
       },
-    ],
-  },
-  {
-    prn: "2280030658",
-    seatNo: "2280030658",
-    name: "Harsh",
-    motherName: "mother",
-    programme: "BACHELOR OF TECHNOLOGY (ELECTRONICS ENGINEERING)",
-    year: "Final Year",
-    registrationYear: "2020-21",
-    cgpa: 8.0,
-    status: true,
-    deployed: true,
-    semesters: [
       {
-        semester: 8,
-        examDate: "MAY 2024",
-        sgpa: 8.5,
-        courses: [
+        prn: "2280030658",
+        seatNo: "2280030658",
+        name: "Harsh",
+        motherName: "mother",
+        programme: "BACHELOR OF TECHNOLOGY (ELECTRONICS ENGINEERING)",
+        year: "Final Year",
+        registrationYear: "2020-21",
+        cgpa: 8.0,
+        status: true,
+        deployed: true,
+        semesters: [
           {
-            code: "BTEECE22801",
-            title: "DIGITAL SIGNAL PROCESSING",
-            credits: 3,
-            cie: "O",
-            ese: "O",
-            finalGrade: "O",
-          },
-          {
-            code: "BTEECE22802",
-            title: "CONTROL SYSTEMS",
-            credits: 3,
-            cie: "A",
-            ese: "A",
-            finalGrade: "A",
+            semester: 8,
+            examDate: "MAY 2024",
+            sgpa: 8.5,
+            courses: [
+              {
+                code: "BTEECE22801",
+                title: "DIGITAL SIGNAL PROCESSING",
+                credits: 3,
+                cie: "O",
+                ese: "O",
+                finalGrade: "O",
+              },
+              {
+                code: "BTEECE22802",
+                title: "CONTROL SYSTEMS",
+                credits: 3,
+                cie: "A",
+                ese: "A",
+                finalGrade: "A",
+              },
+            ],
           },
         ],
       },
-    ],
-  },
-  {
-    prn: "2280030659",
-    seatNo: "2280030659",
-    name: "Priya",
-    motherName: "mother",
-    programme: "BACHELOR OF TECHNOLOGY (INFORMATION TECHNOLOGY)",
-    year: "Second Year",
-    registrationYear: "2022-23",
-    cgpa: 8.75,
-    status: true,
-    deployed: false,
-    semesters: [
       {
-        semester: 4,
-        examDate: "MAY 2024",
-        sgpa: 8.9,
-        courses: [
+        prn: "2280030659",
+        seatNo: "2280030659",
+        name: "Priya",
+        motherName: "mother",
+        programme: "BACHELOR OF TECHNOLOGY (INFORMATION TECHNOLOGY)",
+        year: "Second Year",
+        registrationYear: "2022-23",
+        cgpa: 8.75,
+        status: true,
+        deployed: false,
+        semesters: [
           {
-            code: "BTITCE22401",
-            title: "OPERATING SYSTEMS",
-            credits: 3,
-            cie: "O",
-            ese: "O",
-            finalGrade: "O",
-          },
-          {
-            code: "BTITCE22402",
-            title: "SOFTWARE ENGINEERING",
-            credits: 3,
-            cie: "A",
-            ese: "A",
-            finalGrade: "A",
+            semester: 4,
+            examDate: "MAY 2024",
+            sgpa: 8.9,
+            courses: [
+              {
+                code: "BTITCE22401",
+                title: "OPERATING SYSTEMS",
+                credits: 3,
+                cie: "O",
+                ese: "O",
+                finalGrade: "O",
+              },
+              {
+                code: "BTITCE22402",
+                title: "SOFTWARE ENGINEERING",
+                credits: 3,
+                cie: "A",
+                ese: "A",
+                finalGrade: "A",
+              },
+            ],
           },
         ],
       },
-      
-    ],
-    verifiers: [
-    {
-      verifier: "aryan@test.com",
-      status: false,
-    },
-    {
-      verifier: "soham@test.com",
-      status: false,
-    }
-    ],
-  },
-]);
-// *dummy data authentication collection:
+    ]);
+    // *dummy data authentication collection:
 
-// db.authentications.insertMany([
-//   {
-//     username: "Aryan Giri",
-//     email: "aryan@test.com",
-//     password: "aryan@test.com",
-//     role: "student"
-//   },
-//   {
-//     username: "Mustafa Nasikwala",
-//     email: "mustafa@test.com",
-//     password: "mustafa@test.com",
-//     role: "student"
-//   },
-//   {
-//     username: "admin",
-//     email: "admin@test.com",
-//     password: "admin@test.com",
-//     role: "admin"
-//   }
-// ]);
-*/
+    // db.authentications.insertMany([
+    //   {
+    //     username: "Aryan Giri",
+    //     email: "aryan@test.com",
+    //     password: "aryan@test.com",
+    //     role: "verifier"
+    //   },
+    //   {
+    //     username: "Mustafa Nasikwala",
+    //     email: "mustafa@test.com",
+    //     password: "mustafa@test.com",
+    //     role: "student"
+    //   },
+    //   {
+    //     username: "admin",
+    //     email: "admin@test.com",
+    //     password: "admin@test.com",
+    //     role: "admin"
+    //   }
+    // ]);
+    */
+/*status:Boolean,
+    students: [
+      {
+        prn: String,
+        status: Boolean,
+      },
+    ],*/
