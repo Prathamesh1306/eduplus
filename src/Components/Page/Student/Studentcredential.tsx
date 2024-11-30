@@ -31,6 +31,7 @@ import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import "../../css/studentcredential.css";
 import sha256 from "crypto-js/sha256";
+import axios from "axios";
 
 function Studentcredential() {
   const [students, setStudents] = useState([]); // State to hold fetched student data

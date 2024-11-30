@@ -6,80 +6,26 @@ import Footer from "../../compo/footer";
 import "../../css/admin-student-list-container.css";
 
 const AdminRecutierList = () => {
-  const [studentList, setStudentList] = useState([]);
-  const [verifiedPRNs, setVerifiedPRNs] = useState([]); // To track verified students' PRNs
+  const [recrutier,setRecrutier] = useState([])
   const navigate = useNavigate();
 
-  // Fetch students from the backend
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get("");
-        const unverifiedStudents = response.data.filter(
-          (student) => !student.status
-        );
-        setStudentList(unverifiedStudents);
-      } catch (error) {
-        console.error("Error fetching students:", error);
-      }
-    };
-    fetchStudents();
-  }, []);
 
-  // Handle verification of a student
-  const handleVerify = (index) => {
-    const updatedList = [...studentList];
-    updatedList[index].status = true; // Update status locally
-    setStudentList(updatedList);
-    setVerifiedPRNs([...verifiedPRNs, updatedList[index].prn]); // Add PRN to the verified list
-  };
+  useEffect(()=>{
 
-  // Handle submission and navigate to the next page
-  const handleSubmit = async () => {
-    try {
-      await axios.post("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/update-status", {
-        prns: verifiedPRNs,
-      });
-      alert("Student statuses updated successfully!");
+    const response = axios.get("")
+  },[])
 
-      // Navigate to the next page
-      navigate("/verified-students", { state: { verifiedPRNs } });
-    } catch (error) {
-      console.error("Error updating student statuses:", error);
-      alert("Failed to update student statuses. Please try again.");
-    }
-  };
 
+  
   return (
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
       <div className="admin-student-list-main">
         <div className="admin-student-list-title">Verifier List</div>
         <div className="admin-student-list-renderList">
-          {studentList.length > 0 ? (
-            studentList.map((student, index) => (
-              <div key={student.prn} className="student-item">
-                <span className="student-item-name">{student.name}</span>
-                {student.status ? (
-                  <span className="status-status">Verified</span>
-                ) : (
-                  <button
-                    className="verify-button"
-                    onClick={() => handleVerify(index)}
-                  >
-                    Verify
-                  </button>
-                )}
-              </div>
-            ))
-          ) : (
-            <p>No students to verify.</p>
-          )}
-          {studentList.length > 0 && (
-            <div className="admin-student-list-btn" onClick={handleSubmit}>
-              NEXT
-            </div>
-          )}
+        {
+
+        }
         </div>
       </div>
       <Footer />

@@ -227,7 +227,7 @@ function VerifiedStudentList() {
   useEffect(() => {
     const fetchVerifiedStudents = async () => {
       try {
-        const response = await axios.get("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/students");
+        const response = await axios.get("https://localhost:3000/students");
         const students = response.data.map((student: any) => ({
           ...student,
           deployed: false,
