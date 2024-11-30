@@ -144,12 +144,12 @@ app.get("/", (req, res) => {
 //route1(Adding new data if few, in case needed in future)
 // app.post("/add", isLoggedin, isAdmin, async (req, res) => {
 app.post("/add", async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password } = req.body;
   try {
     const existingUser = await authModel.findOne({ email });
     if (existingUser) return res.status(400).send("User Already Exists!");
-
-    const createdUser = await authModel.create({
+    const role = "employer";
+    const createdUser = await authModel.insertOne({
       username,
       email,
       password,
@@ -452,8 +452,8 @@ app.get("/scan-qrcode/:encryptedData", async (req, res) => {
 
 //now pdf will only generate when student is depoloyed in blockchain, ajun kay condition asel tar add kra
 //and now each diff sem starts at a separate page
-app.get("/generate-pdf/:prn", async (req, res) => {
-  const { prn } = req.params;
+app.post("/generate-pdf/", async (req, res) => {
+  const { prn } = req.body;
 
   try {
     const student = await studentModel.findOne({ prn });
@@ -580,8 +580,15 @@ app.get("/generate-pdf/:prn", async (req, res) => {
         { $set: { dataHash: pdfHash, isHashGenerated: true } }
       );
       console.log(`PDF generated successfully for PRN: ${prn}`);
+      res.json({
+        pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+        Hash: pdfHash,
+      });
     }
-    res.json({ pdfUrl: `http://${hostname}:3000/download-pdf/${prn}` });
+    res.json({
+      pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+      Hash: student.dataHash,
+    });
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
@@ -598,6 +605,7 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
   }
 
   const filePath = file.path;
+  //path.join(__dirname, `GradeCard_${prn}.pdf`);
   fs.readFile(filePath, (err, data) => {
     if (err) {
       console.error("Error reading file:", err);
@@ -606,7 +614,40 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
 
     const hash = crypto.createHash("sha256").update(data).digest("hex");
 
-    fs.unlink(filePath, (err) => {
+    /*fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error("Error deleting file:", er);
+      }
+    });*/
+
+    res.status(200).json({ hash });
+  });
+});
+/*const uploadss = multer({ dest: "uploadss/" });
+app.post("/upload-psdf", uploadss.single("pdf"), (req, res) => {
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).send("No file uploaded.");
+  }
+
+  const filePath = file.path.join(__dirname, `GradeCard_${prn}.pdf`);
+  // const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
+  res.download(filePath, `GradeCard_${prn}.pdf`, (err) => {
+    if (err) {
+      res.status(500).send("Error downloading PDF");
+    }
+  });
+  //path.join(__dirname, `GradeCard_${prn}.pdf`);
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.error("Error reading file:", err);
+      return res.status(500).send("Error processing file.");
+    }
+
+    const hash = crypto.createHash("sha256").update(data).digest("hex");
+
+    /*fs.unlink(filePath, (err) => {
       if (err) {
         console.error("Error deleting file:", er);
       }
@@ -614,6 +655,55 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
 
     res.status(200).json({ hash });
   });
+});*/
+//const upload = multer({ dest: "uploads/" });
+app.post("/upload-pdf-student", upload.single("pdf"), (req, res) => {
+  const file = req.file;
+  const { prn } = req.body; // Assuming prn is sent in the request body
+
+  if (!file) {
+    return res.status(400).send("No file uploaded.");
+  }
+
+  const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
+
+  // Rename the file with the prn
+  fs.rename(file.path, filePath, (err) => {
+    if (err) {
+      console.error("Error renaming file:", err);
+      return res.status(500).send("Error processing file.");
+    }
+
+    res.download(filePath, `student_${prn}.pdf`, (err) => {
+      if (err) {
+        console.error("Error downloading file:", err);
+        return res.status(500).send("Error downloading PDF.");
+      }
+
+      // Calculate and return the hash
+      fs.readFile(filePath, (err, data) => {
+        if (err) {
+          console.error("Error reading file:", err);
+          return res.status(500).send("Error processing file.");
+        }
+
+        //   const hash = crypto.createHash("sha256").update(data).digest("hex");
+
+        // Uncomment the following lines if you want to delete the file after processing
+        // fs.unlink(filePath, (err) => {
+        //   if (err) {
+        //     console.error('Error deleting file:', err);
+        //   }
+        // });
+
+        res.status(200).json();
+      });
+    });
+  });
+});
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });
 
 //get hash of prn
@@ -717,7 +807,15 @@ app.get("/get-hash/:prn", async (req, res) => {
   }
 });
 */
-
+app.get("/download-pdf-verifier/:prn", (req, res) => {
+  const { prn } = req.params;
+  const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
+  res.download(filePath, `user${prn}.pdf`, (err) => {
+    if (err) {
+      res.status(500).send("Error downloading PDF");
+    }
+  });
+});
 app.get("/download-pdf/:prn", (req, res) => {
   const { prn } = req.params;
   const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
@@ -769,6 +867,8 @@ app.listen(port, hostname, () => {
 //12.http://10.10.8.10:3000/get-hash/prn get
 //13. http://10.10.8.10:3000/upload-pdf post pdf key name
 //14. http://10.10.8.10:3000/get-all-datahashes
+//15.http://0.0.0.0:3000/upload-pdf-student
+//16.
 //Points to be covered:
 //koni tari ekda department wise, class wise, year wise, kasa segration karaychay te bgha pls.
 //Authentication module(Done).
@@ -1015,6 +1115,17 @@ db.students.insertMany([
           },
         ],
       },
+      
+    ],
+    verifiers: [
+    {
+      verifier: "aryan@test.com",
+      status: false,
+    },
+    {
+      verifier: "soham@test.com",
+      status: false,
+    }
     ],
   },
 ]);
@@ -1025,7 +1136,7 @@ db.students.insertMany([
 //     username: "Aryan Giri",
 //     email: "aryan@test.com",
 //     password: "aryan@test.com",
-//     role: "employer"
+//     role: "student"
 //   },
 //   {
 //     username: "Mustafa Nasikwala",
