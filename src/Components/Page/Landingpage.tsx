@@ -50,7 +50,7 @@ function Landingpage() {
   
   const handlesubmitsignup=async()=>{
     try {
-      const response = await axios.post("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/add", {
+      const response = await axios.post("https://localhost:3000/add", {
         username: username,
         email: email,
         password: password,

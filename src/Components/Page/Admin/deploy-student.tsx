@@ -227,7 +227,7 @@ function VerifiedStudentList() {
   useEffect(() => {
     const fetchVerifiedStudents = async () => {
       try {
-        const response = await axios.get("http://192.168.149.73:3000/freezed");
+        const response = await axios.get("http://localhost:3000/freezed");
         const students = response.data.map((student:any) => ({
           ...student.name,
 
@@ -269,7 +269,7 @@ const handleDeploy = async (index: number) => {
   const prnno = reponse.prn;
   console.log(student);
 
-  const hashing =  axios.post("http://192.168.94.79:3000/generate-pdf", {
+  const hashing =  axios.post("http://localhost:3000/generate-pdf", {
     prn:prnno
   }).then(()=>{console.log(hashing)});
 
