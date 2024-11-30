@@ -67,6 +67,21 @@ function Studentcredential() {
       setError("No student found with the entered PRN.");
     }
   };
+  const handleSubmit = async () => {
+    try {
+      await axios.post("http://localhost:3000/freeze", {
+         
+      });
+      alert("request send successfully!");
+
+    } catch (error) {
+      console.error("Error sending student request:", error);
+      alert("Failed to send requests. Please try again.");
+    }
+  };
+  
+
+
 
   // Handle Verification
   const handleVerify = () => {
@@ -86,20 +101,17 @@ function Studentcredential() {
         {/* Search Form */}
         <div className="container-search">
           <div className="input-group">
-            <input
-              id="Input-search"
-              name="input-search"
-              type="text"
-              placeholder="Enter PRN"
-              value={searchPRN}
-              onChange={(e) => setSearchPRN(e.target.value)}
-              className="search-input"
-            />
-            <button onClick={handleSearch} className="deploy-button">
-              Search
+            
+            <button onClick={handleSubmit} className="deploy-button">
+              Freeze and fetch certificate
             </button>
           </div>
         </div>
+
+
+       
+
+
 
         {/* Student Details */}
         {error && <p className="error-message">{error}</p>}

@@ -5,7 +5,7 @@ import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/admin-student-list-container.css";
 
-const AdminStudentList = () => {
+const AdminRecutierList = () => {
   const [studentList, setStudentList] = useState([]);
   const [verifiedPRNs, setVerifiedPRNs] = useState([]); // To track verified students' PRNs
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const AdminStudentList = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/view/students");
+        const response = await axios.get("");
         const unverifiedStudents = response.data.filter(
           (student) => !student.status
         );
@@ -37,7 +37,7 @@ const AdminStudentList = () => {
   // Handle submission and navigate to the next page
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:3000/students/update-status", {
+      await axios.post("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/update-status", {
         prns: verifiedPRNs,
       });
       alert("Student statuses updated successfully!");
@@ -54,7 +54,7 @@ const AdminStudentList = () => {
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
       <div className="admin-student-list-main">
-        <div className="admin-student-list-title">Student Management</div>
+        <div className="admin-student-list-title">Verifier List</div>
         <div className="admin-student-list-renderList">
           {studentList.length > 0 ? (
             studentList.map((student, index) => (
@@ -87,7 +87,7 @@ const AdminStudentList = () => {
   );
 };
 
-export default AdminStudentList;
+export default AdminRecutierList;
 
 
 // import React, { useState, useEffect } from "react";

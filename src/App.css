@@ -22,11 +22,12 @@
   flex-direction: row;
   display: flex;
   justify-content: space-around;
+  /* border: 2px solid black; */
 }
 
 .tabs {
   display: flex;
-  width: 60%;
+  /* width: 200px; */
   flex-direction: row;
   /* background-color: red; */
   justify-content: center;
@@ -40,6 +41,7 @@
   font-size: 25px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-weight: bold;
+  /* background-color: white; */
 }
 
 .login {

@@ -9,8 +9,16 @@ import credentialValidationImage from "../../../assets/Createvalida.png";
 import cardimage from "../../../assets/card.png";
 import verified from "../../../assets/verifiedstudent.png";
 
+
+import axios from "axios";
 function Admin() {
   const [account, setAccount] = useState<string | null>(null);
+
+  useEffect(() => {
+    const response = axios.get("/").then(() => {
+      console.log(response);
+    });
+  }, []);
 
   // Function to connect to MetaMask
   async function connectWallet() {
@@ -42,7 +50,7 @@ function Admin() {
 
     // Initialize the history stack for this page
     window.history.pushState(null, "", window.location.href);
-    
+
     // Listen for browser back/forward buttons
     window.addEventListener("popstate", handlePopState);
 
@@ -52,7 +60,7 @@ function Admin() {
   }, [account]);
 
   return (
-    <div className="container" >
+    <div className="container">
       <Header role="ADMIN" />
 
       <div style={{ textAlign: "center", margin: "20px 0" }}>
@@ -82,26 +90,20 @@ function Admin() {
         <Card
           image={studentManagementImage}
           image2={cardimage}
-          title="Student Management"
-          description="Manage student credentials and deployment status"
+          title="Verifier List"
+          description="Manage and validate credential requests from recruiters or institutions"
         />
         <Card
           image={verified}
           image2={cardimage}
-          title="Verified student"
-          description="Manage student verifications and deployment status"
+          title="Freezed student"
+          description="Manage student verifications"
         />
         <Card
           image={deployedStudentsImage}
           image2={cardimage}
           title="Deployed Students"
           description="View students with successfully deployed credentials and access transaction details"
-        />
-        <Card
-          image={credentialValidationImage}
-          image2={cardimage}
-          title="Credential Validation"
-          description="Manage and validate credential requests from recruiters or institutions"
         />
       </div>
 

@@ -30,13 +30,13 @@ function Header() {
         </div>
         <div className="tabs">
           
-          <a
+          {/* <a
             className="tab"
             href="#" style={{ userSelect:"none"}}
             onClick={() => scrollToSection("footer")}
           >
             Support Center
-          </a>
+          </a> */}
         
           <a
             className="tab"

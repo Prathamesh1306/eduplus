@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 const port = 3000;
 //ipconfig run krun wifi cha ipv4 add taka hostname madhe
-const hostname = "192.168.31.28";
+const hostname = "192.168.0.101";
 const { MongoClient } = require("mongodb");
 const uri =
   "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -326,7 +326,7 @@ app.post("/students/update-deployed", async (req, res) => {
 
 // Route to get student by PRN
 // app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
-app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
+app.get("/student/:prn", async (req, res) => {
   const { prn } = req.params;
   try {
     const student = await studentModel.findOne({ prn });
@@ -475,7 +475,7 @@ app.get("/generate-pdf/:prn", async (req, res) => {
       const qrCodeDims = qrCodeImage.scale(0.5);
 
       page.drawImage(qrCodeImage, {
-        x: 500,
+        x: 300,
         y: 100,
         width: qrCodeDims.width,
         height: qrCodeDims.height,

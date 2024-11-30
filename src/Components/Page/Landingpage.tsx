@@ -50,12 +50,11 @@ function Landingpage() {
   
   const handlesubmitsignup=async()=>{
     try {
-      const response = await axios.post("http://localhost:3000/add", {
+      const response = await axios.post("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/add", {
         username: username,
         email: email,
         password: password,
         });
-
       alert("Registration succcesful Successful!");
 
       navigate("/");
@@ -82,11 +81,10 @@ function Landingpage() {
 
   const handlesubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/login", {
+      const response = await axios.post("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/login", {
         email: email,
         password: password,
       });
-
       alert("Login Successful!");
 
       const { role,token } = response.data;
@@ -99,7 +97,7 @@ function Landingpage() {
         navigate("/admin-home");
       } else if (role === "student") {
         navigate("/student");
-      } else if (role === "employer") {
+      } else if (role === "verifier") {
         navigate("/recruiter");
       } else {
         alert("Invalid role. Please contact support.");

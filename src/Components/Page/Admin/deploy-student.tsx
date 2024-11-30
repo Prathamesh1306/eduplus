@@ -227,7 +227,7 @@ function VerifiedStudentList() {
   useEffect(() => {
     const fetchVerifiedStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/view/students/updated");
+        const response = await axios.get("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/students");
         const students = response.data.map((student: any) => ({
           ...student,
           deployed: false,
@@ -263,8 +263,14 @@ function VerifiedStudentList() {
 // After deployment success in your frontend
 const handleDeploy = async (index: number) => {
   const student = verifiedStudents[index];
+  const prnno= student.prn;
+  console.log(student);
 
-  if (!student.dataHash) {
+  const hashing =  axios.post("https://3082be90-5530-44d0-82fe-4c58123a0d44-00-2pynytxp6y3na.pike.replit.dev/generate-pdf", {
+    prn:prnno
+  }).then(()=>{console.log(hashing)});
+
+  if (!hashing.data.Hash) {
     alert("Hash data is missing for this student.");
     return;
   }
@@ -278,11 +284,11 @@ const handleDeploy = async (index: number) => {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, await signer);
 
     // Call the `issueCredentials` function
-    const tx = await contract.issueCredentials(student.dataHash);
+    const tx = await contract.issueCredentials(hashing.data.Hash);
     await tx.wait(); // Wait for the transaction to be mined
 
     // Send the transaction details to the backend
-    await axios.post("http://localhost:3000/update-transaction", {
+    await axios.post("https://5add065b-0909-4f33-9c45-38588a6dc83a-00-lrfiae3f5et4.sisko.replit.dev:3001/update-transaction", {
       prn: student.prn,
       transactionHash: tx.hash,
     });
