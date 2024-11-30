@@ -81,7 +81,7 @@ function Landingpage() {
 
   const handlesubmit = async () => {
     try {
-      const response = await axios.post("http://192.168.149.73:3000/login", {
+      const response = await axios.post("http://localhost:3000/login", {
         email: email,
         password: password,
       });

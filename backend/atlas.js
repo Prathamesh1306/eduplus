@@ -14,7 +14,7 @@ app.use(cors());
 const multer = require("multer");
 app.use(express.json());
 const port = 3000;
-const hostname = "0.0.0.0";
+const hostname = "localhost";
 const { MongoClient } = require("mongodb");
 const uri =
   "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -41,32 +41,36 @@ const Transaction = db.collection("transactions");
         res.status(500).send("Error generating and saving hashes");
       }
     });*/
-
-app.post("/change-verifier", async (req, res) => {
-  try {
-    // Extract email from request body
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).send("Verifier email is required.");
-    }
-
-    // Find the verifier by email and update their status
-    const result = await verifierModel.updateOne(
-      { email }, // Filter by email
-      { $set: { verify: true } } // Update `verify` status to true
-    );
-
-    if (result.matchedCount === 0) {
-      return res.status(404).send("Verifier not found.");
-    }
-
-    res.status(200).send("Verifier status updated to true.");
-  } catch (error) {
-    console.error("Error updating verifier status:", error);
-    res.status(500).send("Internal Server Error.");
-  }
-});
+    app.post("/change-verifier", async (req, res) => {
+      try {
+        // Extract email from request body
+        const { email } = req.body;
+    
+        if (!email) {
+          return res.status(400).send("Verifier email is required.");
+        }
+    
+        // Find the verifier by email
+        const verifier = await verifierModel.findOne({ email });
+        if (!verifier) {
+          return res.status(404).send("Verifier not found.");
+        }
+    
+        // Toggle the `verify` status
+        const updatedVerifier = await verifierModel.updateOne(
+          { email }, // Filter by email
+          { $set: { verify: !verifier.verify } } // Toggle the `verify` status
+        );
+    
+        res
+          .status(200)
+          .send(`Verifier status updated to ${!verifier.verify ? "true" : "false"}.`);
+      } catch (error) {
+        console.error("Error updating verifier status:", error);
+        res.status(500).send("Internal Server Error.");
+      }
+    });
+    
 
 // Define the POST endpoint to handle the update
 app.post("/update-transaction", async (req, res) => {

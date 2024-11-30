@@ -12,34 +12,80 @@ const AdminRecutierList = () => {
   useEffect(() => {
     const fetchVerifier = async () => {
       try {
-        const response = await axios.get("http://192.168.149.73:3000/get-verifier");
-        console.log(response.data)
-        setRecrutier(response.data); 
-        console.log(response.data); // Optional: For debugging
+        const response = await axios.get(
+          "http://localhost:3000/get-all-verifiers"
+        );
+        console.log("This is response", response.data);
+
+        setRecrutier(response.data);
       } catch (error) {
         console.error("Error fetching verifiers:", error);
+        console.log("Hello");
       }
     };
 
     fetchVerifier();
   }, []);
 
+  const changeStatus = async (email: string) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/change-verifier",
+        { email }
+      );
+      console.log("Status changed successfully:", response.data);
 
-  const changeStatus =()=>{
-    console.log("Pressed")
-    
-  }
+      setRecrutier((prevRecrutier) =>
+        prevRecrutier.map((verifier) =>
+          verifier.email === email
+            ? { ...verifier, verify: !verifier.verify }
+            : verifier
+        )
+      );
+    } catch (error) {
+      console.error("Error changing status:", error);
+    }
+  };
+
   return (
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
       <div className="admin-student-list-main">
         <div className="admin-student-list-title">Verifier List</div>
-        <div style={{backgroundColor:"#028978",width:"80%",justifyItems:"center",borderRadius:"20px",padding:"20px 0px"}}>
+        <div
+          style={{
+            backgroundColor: "#028978",
+            width: "80%",
+            justifyItems: "center",
+            borderRadius: "20px",
+            padding: "20px 0px",
+          }}
+        >
           {recrutier.length > 0 ? (
             recrutier.map((verifier) => (
-              <div key={verifier._id} style={{display:"flex",marginBottom:"10px"}}>
-                <p style={{color:"#fff",padding:"0px 20px"}}><strong>Name:</strong> {verifier.username}</p>
-                <div onClick={()=>{console.log( verifier._id , "Pressed")}} style={{backgroundColor:"blue",padding:"5px 10px" ,color:"#fff",borderRadius:"10px",userSelect:"none",cursor:"pointer"}}>Verify</div>
+              <div
+                key={verifier._id}
+                style={{ display: "flex", marginBottom: "10px" }}
+              >
+                <p style={{ color: "#fff", padding: "0px 20px" }}>
+                  <strong>Name:</strong> {verifier.email}
+                </p>
+                <div
+                  onClick={() => {
+                    console.log(verifier._id, "Pressed");
+                    changeStatus(verifier.email);
+                  }}
+                  style={{
+                    backgroundColor: verifier.verify ? "blue" : "green",
+                    padding: "5px 10px",
+                    color: "#fff",
+                    borderRadius: "10px",
+                    userSelect: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {verifier.verify ? "Revoke Access" : "Provide Access"}
+                </div>
               </div>
             ))
           ) : (
@@ -53,8 +99,6 @@ const AdminRecutierList = () => {
 };
 
 export default AdminRecutierList;
-
-
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
@@ -116,7 +160,7 @@ export default AdminRecutierList;
 //           },
 //           credentials: "include", // Include cookies for authentication
 //         });
-        
+
 //         if (!response.ok) {
 //           throw new Error(`Error: ${response.status}`);
 //         }
