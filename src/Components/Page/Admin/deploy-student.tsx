@@ -228,14 +228,11 @@ function VerifiedStudentList() {
     const fetchVerifiedStudents = async () => {
       try {
         const response = await axios.get("http://localhost:3000/freezed");
+        console.log(response.data)
         const students = response.data.map((student:any) => ({
-          ...student.name,
-
+          ...student,
         }));
-        const studentNames = students.map((student: any) => student.name);
         setVerifiedStudents(students);
-
-        console.log(students)
       } catch (error) {
         console.error("Error fetching verified students:", error);
       } finally {
@@ -266,7 +263,7 @@ function VerifiedStudentList() {
 // After deployment success in your frontend
 const handleDeploy = async (index: number) => {
   const student = verifiedStudents[index];
-  const prnno = reponse.prn;
+  const prnno = response.prn;
   console.log(student);
 
   const hashing =  axios.post("http://localhost:3000/generate-pdf", {
@@ -291,7 +288,7 @@ const handleDeploy = async (index: number) => {
     await tx.wait(); // Wait for the transaction to be mined
 
     // Send the transaction details to the backend
-    await axios.post("http://192.168.94.79:3000/update-transaction", {
+    await axios.post("http://localhost:3000/update-transaction", {
       prn: student.prn,
       transactionHash: tx.hash,
     });
@@ -322,6 +319,7 @@ const handleDeploy = async (index: number) => {
           ) : verifiedStudents.length > 0 ? (
             <div className="verified-student-list">
               {verifiedStudents.map((student, index) => (
+                
                 <div key={student.prn} className="verified-student-item">
                   <span className="verified-student-name">{student.name}</span>
                   <button
@@ -330,6 +328,7 @@ const handleDeploy = async (index: number) => {
                     disabled={student.deployed || loading}
                   >
                     {student.deployed ? "Deployed" : "Deploy to Blockchain"}
+                    {console.log(student.deployed)}
                   </button>
                 </div>
               ))}

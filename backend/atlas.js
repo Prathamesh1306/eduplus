@@ -172,6 +172,8 @@ app.get("/", (req, res) => {
   res.send("Page 1");
 });
 
+
+
 //route1(Adding new data if few, in case needed in future)
 // app.post("/add", isLoggedin, isAdmin, async (req, res) => {
 app.post("/add", async (req, res) => {
@@ -204,6 +206,8 @@ app.post("/add", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -461,8 +465,8 @@ app.post("/students/update-deployed", async (req, res) => {
 
 // Route to get student by PRN
 // app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
-app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
-  const { prn } = req.params;
+app.get("/student/",  async (req, res) => {
+  const { prn } = req.body;
   try {
     const student = await studentModel.findOne({ prn });
     if (!student) {
@@ -479,10 +483,24 @@ app.get("/student/:prn", isLoggedin, isAdmin, async (req, res) => {
 
 app.get("/freezed", async (req, res) => {
   try {
-    const freezedStudents = await studentModel.findOne({
+    const freezedStudents = await studentModel.find({
       status: true,
       deployed: false,
-    });
+    },
+    {
+      projection: {
+        prn: 1,
+        name: 1,
+        seatNo: 1,
+        motherName: 1,
+        programme: 1,
+        cgpa: 1,
+        semesters: 1,
+        dataHash: 1,
+        deployed: 1,
+        status: 1,
+      },
+    }).toArray();
     res.status(200).json(freezedStudents);
   } catch (err) {
     console.error("Error fetching freezed students:", err);
@@ -624,10 +642,10 @@ app.post("/generate-pdf", async (req, res) => {
       console.error(`Student with PRN ${prn} not found`);
       return res.status(404).send("Student not found");
     }
-    if (!student.deployed) {
-      console.error(`Student with PRN ${prn} is not deployed`);
-      return res.status(400).send("not deployed");
-    }
+    // if (!student.deployed) {
+    //   console.error(`Student with PRN ${prn} is not deployed`);
+    //   return res.status(400).send("not deployed");
+    // }
     const { iv: encryptedIv, encryptedData } = encryptData(prn);
 
     // const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;

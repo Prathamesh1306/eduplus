@@ -41,7 +41,6 @@ function App() {
           <Route path='/verified-students' element={<Verifiedstudent />} />
           <Route path='/admin-deployedstudent' element={<Admindeployedstudent />} />
 
-          
           <Route path='/student' element={<Student1 />} />
           <Route path='/student-verify' element={<Student2 />} />
           <Route path="/studentcredential" element={<StudentCredential />} />
@@ -52,7 +51,6 @@ function App() {
           <Route path="/searchrecruiter2" element={<Recruiter1b />} />
           <Route path="/verifyrecruiter" element={<Recruiter2 />} />
 
-          
           <Route  path="/about" element={<About/>}></Route>
           <Route path="/home" element={<Home/>}></Route>
           <Route path="/blog" element={<Blog/>}></Route>
