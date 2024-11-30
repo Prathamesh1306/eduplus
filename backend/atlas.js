@@ -276,9 +276,7 @@ app.get("/get-verifier", async (req, res) => {
 
 app.get("/get-not-verifier", async (req, res) => {
   try {
-    const verifier = await authModel
-      .find({ role: "verifier", status: false })
-      .toArray();
+    const verifier = await verifierModel.find({ verify: false }).toArray();
 
     if (!verifier || verifier.length === 0) {
       return res.status(404).send("No verifier");
