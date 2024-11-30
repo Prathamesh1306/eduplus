@@ -179,6 +179,7 @@ app.post("/login", async (req, res) => {
 
   try {
     const user = await authModel.findOne({ email });
+    const student = await studentModel.findOne({ email });
     if (!user) {
       return res.status(404).send("No User Found!");
     }
@@ -191,6 +192,7 @@ app.post("/login", async (req, res) => {
       {
         email: user.email,
         user: user._id,
+        prn: student.prn,
         username: user.username,
         role: user.role,
       },
@@ -212,6 +214,7 @@ app.post("/login", async (req, res) => {
   }
   console.log("login succesful");
 });
+
 
 app.get("/get-employer", async (req, res) => {
   try {
