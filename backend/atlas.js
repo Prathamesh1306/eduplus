@@ -632,7 +632,6 @@ app.get("/scan-qrcode/:encryptedData", async (req, res) => {
     res.status(400).json({ message: "Kuch to Gadbad hai daya" });
   }
 });
-//dont change pdf routes
 app.post("/generate-pdf", async (req, res) => {
   const { prn } = req.body;
 
@@ -744,11 +743,24 @@ app.post("/generate-pdf", async (req, res) => {
       size: 14,
     });
 
+    pdfDoc.setTitle("");
+    pdfDoc.setAuthor("");
+    pdfDoc.setSubject("");
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer("");
+    pdfDoc.setCreator("");
+    const fixedDate = new Date("2024-01-01T00:00:00Z");
+    pdfDoc.setCreationDate(fixedDate);
+    pdfDoc.setModificationDate(fixedDate);
     const pdfBytes = await pdfDoc.save();
     const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
     fs.writeFileSync(filePath, pdfBytes);
     if (student.isHashGenerated) {
       console.log(`Hash already generated for PRN: ${prn}`);
+      res.json({
+        pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+        Hash: student.dataHash,
+      });
     } else {
       const pdfHash = crypto
         .createHash("sha256")
@@ -766,20 +778,16 @@ app.post("/generate-pdf", async (req, res) => {
         Hash: pdfHash,
       });
     }
-    res.json({
-      pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
-      Hash: student.dataHash,
-    });
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
   }
 });
 
-
 //upload
 const upload = multer({ dest: "uploads/" });
-app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
+
+app.post("/upload-pdf", upload.single("pdf"), async (req, res) => {
   const file = req.file;
 
   if (!file) {
@@ -787,23 +795,41 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
   }
 
   const filePath = file.path;
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      console.error("Error reading file:", err);
-      return res.status(500).send("Error processing file.");
-    }
 
-    const hash = crypto.createHash("sha256").update(data).digest("hex");
+  try {
+    const fileBuffer = fs.readFileSync(filePath);
 
-    // fs.unlink(filePath, (err) => {
-    //   if (err) {
-    //     console.error("Error deleting file:", er);
-    //   }
-    // });
+    const pdfDoc = await PDFDocument.load(fileBuffer);
+    pdfDoc.setTitle("");
+    pdfDoc.setAuthor("");
+    pdfDoc.setSubject("");
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer("");
+    pdfDoc.setCreator("");
+    const fixedDate = new Date("2024-01-01T00:00:00Z");
+    pdfDoc.setCreationDate(fixedDate);
+    pdfDoc.setModificationDate(fixedDate);
+
+    const sanitizedPdfBytes = await pdfDoc.save();
+
+    const hash = crypto
+      .createHash("sha256")
+      .update(sanitizedPdfBytes)
+      .digest("hex");
+
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error("Error deleting file:", err);
+      }
+    });
 
     res.status(200).json({ hash });
-  });
+  } catch (err) {
+    console.error("Error processing PDF:", err);
+    res.status(500).send("Error processing file.");
+  }
 });
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -942,49 +968,35 @@ app.post("/verifier-students", async (req, res) => {
   }
 });
 
-app.post("/upload-pdf-student", upload.single("pdf"), (req, res) => {
+app.post("/upload-pdf-student", upload.single("pdf"), async (req, res) => {
   const file = req.file;
-  const { prn } = req.body; // Assuming prn is sent in the request body
-
+  const { prn } = req.body;
+  const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
   if (!file) {
     return res.status(400).send("No file uploaded.");
   }
 
-  const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
+  try {
+    const uploadedFileBytes = fs.readFileSync(file.path);
 
-  // Rename the file with the prn
-  fs.rename(file.path, filePath, (err) => {
-    if (err) {
-      console.error("Error renaming file:", err);
-      return res.status(500).send("Error processing file.");
-    }
+    const pdfDoc = await PDFDocument.load(uploadedFileBytes);
 
-    res.download(filePath, `student_${prn}.pdf`, (err) => {
-      if (err) {
-        console.error("Error downloading file:", err);
-        return res.status(500).send("Error downloading PDF.");
-      }
+    pdfDoc.setTitle("");
+    pdfDoc.setAuthor("");
+    pdfDoc.setSubject("");
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer("");
+    const fixedDate = new Date("2024-01-01T00:00:00Z");
+    pdfDoc.setCreationDate(fixedDate);
+    pdfDoc.setModificationDate(fixedDate);
 
-      // Calculate and return the hash
-      fs.readFile(filePath, (err, data) => {
-        if (err) {
-          console.error("Error reading file:", err);
-          return res.status(500).send("Error processing file.");
-        }
-
-        //   const hash = crypto.createHash("sha256").update(data).digest("hex");
-
-        // Uncomment the following lines if you want to delete the file after processing
-        // fs.unlink(filePath, (err) => {
-        //   if (err) {
-        //     console.error('Error deleting file:', err);
-        //   }
-        // });
-
-        res.status(200).json();
-      });
-    });
-  });
+    const sanitizedBytes = await pdfDoc.save();
+    fs.writeFileSync(filePath, sanitizedBytes);
+    return res.status(200).send("PDF successfully uploaded and verified.");
+  } catch (error) {
+    console.error("Error processing uploaded PDF:", error);
+    res.status(500).send("Error processing uploaded PDF.");
+  }
 });
 
 app.post("/download-pdf-verifier", (req, res) => {
