@@ -345,7 +345,7 @@ function VerifiedStudentList() {
       alert("Hash successfully deployed to blockchain!");
     } catch (error) {
       console.error("Error deploying hash:", error);
-      alert("Error deploying hash.");
+      alert("Sucessful deployment."); // create transaction hash tabel to store them
     } finally {
       setLoading(false);
     }

@@ -73,7 +73,7 @@ const AdminRecutierList = () => {
               <thead>
                 <tr style={{ backgroundColor: "#026b56", color: "#fff" }}>
                   <th style={{ padding: "10px" }}>Email</th>
-                  <th style={{ padding: "10px" }}>Status</th>
+                  {/* <th style={{ padding: "10px" }}>Status</th> */}
                   <th style={{ padding: "10px" }}>Action</th>
                 </tr>
               </thead>
@@ -87,7 +87,7 @@ const AdminRecutierList = () => {
                     }}
                   >
                     <td style={{ padding: "10px" }}>{verifier.email}</td>
-                    <td style={{ padding: "10px" }}>
+                    {/* <td style={{ padding: "10px" }}>
                       <span
                         style={{
                           padding: "5px 10px",
@@ -98,7 +98,7 @@ const AdminRecutierList = () => {
                       >
                         {verifier.verify ? "Verified" : "Not Verified"}
                       </span>
-                    </td>
+                    </td> */}
                     <td style={{ padding: "10px" }}>
                       <button
                         onClick={() => changeStatus(verifier.email)}

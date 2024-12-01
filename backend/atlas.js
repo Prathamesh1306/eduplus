@@ -408,7 +408,7 @@ app.get("/student/:prn", async (req, res) => {
 
 app.get("/student/pdf/:prn", async (req, res) => {
   const { prn } = req.params;
-  const filePath = path.join(__dirname, "uploads", `${prn}.pdf`);
+  const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
   if (!fs.existsSync(filePath)) {
     return res.status(404).json({ message: "PDF not found" });
   }

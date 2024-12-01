@@ -50,11 +50,14 @@ function Landingpage() {
   
   const handlesubmitsignup=async()=>{
     try {
-      const response = await axios.post("https://localhost:3000/add", {
+      console.log(username,email,password)
+      
+       await axios.post("https://localhost:3000/add", {
         username: username,
         email: email,
         password: password,
         });
+   
       alert("Registration succcesful Successful!");
 
       navigate("/");

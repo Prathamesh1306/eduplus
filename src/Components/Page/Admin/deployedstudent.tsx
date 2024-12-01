@@ -14,7 +14,7 @@ function Deploystudent() {
   useEffect(() => {
     const fetchDeployedStudents = async () => {
       try {
-        const response = await axios.get("http://192.168.94.79:3000/deployed");
+        const response = await axios.get("http://localhost:3000/deployed");
         setDeployedStudents(response.data);
         setFilteredStudents(response.data); // Initialize filtered list
       } catch (error) {
@@ -40,9 +40,9 @@ function Deploystudent() {
   const handleViewClick = async (prn) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://192.168.94.79:3000/generate-pdf/${prn}`
-      );
+      const response = await axios.post("http://localhost:3000/generate-pdf", {
+        prn: prn, // Use the student's PRN from the array
+      });
       const { pdfUrl } = response.data;
 
       // Open the generated PDF in a new tab
@@ -82,7 +82,7 @@ function Deploystudent() {
               <div key={student.prn} className="student-item">
                 <span className="student-name">{student.name}</span>
                 <button
-                  className="view-link"
+                  className="view-link deploy-button"
                   onClick={() => handleViewClick(student.prn)}
                 >
                   View
