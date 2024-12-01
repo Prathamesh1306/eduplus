@@ -151,7 +151,8 @@ import Header from "../../compo/header_recruiter";
 import Footer from "../../compo/footer";
 import axios from "axios";
 
-const contractAddress: string = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627"; // Replace with your contract address
+// const contractAddress: string = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627"; // Replace with your contract address
+const contractAddress: string = "0xc85A55b5b79795761793ADF00CFD2aFe16BF850e"; // Replace with your contract address
 import contractABI from "../../../contract/abi.json";
 
 function Recruiter() {
@@ -160,7 +161,7 @@ function Recruiter() {
   const [hashValue, setHashValue] = useState<string>(""); // Hash input
   const [verificationResult, setVerificationResult] = useState<string>(""); // Result of verification
   const [status, setStatus] = useState<string>(""); // Connection status
-  const [file, setFile] = useState<File | null>(null); // File state
+  const [, setFile] = useState<File | null>(null); // File state
 
   useEffect(() => {
     const initBlockchain = async () => {

@@ -1,71 +1,143 @@
+// import React, { useEffect, useState } from "react";
 // import Header from "../../compo/header";
 // import Footer from "../../compo/footer";
 // import "../../css/studentcredential.css";
 
+// import axios from "axios";
+// import Cookies from "js-cookie";
+// import { jwtDecode } from "jwt-decode";
+
 // function Studentcredential() {
-//     return (
-//         <div className="student-credential">
-//             <Header name="Harsh" year="3rd year" role="STUDENT" />
 
-//             <div className="credential-content">
-//                 <h2>Credentials</h2>
+//   const [error, setError] = useState(""); // State for handling errors
 
-//                 <div className="credential-card">
-//                     <img src={ ' '} alt="pdf will be render" className="id-card-image" />
-//                 </div>
+//   // Decode JWT from cookie
+//   const cookies = Cookies.get("eduplus");
+//   const decoded = jwtDecode(cookies);
+//   const prn = decoded.prn; // Extracted PRN from JWT
+//   const name= decoded.username;
+//   // Fetch all students from the API
+//     const fetchStudents = async () => {
+//       try {
+//         const response = await axios.get(
+//           "http://localhost:3000/student",{
+//                 prn: prn
+//           }
+//         );
 
-//                 <div className="unique-id">
-//                     <span>Unique ID:</span>
-//                 </div>
-//             </div>
+//         const data = response.data
+//         setStudents(data); // Set the fetched students
+//       } catch (err) {
+//         console.error("Failed to fetch students:", err);
+//         setError("Failed to fetch student data.");
+//       }
+//     };
 
-//             <Footer />
+//   // Handle submit action
+//   const handleSubmit = async () => {
+//     try {
+//       // Sending PRN from JWT to the API
+//       await axios.post("http://localhost:3000/freeze-student", {
+//         prn: prn, // Use the PRN fetched from decoded JWT
+//       });
+//       alert("Request sent successfully!");
+//     } catch (error) {
+//       console.error("Error sending student request:", error);
+//       alert("Failed to send request. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div className="student-credential">
+//       <Header name={name} year="3rd year" role="STUDENT" />
+
+//       <div className="credential-content">
+//         <h2>Student Credentials</h2>
+
+//         {/* Search Form */}
+//         <div className="container-search">
+//           <div className="input-group">
+
+//             <button onClick={handleSubmit} className="deploy-button">
+//               Freeze and fetch certificate
+//             </button>
+//           </div>
 //         </div>
-//     );
+
+//         Student Details
+//         {error && <p className="error-message">{error}</p>}
+//         <button onClick={fetchStudents}>Fetch</button>
+
+//       </div>
+
+//       <br />
+//       <div className="credential-card">
+//         <img src={" "} alt="pdf will be render" className="id-card-image" />
+//       </div>
+
+//       <Footer />
+//     </div>
+//   );
 // }
 
 // export default Studentcredential;
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import "../../css/studentcredential.css";
 
 import axios from "axios";
 import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Correct import
 
 function Studentcredential() {
-
   const [error, setError] = useState(""); // State for handling errors
+  const [students, setStudents] = useState<any>(null); // State for fetched student data
+  const [pdfUrl, setPdfUrl] = useState(""); // State for PDF URL
 
   // Decode JWT from cookie
   const cookies = Cookies.get("eduplus");
-  const decoded = jwtDecode(cookies);
-  const prn = decoded.prn; // Extracted PRN from JWT
-  const name= decoded.username;
+  if (!cookies) {
+    setError("JWT token not found in cookies.");
+    return null; // Bail out if cookies are missing
+  }
+
+  let prn = "";
+  let name = "";
+
+  try {
+    const decoded = jwtDecode(cookies); // Safely decode JWT
+    prn = (decoded as any).prn; // Explicit casting
+    name = (decoded as any).username;
+  } catch (e) {
+    setError("Invalid JWT token.");
+    console.error("JWT decoding error:", e);
+    return null; // Bail out if decoding fails
+  }
+
   // Fetch all students from the API
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/student",{
-                prn: prn
-          }
-        );
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/student/${prn}`);
+      setStudents(response.data); // Set the fetched students
+    } catch (err) {
+      console.error("Failed to fetch students:", err);
+      setError("Failed to fetch student data.");
+    }
+  };
 
+  // Fetch and render the PDF
+  const fetchPdf = async () => {
+    try {
+      setPdfUrl(`http://localhost:3000/student/pdf/${prn}`);
+    } catch (err) {
+      console.error("Error fetching PDF:", err);
+      alert("Failed to fetch the PDF. Please try again.");
+    }
+  };
 
-        
-        const data = response.data
-        setStudents(data); // Set the fetched students
-      } catch (err) {
-        console.error("Failed to fetch students:", err);
-        setError("Failed to fetch student data.");
-      }
-    };
-
-  
-
-  // Handle submit action
+  // Handle submit action (freeze student)
   const handleSubmit = async () => {
     try {
       // Sending PRN from JWT to the API
@@ -78,8 +150,6 @@ function Studentcredential() {
       alert("Failed to send request. Please try again.");
     }
   };
-  
-
 
   return (
     <div className="student-credential">
@@ -91,27 +161,47 @@ function Studentcredential() {
         {/* Search Form */}
         <div className="container-search">
           <div className="input-group">
-            
             <button onClick={handleSubmit} className="deploy-button">
-              Freeze and fetch certificate
+              Freeze and Fetch Certificate
             </button>
           </div>
         </div>
 
-
-       
-
-
-
-        Student Details
         {error && <p className="error-message">{error}</p>}
-        <button onClick={fetchStudents}>Fetch</button>
-        
+
+        <button onClick={fetchStudents} className="deploy-button">Fetch Student Details</button>
+
+        {/* Render Student Details */}
+        {students && (
+          <div>
+            <h3>Student Details</h3>
+            <p>PRN: {students.prn}</p>
+            <p>Name: {students.name}</p>
+            <p>Email: {students.email}</p>
+          </div>
+        )}
       </div>
 
       <br />
+      <button onClick={fetchPdf} className="deploy-button">
+        View Certificate
+      </button>
       <div className="credential-card">
-        <img src={" "} alt="pdf will be render" className="id-card-image" />
+        {/* Render PDF */}
+        {pdfUrl ? (
+          <iframe
+            src={pdfUrl}
+            title="Student Certificate"
+            width="100%"
+            height="500px"
+          ></iframe>
+        ) : (
+          <img
+            src={" "}
+            alt="PDF will be rendered here"
+            className="id-card-image"
+          />
+        )}
       </div>
 
       <Footer />
@@ -120,138 +210,3 @@ function Studentcredential() {
 }
 
 export default Studentcredential;
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import Header from "../../compo/header";
-// import Footer from "../../compo/footer";
-// import "@react-pdf-viewer/core/lib/styles/index.css"; // PDF Viewer styles
-// import { Worker, Viewer } from "@react-pdf-viewer/core"; // React PDF Viewer
-// import "../../css/studentcredential.css";
-
-// function Studentcredential() {
-//   const [students, setStudents] = useState([]);
-//   const [filteredStudent, setFilteredStudent] = useState(null);
-//   const [searchPRN, setSearchPRN] = useState("");
-//   const [error, setError] = useState("");
-//   const [pdfUrl, setPdfUrl] = useState(null);
-
-//   // Fetch all students
-//   useEffect(() => {
-//     const fetchStudents = async () => {
-//       try {
-//         const response = await fetch(
-//           "http://localhost:3000/view/students/updated-to-verify-student"
-//         );
-//         const data = await response.json();
-//         setStudents(data);
-//       } catch (err) {
-//         console.error("Failed to fetch students:", err);
-//         setError("Failed to fetch student data.");
-//       }
-//     };
-
-//     fetchStudents();
-//   }, []);
-
-//   // Handle PRN search
-//   const handleSearch = () => {
-//     const student = students.find((stu) => stu.prn === searchPRN);
-//     if (student) {
-//       setFilteredStudent(student);
-//       setError("");
-
-//       // Set the PDF URL dynamically
-//       setPdfUrl(`http://localhost:3000/download-pdf/${student.prn}`);
-//     } else {
-//       setFilteredStudent(null);
-//       setError("No student found with the entered PRN.");
-//     }
-//   };
-
-//   return (
-//     <div className="student-credential">
-//       <Header name="Harsh" year="3rd year" role="STUDENT" />
-
-//       <div className="credential-content">
-//         <h2>Student Credentials</h2>
-
-//         {/* Search Form */}
-//         <div className="container-search">
-//           <div className="input-group">
-//             <input
-//               id="Input-search"
-//               name="input-search"
-//               type="text"
-//               placeholder="Enter PRN"
-//               value={searchPRN}
-//               onChange={(e) => setSearchPRN(e.target.value)}
-//               className="search-input"
-//             />
-//             <button onClick={handleSearch} className="deploy-button">
-//               Search
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Error Message */}
-//         {error && <p className="error-message">{error}</p>}
-
-//         {/* Student Details */}
-//         {filteredStudent && (
-//           <div>
-//             <div className="credential-card">
-//               <h3 className="student-title">{filteredStudent.name}</h3>
-//               <table className="student-table">
-//                 <tbody>
-//                   <tr>
-//                     <td><strong>PRN:</strong></td>
-//                     <td>{filteredStudent.prn}</td>
-//                   </tr>
-//                   <tr>
-//                     <td><strong>Programme:</strong></td>
-//                     <td>{filteredStudent.programme}</td>
-//                   </tr>
-//                 </tbody>
-//               </table>
-//             </div>
-
-//             {/* PDF Section */}
-//             {pdfUrl && (
-//               <div className="credential-card">
-//                 <h3>Grade Card PDF</h3>
-//                 <div style={{ border: "1px solid #ddd", padding: "10px" }}>
-//                   {/* Render PDF Viewer */}
-//                   <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.14.305/build/pdf.worker.min.js`}>
-//                     <Viewer fileUrl={pdfUrl} />
-//                   </Worker>
-//                 </div>
-//                 <button
-//                   onClick={() => window.open(pdfUrl, "_blank")}
-//                   className="download-button"
-//                   style={{
-//                     marginTop: "10px",
-//                     padding: "10px 20px",
-//                     backgroundColor: "#00695c",
-//                     color: "white",
-//                     borderRadius: "5px",
-//                     border: "none",
-//                   }}
-//                 >
-//                   Download PDF
-//                 </button>
-//               </div>
-//             )}
-//           </div>
-//         )}
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
-// export default Studentcredential;
