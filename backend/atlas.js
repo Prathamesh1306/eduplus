@@ -693,153 +693,6 @@ app.get("/scan-qrcode/:encryptedData", async (req, res) => {
   }
 });
 //dont change pdf routes
-// app.post("/generate-pdf", async (req, res) => {
-//   const { prn } = req.body;
-
-//   console.log("Received PRN for PDF generation:", req.body);
-
-
-//   try {
-//     const student = await studentModel.findOne({ prn });
-//     if (!student) {
-//       console.error(`Student with PRN ${prn} not found`);
-//       return res.status(404).send("Student not found");
-//     }
-//     if (!student.deployed) {
-//       console.error(`Student with PRN ${prn} is not deployed`);
-//       return res.status(400).send("not deployed");
-//     }
-//     const { iv: encryptedIv, encryptedData } = encryptData(prn);
-
-//     // const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
-//     const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
-//     //pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`
-//     const qrCodeDataUrl = await QRCode.toDataURL(qrCodeText);
-//     const pdfDoc = await PDFDocument.create();
-//     const width = 600;
-//     const height = 800;
-
-//     for (const semester of student.semesters) {
-//       const page = pdfDoc.addPage([width, height]);
-
-//       const qrCodeImage = await pdfDoc.embedPng(qrCodeDataUrl);
-//       const qrCodeDims = qrCodeImage.scale(0.5);
-
-//       page.drawImage(qrCodeImage, {
-//         x: 500,
-//         y: 100,
-//         width: qrCodeDims.width,
-//         height: qrCodeDims.height,
-//       });
-
-//       page.drawText(`Grade Card`, {
-//         x: 50,
-//         y: height - 50,
-//         size: 20,
-//         color: rgb(0, 0, 0),
-//       });
-//       page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 12 });
-//       page.drawText(`Seat No: ${student.seatNo}`, {
-//         x: 50,
-//         y: height - 100,
-//         size: 12,
-//       });
-//       page.drawText(`Name: ${student.name}`, {
-//         x: 50,
-//         y: height - 120,
-//         size: 12,
-//       });
-//       page.drawText(`Mother's Name: ${student.motherName}`, {
-//         x: 50,
-//         y: height - 140,
-//         size: 12,
-//       });
-//       page.drawText(`Programme: ${student.programme}`, {
-//         x: 50,
-//         y: height - 160,
-//         size: 12,
-//       });
-
-//       let yOffset = height - 190;
-//       page.drawText(`Semester ${semester.semester}`, {
-//         x: 50,
-//         y: yOffset,
-//         size: 14,
-//       });
-//       page.drawText(`Exam Date: ${semester.examDate}`, {
-//         x: 50,
-//         y: yOffset - 20,
-//         size: 12,
-//       });
-//       page.drawText(`SGPA: ${semester.sgpa}`, {
-//         x: 50,
-//         y: yOffset - 40,
-//         size: 12,
-//       });
-
-//       page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 12 });
-//       page.drawText("Course Title", { x: 150, y: yOffset - 60, size: 12 });
-//       page.drawText("Credits", { x: 310, y: yOffset - 60, size: 12 });
-//       page.drawText("CIE", { x: 360, y: yOffset - 60, size: 12 });
-//       page.drawText("ESE", { x: 410, y: yOffset - 60, size: 12 });
-//       page.drawText("Final Grade", { x: 460, y: yOffset - 60, size: 12 });
-//       yOffset -= 80;
-
-//       for (const course of semester.courses) {
-//         page.drawText(course.code, { x: 50, y: yOffset, size: 12 });
-//         page.drawText(course.title, { x: 150, y: yOffset, size: 12 });
-//         page.drawText(course.credits.toString(), {
-//           x: 310,
-//           y: yOffset,
-//           size: 12,
-//         });
-//         page.drawText(course.cie, { x: 360, y: yOffset, size: 12 });
-//         page.drawText(course.ese, { x: 410, y: yOffset, size: 12 });
-//         page.drawText(course.finalGrade, { x: 460, y: yOffset, size: 12 });
-//         yOffset -= 20;
-//       }
-//     }
-
-//     const lastPage = pdfDoc.getPages().at(-1);
-//     lastPage.drawText(`CGPA: ${student.cgpa}`, {
-//       x: 50,
-//       y: 50,
-//       size: 14,
-//     });
-
-//     const pdfBytes = await pdfDoc.save();
-//     const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
-//     fs.writeFileSync(filePath, pdfBytes);
-//     if (student.isHashGenerated) {
-//       console.log(`Hash already generated for PRN: ${prn}`);
-//     } else {
-//       const pdfHash = crypto
-//         .createHash("sha256")
-//         .update(pdfBytes)
-//         .digest("hex");
-//       console.log(`Generated hash: ${pdfHash}`);
-
-//       await studentModel.updateOne(
-//         { prn },
-//         { $set: { dataHash: pdfHash, isHashGenerated: true } }
-//       );
-//       console.log(`PDF generated successfully for PRN: ${prn}`);
-//       res.json({
-//         pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
-//         Hash: pdfHash,
-//       });
-//     }
-//     res.json({
-//       pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
-//       Hash: student.dataHash,
-//     });
-//   } catch (error) {
-//     console.error("Error generating PDF:", error);
-//     res.status(500).send("Error generating PDF");
-//   }
-// });
-
-
 app.post("/generate-pdf", async (req, res) => {
   const { prn } = req.body;
 
@@ -953,14 +806,25 @@ app.post("/generate-pdf", async (req, res) => {
       size: 14,
     });
 
+    pdfDoc.setTitle("");
+    pdfDoc.setAuthor("");
+    pdfDoc.setSubject("");
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer("");
+    pdfDoc.setCreator("");
+    const fixedDate = new Date("2024-01-01T00:00:00Z");
+    pdfDoc.setCreationDate(fixedDate);
+    pdfDoc.setModificationDate(fixedDate);
     const pdfBytes = await pdfDoc.save();
     const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
     fs.writeFileSync(filePath, pdfBytes);
-
-    // Check if hash is already generated
-    let pdfHash = student.isHashGenerated ? student.dataHash : null;
-    if (!pdfHash) {
-      pdfHash = crypto.createHash("sha256").update(pdfBytes).digest("hex");
+    if (student.isHashGenerated) {
+      console.log(`Hash already generated for PRN: ${prn}`);
+    } else {
+      const pdfHash = crypto
+        .createHash("sha256")
+        .update(pdfBytes)
+        .digest("hex");
       console.log(`Generated hash: ${pdfHash}`);
 
       // Save hash and update the student model
@@ -968,24 +832,26 @@ app.post("/generate-pdf", async (req, res) => {
         { prn },
         { $set: { dataHash: pdfHash, isHashGenerated: true } }
       );
+      console.log(`PDF generated successfully for PRN: ${prn}`);
+      res.json({
+        pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+        Hash: pdfHash,
+      });
     }
-
-    console.log(`PDF generated successfully for PRN: ${prn}`);
     res.json({
       pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
-      Hash: pdfHash,
+      Hash: student.dataHash,
     });
-
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
   }
 });
 
-
 //upload
 const upload = multer({ dest: "uploads/" });
-app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
+
+app.post("/upload-pdf", upload.single("pdf"), async (req, res) => {
   const file = req.file;
 
   if (!file) {
@@ -993,23 +859,41 @@ app.post("/upload-pdf", upload.single("pdf"), (req, res) => {
   }
 
   const filePath = file.path;
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      console.error("Error reading file:", err);
-      return res.status(500).send("Error processing file.");
-    }
 
-    const hash = crypto.createHash("sha256").update(data).digest("hex");
+  try {
+    const fileBuffer = fs.readFileSync(filePath);
 
-    // fs.unlink(filePath, (err) => {
-    //   if (err) {
-    //     console.error("Error deleting file:", er);
-    //   }
-    // });
+    const pdfDoc = await PDFDocument.load(fileBuffer);
+    pdfDoc.setTitle("");
+    pdfDoc.setAuthor("");
+    pdfDoc.setSubject("");
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer("");
+    pdfDoc.setCreator("");
+    const fixedDate = new Date("2024-01-01T00:00:00Z");
+    pdfDoc.setCreationDate(fixedDate);
+    pdfDoc.setModificationDate(fixedDate);
+
+    const sanitizedPdfBytes = await pdfDoc.save();
+
+    const hash = crypto
+      .createHash("sha256")
+      .update(sanitizedPdfBytes)
+      .digest("hex");
+
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error("Error deleting file:", err);
+      }
+    });
 
     res.status(200).json({ hash });
-  });
+  } catch (err) {
+    console.error("Error processing PDF:", err);
+    res.status(500).send("Error processing file.");
+  }
 });
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -1148,49 +1032,35 @@ app.post("/verifier-students", async (req, res) => {
   }
 });
 
-app.post("/upload-pdf-student", upload.single("pdf"), (req, res) => {
+app.post("/upload-pdf-student", upload.single("pdf"), async (req, res) => {
   const file = req.file;
-  const { prn } = req.body; // Assuming prn is sent in the request body
-
+  const { prn } = req.body;
+  const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
   if (!file) {
     return res.status(400).send("No file uploaded.");
   }
 
-  const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
+  try {
+    const uploadedFileBytes = fs.readFileSync(file.path);
 
-  // Rename the file with the prn
-  fs.rename(file.path, filePath, (err) => {
-    if (err) {
-      console.error("Error renaming file:", err);
-      return res.status(500).send("Error processing file.");
-    }
+    const pdfDoc = await PDFDocument.load(uploadedFileBytes);
 
-    res.download(filePath, `student_${prn}.pdf`, (err) => {
-      if (err) {
-        console.error("Error downloading file:", err);
-        return res.status(500).send("Error downloading PDF.");
-      }
+    pdfDoc.setTitle("");
+    pdfDoc.setAuthor("");
+    pdfDoc.setSubject("");
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer("");
+    const fixedDate = new Date("2024-01-01T00:00:00Z");
+    pdfDoc.setCreationDate(fixedDate);
+    pdfDoc.setModificationDate(fixedDate);
 
-      // Calculate and return the hash
-      fs.readFile(filePath, (err, data) => {
-        if (err) {
-          console.error("Error reading file:", err);
-          return res.status(500).send("Error processing file.");
-        }
-
-        //   const hash = crypto.createHash("sha256").update(data).digest("hex");
-
-        // Uncomment the following lines if you want to delete the file after processing
-        // fs.unlink(filePath, (err) => {
-        //   if (err) {
-        //     console.error('Error deleting file:', err);
-        //   }
-        // });
-
-        res.status(200).json();
-      });
-    });
-  });
+    const sanitizedBytes = await pdfDoc.save();
+    fs.writeFileSync(filePath, sanitizedBytes);
+    return res.status(200).send("PDF successfully uploaded and verified.");
+  } catch (error) {
+    console.error("Error processing uploaded PDF:", error);
+    res.status(500).send("Error processing uploaded PDF.");
+  }
 });
 
 app.post("/download-pdf-verifier", (req, res) => {
