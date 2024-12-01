@@ -214,8 +214,8 @@ interface Student {
 }
 
 // const CONTRACT_ADDRESS = "0xd2a5bC10698FD955D1Fe6cb468a17809A08fd005";
-// const CONTRACT_ADDRESS = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627";
-const CONTRACT_ADDRESS = "0x5f44edf49edf6014d791e327ef57045f99ea83b2";
+const CONTRACT_ADDRESS = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627";
+// const CONTRACT_ADDRESS = "0x5f44edf49edf6014d791e327ef57045f99ea83b2";
 const CONTRACT_ABI = abi;
 
 function VerifiedStudentList() {
@@ -261,21 +261,68 @@ function VerifiedStudentList() {
   };
 
 // After deployment success in your frontend
+// const handleDeploy = async (index: number) => {
+//   const student = verifiedStudents[index];
+//   const prnno = response.prn;
+//   console.log(student);
+
+//   const hashing =  axios.post("http://localhost:3000/generate-pdf", {
+//     prn:prnno
+//   }).then(()=>{console.log(hashing)});
+
+//   if (!hashing.data.Hash) {
+//     alert("Hash data is missing for this student.");
+//     return;
+//   }
+
+//   try {
+//     setLoading(true);
+//     const provider = await connectToMetaMask();
+//     if (!provider) return;
+
+//     const signer = provider.getSigner();
+//     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, await signer);
+
+//     // Call the `issueCredentials` function
+//     const tx = await contract.issueCredentials(hashing.data.Hash);
+//     await tx.wait(); // Wait for the transaction to be mined
+
+//     // Send the transaction details to the backend
+//     await axios.post("http://localhost:3000/update-transaction", {
+//       prn: student.prn,
+//       transactionHash: tx.hash,
+//     });
+
+//     // Update the local state and deployed status
+//     const updatedStudents = [...verifiedStudents];
+//     updatedStudents[index].deployed = true;
+//     setVerifiedStudents(updatedStudents);
+
+//     alert("Hash successfully deployed to blockchain!");
+//   } catch (error) {
+//     console.error("Error deploying hash:", error);
+//     alert("Error deploying hash.");
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+
+
 const handleDeploy = async (index: number) => {
   const student = verifiedStudents[index];
-  const prnno = response.prn;
-  console.log(student);
-
-  const hashing =  axios.post("http://localhost:3000/generate-pdf", {
-    prn:prnno
-  }).then(()=>{console.log(hashing)});
-
-  if (!hashing.data.Hash) {
-    alert("Hash data is missing for this student.");
-    return;
-  }
 
   try {
+    // Call the backend API to generate the hash and PDF
+    const hashing = await axios.post("http://localhost:3000/generate-pdf", {
+      prn: student.prn, // Use the student's PRN from the array
+    });
+
+    if (!hashing.data.Hash) {
+      alert("Hash data is missing for this student.");
+      return;
+    }
+
     setLoading(true);
     const provider = await connectToMetaMask();
     if (!provider) return;
@@ -283,7 +330,7 @@ const handleDeploy = async (index: number) => {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, await signer);
 
-    // Call the `issueCredentials` function
+    // Call the `issueCredentials` function with the hash
     const tx = await contract.issueCredentials(hashing.data.Hash);
     await tx.wait(); // Wait for the transaction to be mined
 
@@ -306,6 +353,7 @@ const handleDeploy = async (index: number) => {
     setLoading(false);
   }
 };
+
 
 
   return (

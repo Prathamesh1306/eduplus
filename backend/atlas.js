@@ -633,6 +633,152 @@ app.get("/scan-qrcode/:encryptedData", async (req, res) => {
   }
 });
 
+// app.post("/generate-pdf", async (req, res) => {
+//   const { prn } = req.body;
+
+//   try {
+//     const student = await studentModel.findOne({ prn });
+//     if (!student) {
+//       console.error(`Student with PRN ${prn} not found`);
+//       return res.status(404).send("Student not found");
+//     }
+//     // if (!student.deployed) {
+//     //   console.error(`Student with PRN ${prn} is not deployed`);
+//     //   return res.status(400).send("not deployed");
+//     // }
+//     const { iv: encryptedIv, encryptedData } = encryptData(prn);
+
+//     // const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
+//     const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
+//     //pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`
+//     const qrCodeDataUrl = await QRCode.toDataURL(qrCodeText);
+//     const pdfDoc = await PDFDocument.create();
+//     const width = 600;
+//     const height = 800;
+
+//     for (const semester of student.semesters) {
+//       const page = pdfDoc.addPage([width, height]);
+
+//       const qrCodeImage = await pdfDoc.embedPng(qrCodeDataUrl);
+//       const qrCodeDims = qrCodeImage.scale(0.5);
+
+//       page.drawImage(qrCodeImage, {
+//         x: 500,
+//         y: 100,
+//         width: qrCodeDims.width,
+//         height: qrCodeDims.height,
+//       });
+
+//       page.drawText(`Grade Card`, {
+//         x: 50,
+//         y: height - 50,
+//         size: 20,
+//         color: rgb(0, 0, 0),
+//       });
+//       page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 12 });
+//       page.drawText(`Seat No: ${student.seatNo}`, {
+//         x: 50,
+//         y: height - 100,
+//         size: 12,
+//       });
+//       page.drawText(`Name: ${student.name}`, {
+//         x: 50,
+//         y: height - 120,
+//         size: 12,
+//       });
+//       page.drawText(`Mother's Name: ${student.motherName}`, {
+//         x: 50,
+//         y: height - 140,
+//         size: 12,
+//       });
+//       page.drawText(`Programme: ${student.programme}`, {
+//         x: 50,
+//         y: height - 160,
+//         size: 12,
+//       });
+
+//       let yOffset = height - 190;
+//       page.drawText(`Semester ${semester.semester}`, {
+//         x: 50,
+//         y: yOffset,
+//         size: 14,
+//       });
+//       page.drawText(`Exam Date: ${semester.examDate}`, {
+//         x: 50,
+//         y: yOffset - 20,
+//         size: 12,
+//       });
+//       page.drawText(`SGPA: ${semester.sgpa}`, {
+//         x: 50,
+//         y: yOffset - 40,
+//         size: 12,
+//       });
+
+//       page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 12 });
+//       page.drawText("Course Title", { x: 150, y: yOffset - 60, size: 12 });
+//       page.drawText("Credits", { x: 310, y: yOffset - 60, size: 12 });
+//       page.drawText("CIE", { x: 360, y: yOffset - 60, size: 12 });
+//       page.drawText("ESE", { x: 410, y: yOffset - 60, size: 12 });
+//       page.drawText("Final Grade", { x: 460, y: yOffset - 60, size: 12 });
+//       yOffset -= 80;
+
+//       for (const course of semester.courses) {
+//         page.drawText(course.code, { x: 50, y: yOffset, size: 12 });
+//         page.drawText(course.title, { x: 150, y: yOffset, size: 12 });
+//         page.drawText(course.credits.toString(), {
+//           x: 310,
+//           y: yOffset,
+//           size: 12,
+//         });
+//         page.drawText(course.cie, { x: 360, y: yOffset, size: 12 });
+//         page.drawText(course.ese, { x: 410, y: yOffset, size: 12 });
+//         page.drawText(course.finalGrade, { x: 460, y: yOffset, size: 12 });
+//         yOffset -= 20;
+//       }
+//     }
+
+//     const lastPage = pdfDoc.getPages().at(-1);
+//     lastPage.drawText(`CGPA: ${student.cgpa}`, {
+//       x: 50,
+//       y: 50,
+//       size: 14,
+//     });
+
+//     const pdfBytes = await pdfDoc.save();
+//     const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
+//     fs.writeFileSync(filePath, pdfBytes);
+//     if (student.isHashGenerated) {
+//       console.log(`Hash already generated for PRN: ${prn}`);
+//     } else {
+//       const pdfHash = crypto
+//         .createHash("sha256")
+//         .update(pdfBytes)
+//         .digest("hex");
+//       console.log(`Generated hash: ${pdfHash}`);
+
+//       await studentModel.updateOne(
+//         { prn },
+//         { $set: { dataHash: pdfHash, isHashGenerated: true } }
+//       );
+//       console.log(`PDF generated successfully for PRN: ${prn}`);
+//       res.json({
+//         pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+//         Hash: pdfHash,
+//       });
+//     }
+//     res.json({
+//       pdfUrl: `http://${hostname}:3000/${prn}`,
+//       Hash: student.dataHash,
+//     });
+//   } catch (error) {
+//     console.error("Error generating PDF:", error);
+//     res.status(500).send("Error generating PDF");
+//   }
+// });
+
+
+
+///new function
 app.post("/generate-pdf", async (req, res) => {
   const { prn } = req.body;
 
@@ -642,23 +788,17 @@ app.post("/generate-pdf", async (req, res) => {
       console.error(`Student with PRN ${prn} not found`);
       return res.status(404).send("Student not found");
     }
-    // if (!student.deployed) {
-    //   console.error(`Student with PRN ${prn} is not deployed`);
-    //   return res.status(400).send("not deployed");
-    // }
-    const { iv: encryptedIv, encryptedData } = encryptData(prn);
 
-    // const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
+    const { iv: encryptedIv, encryptedData } = encryptData(prn);
     const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
-    //pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`
     const qrCodeDataUrl = await QRCode.toDataURL(qrCodeText);
     const pdfDoc = await PDFDocument.create();
+
     const width = 600;
     const height = 800;
 
     for (const semester of student.semesters) {
       const page = pdfDoc.addPage([width, height]);
-
       const qrCodeImage = await pdfDoc.embedPng(qrCodeDataUrl);
       const qrCodeDims = qrCodeImage.scale(0.5);
 
@@ -669,33 +809,8 @@ app.post("/generate-pdf", async (req, res) => {
         height: qrCodeDims.height,
       });
 
-      page.drawText(`Grade Card`, {
-        x: 50,
-        y: height - 50,
-        size: 20,
-        color: rgb(0, 0, 0),
-      });
+      page.drawText(`Grade Card`, { x: 50, y: height - 50, size: 20 });
       page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 12 });
-      page.drawText(`Seat No: ${student.seatNo}`, {
-        x: 50,
-        y: height - 100,
-        size: 12,
-      });
-      page.drawText(`Name: ${student.name}`, {
-        x: 50,
-        y: height - 120,
-        size: 12,
-      });
-      page.drawText(`Mother's Name: ${student.motherName}`, {
-        x: 50,
-        y: height - 140,
-        size: 12,
-      });
-      page.drawText(`Programme: ${student.programme}`, {
-        x: 50,
-        y: height - 160,
-        size: 12,
-      });
 
       let yOffset = height - 190;
       page.drawText(`Semester ${semester.semester}`, {
@@ -703,78 +818,48 @@ app.post("/generate-pdf", async (req, res) => {
         y: yOffset,
         size: 14,
       });
-      page.drawText(`Exam Date: ${semester.examDate}`, {
-        x: 50,
-        y: yOffset - 20,
-        size: 12,
-      });
-      page.drawText(`SGPA: ${semester.sgpa}`, {
-        x: 50,
-        y: yOffset - 40,
-        size: 12,
-      });
 
-      page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 12 });
-      page.drawText("Course Title", { x: 150, y: yOffset - 60, size: 12 });
-      page.drawText("Credits", { x: 310, y: yOffset - 60, size: 12 });
-      page.drawText("CIE", { x: 360, y: yOffset - 60, size: 12 });
-      page.drawText("ESE", { x: 410, y: yOffset - 60, size: 12 });
-      page.drawText("Final Grade", { x: 460, y: yOffset - 60, size: 12 });
       yOffset -= 80;
-
       for (const course of semester.courses) {
         page.drawText(course.code, { x: 50, y: yOffset, size: 12 });
-        page.drawText(course.title, { x: 150, y: yOffset, size: 12 });
-        page.drawText(course.credits.toString(), {
-          x: 310,
-          y: yOffset,
-          size: 12,
-        });
-        page.drawText(course.cie, { x: 360, y: yOffset, size: 12 });
-        page.drawText(course.ese, { x: 410, y: yOffset, size: 12 });
-        page.drawText(course.finalGrade, { x: 460, y: yOffset, size: 12 });
         yOffset -= 20;
       }
     }
 
-    const lastPage = pdfDoc.getPages().at(-1);
-    lastPage.drawText(`CGPA: ${student.cgpa}`, {
-      x: 50,
-      y: 50,
-      size: 14,
-    });
-
     const pdfBytes = await pdfDoc.save();
     const filePath = path.join(__dirname, `GradeCard_${prn}.pdf`);
     fs.writeFileSync(filePath, pdfBytes);
+
     if (student.isHashGenerated) {
       console.log(`Hash already generated for PRN: ${prn}`);
-    } else {
-      const pdfHash = crypto
-        .createHash("sha256")
-        .update(pdfBytes)
-        .digest("hex");
-      console.log(`Generated hash: ${pdfHash}`);
-
-      await studentModel.updateOne(
-        { prn },
-        { $set: { dataHash: pdfHash, isHashGenerated: true } }
-      );
-      console.log(`PDF generated successfully for PRN: ${prn}`);
-      res.json({
+      return res.json({
         pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
-        Hash: pdfHash,
+        Hash: student.dataHash,
       });
     }
-    res.json({
-      pdfUrl: `http://${hostname}:3000/${prn}`,
-      Hash: student.dataHash,
+
+    const pdfHash = crypto
+      .createHash("sha256")
+      .update(pdfBytes)
+      .digest("hex");
+
+    console.log(`Generated hash: ${pdfHash}`);
+    await studentModel.updateOne(
+      { prn },
+      { $set: { dataHash: pdfHash, isHashGenerated: true } }
+    );
+
+    console.log(`PDF generated successfully for PRN: ${prn}`);
+    return res.json({
+      pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+      Hash: pdfHash,
     });
   } catch (error) {
     console.error("Error generating PDF:", error);
-    res.status(500).send("Error generating PDF");
+    return res.status(500).send("Error generating PDF");
   }
 });
+
 
 //upload
 const upload = multer({ dest: "uploads/" });

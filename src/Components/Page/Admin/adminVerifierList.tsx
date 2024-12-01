@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -16,11 +17,9 @@ const AdminRecutierList = () => {
           "http://localhost:3000/get-all-verifiers"
         );
         console.log("This is response", response.data);
-
         setRecrutier(response.data);
       } catch (error) {
         console.error("Error fetching verifiers:", error);
-        console.log("Hello");
       }
     };
 
@@ -59,35 +58,66 @@ const AdminRecutierList = () => {
             justifyItems: "center",
             borderRadius: "20px",
             padding: "20px 0px",
+            overflowX: "auto",
           }}
         >
           {recrutier.length > 0 ? (
-            recrutier.map((verifier) => (
-              <div
-                key={verifier._id}
-                style={{ display: "flex", marginBottom: "10px" }}
-              >
-                <p style={{ color: "#fff", padding: "0px 20px" }}>
-                  <strong>Name:</strong> {verifier.email}
-                </p>
-                <div
-                  onClick={() => {
-                    console.log(verifier._id, "Pressed");
-                    changeStatus(verifier.email);
-                  }}
-                  style={{
-                    backgroundColor: verifier.verify ? "blue" : "green",
-                    padding: "5px 10px",
-                    color: "#fff",
-                    borderRadius: "10px",
-                    userSelect: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  {verifier.verify ? "Revoke Access" : "Provide Access"}
-                </div>
-              </div>
-            ))
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                marginTop: "20px",
+                textAlign: "left",
+              }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: "#026b56", color: "#fff" }}>
+                  <th style={{ padding: "10px" }}>Email</th>
+                  <th style={{ padding: "10px" }}>Status</th>
+                  <th style={{ padding: "10px" }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recrutier.map((verifier) => (
+                  <tr
+                    key={verifier._id}
+                    style={{
+                      backgroundColor: verifier.verify ? "#e7f6f2" : "#f6f2e7",
+                      color: "#333",
+                    }}
+                  >
+                    <td style={{ padding: "10px" }}>{verifier.email}</td>
+                    <td style={{ padding: "10px" }}>
+                      <span
+                        style={{
+                          padding: "5px 10px",
+                          borderRadius: "5px",
+                          backgroundColor: verifier.verify ? "green" : "red",
+                          color: "#fff",
+                        }}
+                      >
+                        {verifier.verify ? "Verified" : "Not Verified"}
+                      </span>
+                    </td>
+                    <td style={{ padding: "10px" }}>
+                      <button
+                        onClick={() => changeStatus(verifier.email)}
+                        style={{
+                          padding: "5px 10px",
+                          backgroundColor: verifier.verify ? "#007bff" : "#28a745",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {verifier.verify ? "Revoke Access" : "Provide Access"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <p>No verifiers found.</p>
           )}
@@ -99,6 +129,127 @@ const AdminRecutierList = () => {
 };
 
 export default AdminRecutierList;
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import axios from "axios";
+// import Header from "../../compo/header_admin";
+// import Footer from "../../compo/footer";
+// import "../../css/admin-student-list-container.css";
+
+// const AdminRecutierList = () => {
+//   const [recrutier, setRecrutier] = useState([]); // State to store verifier data
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const fetchVerifier = async () => {
+//       try {
+//         const response = await axios.get(
+//           "http://localhost:3000/get-all-verifiers"
+//         );
+//         console.log("This is response", response.data);
+
+//         setRecrutier(response.data);
+//       } catch (error) {
+//         console.error("Error fetching verifiers:", error);
+//         console.log("Hello");
+//       }
+//     };
+
+//     fetchVerifier();
+//   }, []);
+
+//   const changeStatus = async (email: string) => {
+//     try {
+//       const response = await axios.post(
+//         "http://localhost:3000/change-verifier",
+//         { email }
+//       );
+//       console.log("Status changed successfully:", response.data);
+
+//       setRecrutier((prevRecrutier) =>
+//         prevRecrutier.map((verifier) =>
+//           verifier.email === email
+//             ? { ...verifier, verify: !verifier.verify }
+//             : verifier
+//         )
+//       );
+//     } catch (error) {
+//       console.error("Error changing status:", error);
+//     }
+//   };
+
+//   return (
+//     <div className="admin-student-list-container">
+//       <Header role="ADMIN" />
+//       <div className="admin-student-list-main">
+//         <div className="admin-student-list-title">Verifier List</div>
+//         <div
+//           style={{
+//             backgroundColor: "#028978",
+//             width: "80%",
+//             justifyItems: "center",
+//             borderRadius: "20px",
+//             padding: "20px 0px",
+//           }}
+//         >
+//           {recrutier.length > 0 ? (
+//             recrutier.map((verifier) => (
+//               <div
+//                 key={verifier._id}
+//                 style={{ display: "flex", marginBottom: "10px" }}
+//               >
+//                 <p style={{ color: "#fff", padding: "0px 20px" }}>
+//                   <strong>Name:</strong> {verifier.email}
+//                 </p>
+//                 <div
+//                   onClick={() => {
+//                     console.log(verifier._id, "Pressed");
+//                     changeStatus(verifier.email);
+//                   }}
+//                   style={{
+//                     backgroundColor: verifier.verify ? "blue" : "green",
+//                     padding: "5px 10px",
+//                     color: "#fff",
+//                     borderRadius: "10px",
+//                     userSelect: "none",
+//                     cursor: "pointer",
+//                   }}
+//                 >
+//                   {verifier.verify ? "Revoke Access" : "Provide Access"}
+//                 </div>
+//               </div>
+//             ))
+//           ) : (
+//             <p>No verifiers found.</p>
+//           )}
+//         </div>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default AdminRecutierList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
