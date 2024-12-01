@@ -820,6 +820,10 @@ app.post("/generate-pdf", async (req, res) => {
     fs.writeFileSync(filePath, pdfBytes);
     if (student.isHashGenerated) {
       console.log(`Hash already generated for PRN: ${prn}`);
+      res.json({
+      pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+      Hash: student.dataHash,
+    });
     } else {
       const pdfHash = crypto
         .createHash("sha256")
@@ -838,10 +842,7 @@ app.post("/generate-pdf", async (req, res) => {
         Hash: pdfHash,
       });
     }
-    res.json({
-      pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
-      Hash: student.dataHash,
-    });
+    
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
