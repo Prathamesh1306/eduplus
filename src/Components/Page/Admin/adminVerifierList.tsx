@@ -5,48 +5,45 @@ import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/admin-student-list-container.css";
 
-const AdminStudentList = () => {
-  const [studentList, setStudentList] = useState([]);
-  const [verifiedPRNs, setVerifiedPRNs] = useState([]); // To track verified students' PRNs
+const AdminRecutierList = () => {
+  const [recrutier, setRecrutier] = useState([]); // State to store verifier data
   const navigate = useNavigate();
 
-  // Fetch students from the backend
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchVerifier = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/view/students");
-        const unverifiedStudents = response.data.filter(
-          (student) => !student.status
+        const response = await axios.get(
+          "http://localhost:3000/get-all-verifiers"
         );
-        setStudentList(unverifiedStudents);
+        console.log("This is response", response.data);
+
+        setRecrutier(response.data);
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching verifiers:", error);
+        console.log("Hello");
       }
     };
-    fetchStudents();
+
+    fetchVerifier();
   }, []);
 
-  // Handle verification of a student
-  const handleVerify = (index) => {
-    const updatedList = [...studentList];
-    updatedList[index].status = true; // Update status locally
-    setStudentList(updatedList);
-    setVerifiedPRNs([...verifiedPRNs, updatedList[index].prn]); // Add PRN to the verified list
-  };
-
-  // Handle submission and navigate to the next page
-  const handleSubmit = async () => {
+  const changeStatus = async (email: string) => {
     try {
-      await axios.post("http://localhost:3000/students/update-status", {
-        prns: verifiedPRNs,
-      });
-      alert("Student statuses updated successfully!");
+      const response = await axios.post(
+        "http://localhost:3000/change-verifier",
+        { email }
+      );
+      console.log("Status changed successfully:", response.data);
 
-      // Navigate to the next page
-      navigate("/verified-students", { state: { verifiedPRNs } });
+      setRecrutier((prevRecrutier) =>
+        prevRecrutier.map((verifier) =>
+          verifier.email === email
+            ? { ...verifier, verify: !verifier.verify }
+            : verifier
+        )
+      );
     } catch (error) {
-      console.error("Error updating student statuses:", error);
-      alert("Failed to update student statuses. Please try again.");
+      console.error("Error changing status:", error);
     }
   };
 
@@ -54,31 +51,45 @@ const AdminStudentList = () => {
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
       <div className="admin-student-list-main">
-        <div className="admin-student-list-title">Student Management</div>
-        <div className="admin-student-list-renderList">
-          {studentList.length > 0 ? (
-            studentList.map((student, index) => (
-              <div key={student.prn} className="student-item">
-                <span className="student-item-name">{student.name}</span>
-                {student.status ? (
-                  <span className="status-status">Verified</span>
-                ) : (
-                  <button
-                    className="verify-button"
-                    onClick={() => handleVerify(index)}
-                  >
-                    Verify
-                  </button>
-                )}
+        <div className="admin-student-list-title">Verifier List</div>
+        <div
+          style={{
+            backgroundColor: "#028978",
+            width: "80%",
+            justifyItems: "center",
+            borderRadius: "20px",
+            padding: "20px 0px",
+          }}
+        >
+          {recrutier.length > 0 ? (
+            recrutier.map((verifier) => (
+              <div
+                key={verifier._id}
+                style={{ display: "flex", marginBottom: "10px" }}
+              >
+                <p style={{ color: "#fff", padding: "0px 20px" }}>
+                  <strong>Name:</strong> {verifier.email}
+                </p>
+                <div
+                  onClick={() => {
+                    console.log(verifier._id, "Pressed");
+                    changeStatus(verifier.email);
+                  }}
+                  style={{
+                    backgroundColor: verifier.verify ? "blue" : "green",
+                    padding: "5px 10px",
+                    color: "#fff",
+                    borderRadius: "10px",
+                    userSelect: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {verifier.verify ? "Revoke Access" : "Provide Access"}
+                </div>
               </div>
             ))
           ) : (
-            <p>No students to verify.</p>
-          )}
-          {studentList.length > 0 && (
-            <div className="admin-student-list-btn" onClick={handleSubmit}>
-              NEXT
-            </div>
+            <p>No verifiers found.</p>
           )}
         </div>
       </div>
@@ -87,8 +98,7 @@ const AdminStudentList = () => {
   );
 };
 
-export default AdminStudentList;
-
+export default AdminRecutierList;
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
@@ -150,7 +160,7 @@ export default AdminStudentList;
 //           },
 //           credentials: "include", // Include cookies for authentication
 //         });
-        
+
 //         if (!response.ok) {
 //           throw new Error(`Error: ${response.status}`);
 //         }

@@ -50,12 +50,11 @@ function Landingpage() {
   
   const handlesubmitsignup=async()=>{
     try {
-      const response = await axios.post("http://localhost:3000/add", {
+      const response = await axios.post("https://localhost:3000/add", {
         username: username,
         email: email,
         password: password,
         });
-
       alert("Registration succcesful Successful!");
 
       navigate("/");
@@ -86,12 +85,9 @@ function Landingpage() {
         email: email,
         password: password,
       });
-
       alert("Login Successful!");
 
       const { role,token } = response.data;
-      console.log("Response:", response.data);
-    
       Cookies.set("eduplus",token,{ expires: 1});
 
       // Redirect based on role
@@ -99,7 +95,7 @@ function Landingpage() {
         navigate("/admin-home");
       } else if (role === "student") {
         navigate("/student");
-      } else if (role === "employer") {
+      } else if (role === "verifier") {
         navigate("/recruiter");
       } else {
         alert("Invalid role. Please contact support.");

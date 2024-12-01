@@ -9,25 +9,22 @@ interface CardProps {
   description: string;
 }
 
-const Card: React.FC<CardProps> = ({ image, image2, title, description }) => {
+const Card: React.FC<CardProps> = ({ image, image2, title, description , }) => {
   const navigate = useNavigate();
 
   // Function to handle navigation based on the card title
   const handleNavigation = () => {
     let path = '';
     switch (title) {
-      case 'Student Management':
-        path = '/admin-student-list';
+      case 'Verifier List':
+        path = '/admin-recruiter-list';
         break;
-        case 'Verified student':
-          path = '/verified-students';
-          break;
+      case 'Freezed student':
+        path = '/verified-students';
+        break;
       case 'Deployed Students':
         path = '/admin-deployedstudent';
         break;
-      // case 'Credential Validation':
-      //   path = '/admin-recruiter-list';
-      //   break;
       default:
         break;
     }

@@ -30,22 +30,32 @@ import React, { useEffect, useState } from "react";
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import "../../css/studentcredential.css";
-import sha256 from "crypto-js/sha256";
+
+import axios from "axios";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 function Studentcredential() {
-  const [students, setStudents] = useState([]); // State to hold fetched student data
-  const [filteredStudent, setFilteredStudent] = useState(null); // State for search results
-  const [searchPRN, setSearchPRN] = useState(""); // State for the search input
+
   const [error, setError] = useState(""); // State for handling errors
 
+  // Decode JWT from cookie
+  const cookies = Cookies.get("eduplus");
+  const decoded = jwtDecode(cookies);
+  const prn = decoded.prn; // Extracted PRN from JWT
+  const name= decoded.username;
   // Fetch all students from the API
-  useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:3000/view/students/updated-to-verify-student"
+        const response = await axios.get(
+          "http://localhost:3000/student",{
+                prn: prn
+          }
         );
-        const data = await response.json();
+
+
+        
+        const data = response.data
         setStudents(data); // Set the fetched students
       } catch (err) {
         console.error("Failed to fetch students:", err);
@@ -53,32 +63,27 @@ function Studentcredential() {
       }
     };
 
-    fetchStudents();
-  }, []);
+  
 
-  // Handle PRN search
-  const handleSearch = () => {
-    const student = students.find((stu) => stu.prn === searchPRN);
-    if (student) {
-      setFilteredStudent(student);
-      setError("");
-    } else {
-      setFilteredStudent(null);
-      setError("No student found with the entered PRN.");
+  // Handle submit action
+  const handleSubmit = async () => {
+    try {
+      // Sending PRN from JWT to the API
+      await axios.post("http://localhost:3000/freeze-student", {
+        prn: prn, // Use the PRN fetched from decoded JWT
+      });
+      alert("Request sent successfully!");
+    } catch (error) {
+      console.error("Error sending student request:", error);
+      alert("Failed to send request. Please try again.");
     }
   };
+  
 
-  // Handle Verification
-  const handleVerify = () => {
-    if (filteredStudent) {
-      const hash = sha256(JSON.stringify(filteredStudent)).toString();
-      setFilteredStudent({ ...filteredStudent, dataHash: hash }); // Update filtered student with hash
-    }
-  };
 
   return (
     <div className="student-credential">
-      <Header name="Harsh" year="3rd year" role="STUDENT" />
+      <Header name={name} year="3rd year" role="STUDENT" />
 
       <div className="credential-content">
         <h2>Student Credentials</h2>
@@ -86,118 +91,22 @@ function Studentcredential() {
         {/* Search Form */}
         <div className="container-search">
           <div className="input-group">
-            <input
-              id="Input-search"
-              name="input-search"
-              type="text"
-              placeholder="Enter PRN"
-              value={searchPRN}
-              onChange={(e) => setSearchPRN(e.target.value)}
-              className="search-input"
-            />
-            <button onClick={handleSearch} className="deploy-button">
-              Search
+            
+            <button onClick={handleSubmit} className="deploy-button">
+              Freeze and fetch certificate
             </button>
           </div>
         </div>
 
-        {/* Student Details */}
+
+       
+
+
+
+        Student Details
         {error && <p className="error-message">{error}</p>}
-        {filteredStudent && (
-          <div className="credential-card">
-            <h3 className="student-title">{filteredStudent.name}</h3>
-
-            {/* Student Information Table */}
-            <div className="table-wrapper">
-              <table className="student-table">
-                <tbody>
-                  <tr>
-                    <td>
-                      <strong>PRN:</strong>
-                    </td>
-                    <td>{filteredStudent.prn}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Seat No:</strong>
-                    </td>
-                    <td>{filteredStudent.seatNo}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Mother's Name:</strong>
-                    </td>
-                    <td>{filteredStudent.motherName}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Programme:</strong>
-                    </td>
-                    <td>{filteredStudent.programme}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>CGPA:</strong>
-                    </td>
-                    <td>{filteredStudent.cgpa}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Unique ID:</strong>
-                    </td>
-                    <td>{filteredStudent.dataHash || "Not Verified"}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <br />
-            {/* Semester and Course Details */}
-            <div className="semester-section">
-              {filteredStudent.semesters.map((semester, index) => (
-                <div key={index}>
-                  <h4>
-                    Semester: {semester.semester} | Exam Date:{" "}
-                    {semester.examDate} | SGPA: {semester.sgpa}
-                  </h4>
-                  <div className="table-wrapper">
-                    <table className="course-table">
-                      <thead>
-                        <tr>
-                          <th>Code</th>
-                          <th>Title</th>
-                          <th>Credits</th>
-                          <th>CIE</th>
-                          <th>ESE</th>
-                          <th>Final Grade</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {semester.courses.map((course, courseIndex) => (
-                          <tr key={courseIndex}>
-                            <td>{course.code}</td>
-                            <td>{course.title}</td>
-                            <td>{course.credits}</td>
-                            <td>{course.cie}</td>
-                            <td>{course.ese}</td>
-                            <td>{course.finalGrade}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              className="verify-button"
-              onClick={handleVerify}
-              disabled={!!filteredStudent.dataHash} // Disable button if already verified
-            >
-              {filteredStudent.dataHash ? "Verified" : "Verify"}
-            </button>
-          </div>
-        )}
+        <button onClick={fetchStudents}>Fetch</button>
+        
       </div>
 
       <br />

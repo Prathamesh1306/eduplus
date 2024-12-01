@@ -209,6 +209,9 @@ function Recruiter() {
     }
   };
 
+
+  
+
   // const getIssuedCredentials = async () => {
   //   if (!contract) {
   //     setStatus("Contract not initialized.");
@@ -262,6 +265,12 @@ function Recruiter() {
             value={hashValue}
             onChange={(e) => setHashValue(e.target.value)}
             className="form-input"
+          />
+
+          <input
+            type="file"
+            placeholder="upload pdf"
+          
           />
           <button
             type="button"

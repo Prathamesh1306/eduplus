@@ -48,16 +48,16 @@ function Header({ role }: HeaderProps) {
           />
         </div>
         <div className="tabs">
-          <a className="tab">
+          {/* <a className="tab">
             Home
-          </a>
+          </a> */}
           
             <a
             className="tab"
             href="#"
-            onClick={() => scrollToSection("footer")}style={{ userSelect:"none"}}
+            onClick={() => scrollToSection("footer")}style={{textAlign:"right"}}
           >
-            About Us
+          ABOUT US
           </a>
         </div>
         <div className="collab">
@@ -67,12 +67,13 @@ function Header({ role }: HeaderProps) {
             </div>
             <span className="play-icon">▶</span>
           </div> */}
+          
           <div className="logout" onClick={Logout}>
             LOGOUT
           </div>
         </div>
       </div>
-      <div className="role">{role}</div>
+      <div className="role" style={{textAlign:"center"}}>{role}</div>
     </div>
   );
 }

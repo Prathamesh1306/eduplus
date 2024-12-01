@@ -20,7 +20,10 @@ function Recruiter() {
           
           
         </form>
-        <button className="initiate-button" onClick={()=>navigate('/searchrecruiter2')} >INITIATE PAYMENT</button>
+        
+        
+
+
       </div>
 
   

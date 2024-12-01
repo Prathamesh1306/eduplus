@@ -14,7 +14,7 @@ function Deploystudent() {
   useEffect(() => {
     const fetchDeployedStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/deployed");
+        const response = await axios.get("http://192.168.94.79:3000/deployed");
         setDeployedStudents(response.data);
         setFilteredStudents(response.data); // Initialize filtered list
       } catch (error) {
@@ -41,7 +41,7 @@ function Deploystudent() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/generate-pdf/${prn}`
+        `http://192.168.94.79:3000/generate-pdf/${prn}`
       );
       const { pdfUrl } = response.data;
 

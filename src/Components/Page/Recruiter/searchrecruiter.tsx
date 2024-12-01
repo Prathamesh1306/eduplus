@@ -24,6 +24,7 @@ function Recruiter() {
             <input type="text" placeholder="Unique ID" />
           </label>
         </form>
+        
         <button className="initiate-button" onClick={()=>navigate('/searchrecruiter1')} >INITIATE PAYMENT</button>
       </div>
 

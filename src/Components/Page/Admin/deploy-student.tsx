@@ -227,10 +227,10 @@ function VerifiedStudentList() {
   useEffect(() => {
     const fetchVerifiedStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/view/students/updated");
-        const students = response.data.map((student: any) => ({
+        const response = await axios.get("http://localhost:3000/freezed");
+        console.log(response.data)
+        const students = response.data.map((student:any) => ({
           ...student,
-          deployed: false,
         }));
         setVerifiedStudents(students);
       } catch (error) {
@@ -263,8 +263,14 @@ function VerifiedStudentList() {
 // After deployment success in your frontend
 const handleDeploy = async (index: number) => {
   const student = verifiedStudents[index];
+  const prnno = response.prn;
+  console.log(student);
 
-  if (!student.dataHash) {
+  const hashing =  axios.post("http://localhost:3000/generate-pdf", {
+    prn:prnno
+  }).then(()=>{console.log(hashing)});
+
+  if (!hashing.data.Hash) {
     alert("Hash data is missing for this student.");
     return;
   }
@@ -278,7 +284,7 @@ const handleDeploy = async (index: number) => {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, await signer);
 
     // Call the `issueCredentials` function
-    const tx = await contract.issueCredentials(student.dataHash);
+    const tx = await contract.issueCredentials(hashing.data.Hash);
     await tx.wait(); // Wait for the transaction to be mined
 
     // Send the transaction details to the backend
@@ -313,6 +319,7 @@ const handleDeploy = async (index: number) => {
           ) : verifiedStudents.length > 0 ? (
             <div className="verified-student-list">
               {verifiedStudents.map((student, index) => (
+                
                 <div key={student.prn} className="verified-student-item">
                   <span className="verified-student-name">{student.name}</span>
                   <button
@@ -321,6 +328,7 @@ const handleDeploy = async (index: number) => {
                     disabled={student.deployed || loading}
                   >
                     {student.deployed ? "Deployed" : "Deploy to Blockchain"}
+                    {console.log(student.deployed)}
                   </button>
                 </div>
               ))}

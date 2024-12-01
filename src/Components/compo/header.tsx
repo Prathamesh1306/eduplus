@@ -47,14 +47,14 @@ function Header() {
           />
         </div>
         <div className="tabs">
-          <a className="tab" href="./home.tsx">
+          {/* <a className="tab" href="./home.tsx">
             Home
-          </a>
-          <a className="tab" href="./blog.tsx">
+          </a> */}
+          {/* <a className="tab" href="./blog.tsx">
             Blog
-          </a>
+          </a> */}
           <a className="tab" href="./about.tsx">
-            About Us
+            ABOUT US
           </a>
         </div>
         <div className="collab">
