@@ -705,7 +705,6 @@ app.post("/generate-pdf", async (req, res) => {
       return res.status(404).send("Student not found");
     }
 
-    // Removed deployed check: Allow PDF generation even if not deployed
     const { iv: encryptedIv, encryptedData } = encryptData(prn);
 
     const qrCodeText = `http://${hostname}:3000/scan-qrcode/${encryptedData}`;
@@ -714,7 +713,6 @@ app.post("/generate-pdf", async (req, res) => {
     const width = 600;
     const height = 800;
 
-    // Loop through the semesters to generate PDF content
     for (const semester of student.semesters) {
       const page = pdfDoc.addPage([width, height]);
 
@@ -722,8 +720,8 @@ app.post("/generate-pdf", async (req, res) => {
       const qrCodeDims = qrCodeImage.scale(0.5);
 
       page.drawImage(qrCodeImage, {
-        x: 500,
-        y: 100,
+        x: 450,
+        y: height - 150,
         width: qrCodeDims.width,
         height: qrCodeDims.height,
       });
@@ -734,26 +732,26 @@ app.post("/generate-pdf", async (req, res) => {
         size: 20,
         color: rgb(0, 0, 0),
       });
-      page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 12 });
+      page.drawText(`PRN: ${student.prn}`, { x: 50, y: height - 80, size: 10 });
       page.drawText(`Seat No: ${student.seatNo}`, {
         x: 50,
         y: height - 100,
-        size: 12,
+        size: 10,
       });
       page.drawText(`Name: ${student.name}`, {
         x: 50,
         y: height - 120,
-        size: 12,
+        size: 10,
       });
       page.drawText(`Mother's Name: ${student.motherName}`, {
         x: 50,
         y: height - 140,
-        size: 12,
+        size: 10,
       });
       page.drawText(`Programme: ${student.programme}`, {
         x: 50,
         y: height - 160,
-        size: 12,
+        size: 10,
       });
 
       let yOffset = height - 190;
@@ -765,45 +763,44 @@ app.post("/generate-pdf", async (req, res) => {
       page.drawText(`Exam Date: ${semester.examDate}`, {
         x: 50,
         y: yOffset - 20,
-        size: 12,
+        size: 10,
       });
-      page.drawText(`SGPA: ${semester.sgpa}`, {
-        x: 50,
-        y: yOffset - 40,
-        size: 12,
-      });
+      if (semester.sgpa != null) {
+        page.drawText(`SGPA: ${semester.sgpa}`, {
+          x: 50,
+          y: yOffset - 40,
+          size: 10,
+        });
+      }
 
-      // Draw course table header
-      page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 12 });
-      page.drawText("Course Title", { x: 150, y: yOffset - 60, size: 12 });
-      page.drawText("Credits", { x: 310, y: yOffset - 60, size: 12 });
-      page.drawText("CIE", { x: 360, y: yOffset - 60, size: 12 });
-      page.drawText("ESE", { x: 410, y: yOffset - 60, size: 12 });
-      page.drawText("Final Grade", { x: 460, y: yOffset - 60, size: 12 });
+      page.drawText("Course Code", { x: 50, y: yOffset - 60, size: 10 });
+      page.drawText("Course Title", { x: 110, y: yOffset - 60, size: 10 });
+      page.drawText("Credits", { x: 380, y: yOffset - 60, size: 10 });
+      page.drawText("CIE", { x: 435, y: yOffset - 60, size: 10 });
+      page.drawText("ESE", { x: 475, y: yOffset - 60, size: 10 });
+      page.drawText("Final Grade", { x: 510, y: yOffset - 60, size: 10 });
       yOffset -= 80;
 
-      // Loop through courses for the semester
       for (const course of semester.courses) {
-        page.drawText(course.code, { x: 50, y: yOffset, size: 12 });
-        page.drawText(course.title, { x: 150, y: yOffset, size: 12 });
+        page.drawText(course.code, { x: 50, y: yOffset, size: 9 });
+        page.drawText(course.title, { x: 110, y: yOffset, size: 9 });
         page.drawText(course.credits.toString(), {
-          x: 310,
+          x: 390,
           y: yOffset,
-          size: 12,
+          size: 10,
         });
-        page.drawText(course.cie, { x: 360, y: yOffset, size: 12 });
-        page.drawText(course.ese, { x: 410, y: yOffset, size: 12 });
-        page.drawText(course.finalGrade, { x: 460, y: yOffset, size: 12 });
+        page.drawText(course.cie, { x: 440, y: yOffset, size: 10 });
+        page.drawText(course.ese, { x: 480, y: yOffset, size: 10 });
+        page.drawText(course.finalGrade, { x: 520, y: yOffset, size: 10 });
         yOffset -= 20;
       }
     }
-
-    // Add CGPA at the end of the PDF
+    let yOffset = height - 190;
     const lastPage = pdfDoc.getPages().at(-1);
     lastPage.drawText(`CGPA: ${student.cgpa}`, {
-      x: 50,
-      y: 50,
-      size: 14,
+      x: 110,
+      y: yOffset - 40,
+      size: 10,
     });
 
     pdfDoc.setTitle("");
@@ -821,9 +818,9 @@ app.post("/generate-pdf", async (req, res) => {
     if (student.isHashGenerated) {
       console.log(`Hash already generated for PRN: ${prn}`);
       res.json({
-      pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
-      Hash: student.dataHash,
-    });
+        pdfUrl: `http://${hostname}:3000/download-pdf/${prn}`,
+        Hash: student.dataHash,
+      });
     } else {
       const pdfHash = crypto
         .createHash("sha256")
@@ -831,7 +828,7 @@ app.post("/generate-pdf", async (req, res) => {
         .digest("hex");
       console.log(`Generated hash: ${pdfHash}`);
 
-      // Save hash and update the student model
+      
       await studentModel.updateOne(
         { prn },
         { $set: { dataHash: pdfHash, isHashGenerated: true } }
@@ -842,7 +839,6 @@ app.post("/generate-pdf", async (req, res) => {
         Hash: pdfHash,
       });
     }
-    
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
