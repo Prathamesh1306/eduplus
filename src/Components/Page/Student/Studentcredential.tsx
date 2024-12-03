@@ -123,6 +123,7 @@ function Studentcredential() {
       setStudents(response.data); // Set the fetched students
     } catch (err) {
       console.error("Failed to fetch students:", err);
+      console.error(students);
       setError("Failed to fetch student data.");
     }
   };
@@ -169,7 +170,7 @@ function Studentcredential() {
 
         {error && <p className="error-message">{error}</p>}
 
-        <button onClick={fetchStudents} className="deploy-button">Fetch Student Details</button>
+        <button onClick={fetchStudents} className="deploy-button">View Details</button>
 
         {/* Render Student Details */}
         {students && (
@@ -180,6 +181,63 @@ function Studentcredential() {
             <p>Email: {students.email}</p>
           </div>
         )}
+
+{/* {students && (
+  <div>
+    <h3 style={{ textAlign: "center", marginBottom: "20px", color: "#4CAF50" }}>Student Details</h3>
+    <table style={{ 
+      width: "100%", 
+      borderCollapse: "collapse", 
+      margin: "0 auto", 
+      backgroundColor: "#f9f9f9", 
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" 
+    }}>
+      <thead style={{ backgroundColor: "#4CAF50", color: "white" }}>
+        <tr>
+          <th style={{ padding: "10px", textAlign: "left" }}>Field</th>
+          <th style={{ padding: "10px", textAlign: "left" }}>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style={{ borderBottom: "1px solid #ddd" }}>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>PRN</td>
+          <td style={{ padding: "10px" }}>{students.prn}</td>
+        </tr>
+        <tr style={{ borderBottom: "1px solid #ddd" }}>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>Name</td>
+          <td style={{ padding: "10px" }}>{students.name}</td>
+        </tr>
+        <tr style={{ borderBottom: "1px solid #ddd" }}>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>Email</td>
+          <td style={{ padding: "10px" }}>{students.email}</td>
+        </tr>
+        <tr style={{ borderBottom: "1px solid #ddd" }}>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>Programme</td>
+          <td style={{ padding: "10px" }}>{students.programme || "N/A"}</td>
+        </tr>
+        <tr style={{ borderBottom: "1px solid #ddd" }}>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>Semester</td>
+          <td style={{ padding: "10px" }}>{students.semester || "N/A"}</td>
+        </tr>
+        <tr style={{ borderBottom: "1px solid #ddd" }}>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>CGPA</td>
+          <td style={{ padding: "10px" }}>{students.cgpa || "N/A"}</td>
+        </tr>
+        <tr style={{ borderBottom: "1px solid #ddd" }}>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>Contact</td>
+          <td style={{ padding: "10px" }}>{students.contact || "N/A"}</td>
+        </tr>
+        <tr>
+          <td style={{ padding: "10px", fontWeight: "bold" }}>Address</td>
+          <td style={{ padding: "10px" }}>{students.address || "N/A"}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+)} */}
+
+
+
       </div>
 
       <br />
