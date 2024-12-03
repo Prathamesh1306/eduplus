@@ -14,7 +14,7 @@ app.use(cors());
 const multer = require("multer");
 app.use(express.json());
 const port = 3000;
-const hostname = "10.25.0.32";
+const hostname = "localhost";
 const { MongoClient } = require("mongodb");
 const uri =
   "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -1004,6 +1004,57 @@ app.post("/make-payment", async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 });
+app.post("/check-payment", async (req, res) => {
+  const { prn } = req.body;
+
+  if (!prn) {
+    return res.status(400).send("PRN is required.");
+  }
+
+  try {
+    const student = await studentModel.findOne({ prn });
+
+    if (!student) {
+      return res.status(404).send("Student not found.");
+    }
+
+    return res.status(200).json({
+      paymentStatus: student.payment || false,
+    });
+  } catch (error) {
+    console.error("Error fetching payment status:", error);
+    return res.status(500).send("Internal server error.");
+  }
+});
+
+app.post("/check-student-verif", async (req, res) => {
+  const { email, prn } = req.body;
+
+  if (!email || !prn) {
+    return res.status(400).send("Email and PRN are required.");
+  }
+
+  try {
+    const verifier = await verifierModel.findOne(
+      { email },
+      { students: { $elemMatch: { prn } } }
+    );
+
+    if (!verifier || !verifier.students || verifier.students.length === 0) {
+      return res
+        .status(404)
+        .send("Student not found under the specified verifier.");
+    }
+
+    return res.status(200).json({
+      status: verifier.students[0].status,
+    });
+  } catch (error) {
+    console.error("Error fetching student status:", error);
+    return res.status(500).send("Internal server error.");
+  }
+});
+
 //upload
 const upload = multer({ dest: "uploads/" });
 
@@ -1125,46 +1176,75 @@ app.get("/get-hash/:prn", async (req, res) => {
   }
 });
 
-// Route to apply with email and PRN
 app.post("/apply", async (req, res) => {
   const { email, prn } = req.body;
 
   if (!email || !prn) {
     return res.status(400).send("Missing required fields or invalid data.");
   }
-  const status = false;
+
   try {
-    // Check if the email exists in verifierModel
-    let verifier = await verifierModel.findOne({ email });
-
-    // If not, insert a new verifier document
-    if (!verifier) {
-      await verifierModel.insertOne({
-        email,
-        students: [],
-      });
-    }
-
-    // Add PRN and status to the verifier's students array
-    const result = await verifierModel.updateOne(
+    let verifier = await verifierModel.findOneAndUpdate(
       { email },
+      { $setOnInsert: { email, students: [] } },
+      { upsert: true, returnDocument: "after" }
+    );
+
+    const verifierUpdate = await verifierModel.updateOne(
+      { email, "students.prn": { $ne: prn } },
       {
-        $push: {
-          students: {
-            prn,
-            status,
-          },
-        },
+        $push: { students: { prn, status: false } },
       }
     );
 
-    if (result.modifiedCount > 0) {
-      return res.status(200).send("PRN added successfully.");
+    let student = await studentModel.findOneAndUpdate(
+      { prn },
+      { $setOnInsert: { prn, verifiers: [] } },
+      { upsert: true, returnDocument: "after" }
+    );
+
+    const studentUpdate = await studentModel.updateOne(
+      { prn, verifiers: { $ne: verifier.email } },
+      {
+        $push: { verifiers: verifier.email },
+      }
+    );
+
+    if (verifierUpdate.modifiedCount > 0 || studentUpdate.modifiedCount > 0) {
+      return res.status(200).send("Application successfully processed.");
     } else {
-      return res.status(500).send("Failed to update the verifier document.");
+      return res
+        .status(400)
+        .send("No changes were made. Data may already exist.");
     }
   } catch (error) {
     console.error("Error in /apply route:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
+
+app.post("/chaange", async (req, res) => {
+  const { email, prn } = req.body;
+
+  if (!email || !prn) {
+    return res.status(400).send("Missing required fields or invalid data.");
+  }
+
+  try {
+    const verifierUpdate = await verifierModel.updateOne(
+      { email, "students.prn": prn },
+      {
+        $set: { "students.$.status": true },
+      }
+    );
+
+    if (verifierUpdate.modifiedCount > 0) {
+      return res.status(200).send("Student status successfully updated.");
+    } else {
+      return res.status(400).send("kuch gadbad hai Daya!!");
+    }
+  } catch (error) {
+    console.error("Error in /chaange route:", error);
     res.status(500).send("Internal server error.");
   }
 });
