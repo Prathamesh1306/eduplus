@@ -306,6 +306,12 @@
   border-radius: 8px;
   object-fit: cover;          
 }
+.card-imagei img {
+  max-width: 200%;             
+  max-height: 190%;         
+  border-radius: 8px;
+  object-fit: cover;          
+}
 
 .card-content {
   flex: 2;
