@@ -13,11 +13,11 @@ function Landingpage() {
   const [password, setPassword] = useState<string>("");
   const [isSignUp, setIsSignUp] = useState<boolean>(false); // Toggle between Sign In and Sign Up
   const navigate = useNavigate();
- 
+
   // const setCookie=(name,value)=>{
   //   Cookies.set(name,value,{ expires: 1});
   // }
-  
+
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
 
@@ -47,22 +47,20 @@ function Landingpage() {
   const toggleSignUp = () => {
     setIsSignUp((prev) => !prev);
   };
-  
-  const handlesubmitsignup=async()=>{
+
+  const handlesubmitsignup = async () => {
     try {
-      console.log(username,email,password)
-      
-       await axios.post("https://localhost:3000/add", {
+      console.log(username, email, password);
+
+      await axios.post("https://localhost:3000/add", {
         username: username,
         email: email,
         password: password,
-        });
-   
+      });
+
       alert("Registration succcesful Successful!");
 
       navigate("/");
-
-      
     } catch (error: any) {
       if (error.response) {
         if (error.response.status === 404) {
@@ -73,7 +71,9 @@ function Landingpage() {
           alert("An error occurred: " + error.response.data);
         }
       } else {
-        alert("Unable to connect to the server. Please try again later." + error);
+        alert(
+          "Unable to connect to the server. Please try again later." + error
+        );
       }
       console.error(
         "Error during login:",
@@ -90,8 +90,8 @@ function Landingpage() {
       });
       alert("Login Successful!");
 
-      const { role,token } = response.data;
-      Cookies.set("eduplus",token,{ expires: 1});
+      const { role, token } = response.data;
+      Cookies.set("eduplus", token, { expires: 1 });
 
       // Redirect based on role
       if (role === "admin") {
@@ -113,7 +113,9 @@ function Landingpage() {
           alert("An error occurred: " + error.response.data);
         }
       } else {
-        alert("Unable to connect to the server. Please try again later." + error);
+        alert(
+          "Unable to connect to the server. Please try again later." + error
+        );
       }
       console.error(
         "Error during login:",
@@ -152,7 +154,6 @@ function Landingpage() {
 
         {isSignUp ? (
           <>
-            
             <div
               style={{
                 display: "flex",
@@ -184,7 +185,6 @@ function Landingpage() {
               />
             </div>
 
-         
             <div
               style={{
                 display: "flex",
@@ -216,7 +216,6 @@ function Landingpage() {
               />
             </div>
 
-           
             <div
               style={{
                 display: "flex",
@@ -250,7 +249,6 @@ function Landingpage() {
           </>
         ) : (
           <>
-          
             <div
               style={{
                 display: "flex",
@@ -282,7 +280,6 @@ function Landingpage() {
               />
             </div>
 
-           
             <div
               style={{
                 display: "flex",
@@ -316,9 +313,8 @@ function Landingpage() {
           </>
         )}
 
-      
         <div
-          onClick={isSignUp?handlesubmitsignup:handlesubmit}
+          onClick={isSignUp ? handlesubmitsignup : handlesubmit}
           style={{
             color: "#000",
             backgroundColor: "#D2E6E4",
@@ -335,7 +331,6 @@ function Landingpage() {
           {isSignUp ? "Sign Up" : "Sign In"}
         </div>
 
-     
         <div
           onClick={toggleSignUp}
           style={{
@@ -346,7 +341,9 @@ function Landingpage() {
             fontSize: 16,
           }}
         >
-          {isSignUp ? "Already have an account? Sign In" : " Sign Up as Verifier"}
+          {isSignUp
+            ? "Already have an account? Sign In"
+            : " Sign Up as Verifier"}
         </div>
       </div>
       <Footer />
@@ -355,9 +352,6 @@ function Landingpage() {
 }
 
 export default Landingpage;
-
-
-
 
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";

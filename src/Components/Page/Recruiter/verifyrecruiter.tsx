@@ -1,6 +1,3 @@
-
-
-
 // import React, { useState, useEffect } from "react";
 // import { ethers,Contract } from "ethers";
 // // import { utils } from "ethers";
@@ -11,9 +8,7 @@
 // const contractAddress: string = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627"; // Replace with your contract address
 // // const contractAddress: string = "0x5f44edf49edf6014d791e327ef57045f99ea83b2";
 
-
 // import contractABI from "../../../contract/abi.json";
-
 
 // function Recruiter() {
 //   const [contract, setContract] = useState<Contract | null>(null);
@@ -36,7 +31,6 @@
 //             await signer
 //           );
 //           console.log("contract:", contract);
-
 
 //           // console.log("Contract instance:", blockchainContract);
 
@@ -63,8 +57,6 @@
 //     initBlockchain();
 //   }, []);
 
-
-
 //   const verifyCredentials = async () => {
 //     if (!contract) {
 //       setStatus("Contract not initialized.");
@@ -79,9 +71,6 @@
 //       setStatus("Error verifying credential. Please try again.");
 //     }
 //   };
-
-
-  
 
 //   return (
 //     <div className="container">
@@ -110,7 +99,7 @@
 //           <input
 //             type="file"
 //             placeholder="upload pdf"
-          
+
 //           />
 //           <button
 //             type="button"
@@ -125,24 +114,15 @@
 //             <p className="verification-result">{verificationResult}</p>
 //           )}
 
-    
 //         </form>
 //       </div>
-
-
 
 //       <Footer />
 //     </div>
 //   );
 // }
 
-
-
 // export default Recruiter;
-
-
-
-
 
 import React, { useState, useEffect } from "react";
 import { ethers, Contract } from "ethers";
@@ -207,14 +187,18 @@ function Recruiter() {
 
     try {
       const isValid: boolean = await contract.verifyCredentials(hashValue);
-      setVerificationResult(isValid ? "✅ Credential verified!" : "❌ Credential not found.");
+      setVerificationResult(
+        isValid ? "✅ Credential verified!" : "❌ Credential not found."
+      );
     } catch (error) {
       console.error("Error verifying credential:", error);
       setStatus("Error verifying credential. Please try again.");
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
@@ -223,9 +207,13 @@ function Recruiter() {
       formData.append("pdf", selectedFile);
 
       try {
-        const response = await axios.post("http://localhost:3000/upload-pdf", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        const response = await axios.post(
+          "http://localhost:3000/upload-pdf",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
 
         if (response.data.hash) {
           setHashValue(response.data.hash);
@@ -245,7 +233,8 @@ function Recruiter() {
       <div className="hub-section">
         <h1>Verify Academic Credentials with Confidence</h1>
         <p>
-          Streamlined credential verification for recruiters, ensuring authenticity and reliability.
+          Streamlined credential verification for recruiters, ensuring
+          authenticity and reliability.
         </p>
       </div>
 
@@ -261,13 +250,13 @@ function Recruiter() {
             onChange={(e) => setHashValue(e.target.value)}
             className="form-input"
           />
-          
+
           <input
             type="file"
             onChange={handleFileUpload}
             className="form-input"
           />
-          
+
           <button
             type="button"
             onClick={() => verifyCredentials()}

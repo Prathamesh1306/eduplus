@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -104,7 +103,9 @@ const AdminRecutierList = () => {
                         onClick={() => changeStatus(verifier.email)}
                         style={{
                           padding: "5px 10px",
-                          backgroundColor: verifier.verify ? "#007bff" : "#28a745",
+                          backgroundColor: verifier.verify
+                            ? "#007bff"
+                            : "#28a745",
                           color: "#fff",
                           border: "none",
                           borderRadius: "5px",
@@ -129,9 +130,6 @@ const AdminRecutierList = () => {
 };
 
 export default AdminRecutierList;
-
-
-
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
@@ -234,22 +232,6 @@ export default AdminRecutierList;
 // };
 
 // export default AdminRecutierList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";

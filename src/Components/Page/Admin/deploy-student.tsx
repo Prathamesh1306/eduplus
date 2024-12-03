@@ -209,7 +209,7 @@ interface Student {
 }
 
 // const CONTRACT_ADDRESS = "0xd2a5bC10698FD955D1Fe6cb468a17809A08fd005";
-const CONTRACT_ADDRESS = "0xc85A55b5b79795761793ADF00CFD2aFe16BF850e";//maddy contract sepolia
+const CONTRACT_ADDRESS = "0xc85A55b5b79795761793ADF00CFD2aFe16BF850e"; //maddy contract sepolia
 // const CONTRACT_ADDRESS = "0x5f44edf49edf6014d791e327ef57045f99ea83b2";
 const CONTRACT_ABI = abi;
 
@@ -389,8 +389,6 @@ function VerifiedStudentList() {
 
 export default VerifiedStudentList;
 
-
-
 // import { useState, useEffect } from "react";
 // import { ethers } from "ethers";
 // import axios from "axios";
@@ -529,36 +527,36 @@ export default VerifiedStudentList;
 
 //   const handleDeploy = async (index: number) => {
 //     const student = verifiedStudents[index];
- 
+
 //     try {
 //        setLoading(true);
- 
+
 //        // Step 1: Connect to MetaMask and deploy to blockchain
 //        const provider = await connectToMetaMask();
 //        if (!provider) return;
- 
+
 //        const signer = provider.getSigner();
 //        const contract = new ethers.Contract(
 //           CONTRACT_ADDRESS,
 //           CONTRACT_ABI,
 //           await signer
 //        );
- 
+
 //        // Generate hash first
 //        const hashingResponse = await axios.post(
 //           "http://localhost:3000/generate-pdf",
 //           { prn: student.prn },
 //           { headers: { "Content-Type": "application/json" } }
 //        );
- 
+
 //        const { Hash } = hashingResponse.data;
 //        if (!Hash) {
 //           throw new Error("Hash data is missing from backend response.");
 //        }
- 
+
 //        const tx = await contract.issueCredentials(Hash);
 //        await tx.wait(); // Wait for the transaction to be mined
- 
+
 //        // Notify backend of successful deployment
 //        await axios.post("http://localhost:3000/freeze-student", {
 //           prn: student.prn,
@@ -576,12 +574,12 @@ export default VerifiedStudentList;
 //     if (deployResponse.status !== 200) {
 //         throw new Error("Failed to update deployed status in the backend.");
 //     }
- 
+
 //        // Update UI
 //        const updatedStudents = [...verifiedStudents];
 //        updatedStudents[index].deployed = true;
 //        setVerifiedStudents(updatedStudents);
- 
+
 //        alert("Hash successfully deployed to blockchain!");
 //     } catch (error: any) {
 //        console.error("Error deploying hash:", error);
@@ -590,7 +588,6 @@ export default VerifiedStudentList;
 //        setLoading(false);
 //     }
 //  };
- 
 
 //   return (
 //     <div className="verified-student-list-container">
