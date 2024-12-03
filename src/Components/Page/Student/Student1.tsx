@@ -3,6 +3,7 @@ import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import image from "../../../assets/image.png";
 import personcard from "../../../assets/personcard.png";
+import classroom from "../../../assets/classroom.png";
 import card from "../../../assets/card.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -83,8 +84,8 @@ function Student1() {
   
         <div className="card-container-harsh">
           <div className="card-harsh">
-            <div className="card-image">
-              <img src={personcard} alt="Avatar" />
+            <div className="card-image 1">
+              <img src={classroom} width="60%" alt="Avatar" />
             </div>
             <div className="card-content">
               <h2>My Credentials</h2>

@@ -14,12 +14,12 @@ function StudentRecruiter() {
   
   const cookie=Cookies.get("eduplus");
   const decoded=jwtDecode(cookie);
-
+  const prn=decoded.prn;
   useEffect(() => {
     const fetchVerifier = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/get-all-verifiers"
+          "http://10.25.0.32:3000/get-all-verifiers"
         );
 
         const verifiedVerifiers = response.data.filter(
@@ -34,7 +34,7 @@ function StudentRecruiter() {
     fetchVerifier();
   }, []);
 
-  const handlePDFUpload = (verifierId) => {
+  const handlePDFUpload = (prn) => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "application/pdf";
@@ -45,16 +45,10 @@ function StudentRecruiter() {
       if (file) {
         const formData = new FormData();
         formData.append("pdf", file);
-
+        formData.append("prn", prn); // Append PRN to FormData
 
         try {
-          const response = await axios.post(
-            "http://localhost:3000/upload-pdf-student",
-        
-            {
-              
-            }
-          );
+          await axios.post("http://10.25.0.32:3000/upload-pdf-student", formData);
           alert("PDF uploaded successfully!");
         } catch (error) {
           console.error("Error uploading PDF:", error);
@@ -107,7 +101,7 @@ function StudentRecruiter() {
                   >
                     <td style={{ padding: "10px" }}>{verifier.email}</td>
                     <td style={{ padding: "10px" }}>
-                      <button onClick={() => handlePDFUpload(verifier._id)}>
+                      <button onClick={() => handlePDFUpload(decoded.prn)}>
                         Upload PDF
                       </button>
                     </td>
