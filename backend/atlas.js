@@ -14,7 +14,7 @@ app.use(cors());
 const multer = require("multer");
 app.use(express.json());
 const port = 3000;
-const hostname = "localhost";
+const hostname = "10.25.0.32";
 const { MongoClient } = require("mongodb");
 const uri =
   "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
