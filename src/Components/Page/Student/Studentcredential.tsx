@@ -445,7 +445,7 @@ function Studentcredential() {
                   Freeze
                 </button> */}
 
-<button
+                <button
   onClick={() => {
     setShowModal(true);
     setIsFrozen(true); // Disable the button and update text
