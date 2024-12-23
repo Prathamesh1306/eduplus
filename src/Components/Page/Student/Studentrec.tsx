@@ -1,7 +1,7 @@
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import "../../css/studnetverify.css";
-import image from '../../../assets/pana.png';
+import image from "../../../assets/pana.png";
 import { useEffect, useState } from "react";
 import axios from "axios"; // Ensure axios is imported
 import { useNavigate } from "react-router-dom"; // Ensure this is imported
@@ -11,15 +11,14 @@ import { jwtDecode } from "jwt-decode";
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
   const navigate = useNavigate();
-  
-  const cookie=Cookies.get("eduplus");
-  const decoded=jwtDecode(cookie);
-  const prn=decoded.prn;
+  const cookie = Cookies.get("eduplus");
+  const decoded = jwtDecode(cookie);
+  const prn = decoded.prn;
   useEffect(() => {
     const fetchVerifier = async () => {
       try {
         const response = await axios.get(
-          "http://10.25.0.32:3000/get-all-verifiers"
+          "http://localhost:3000/get-all-verifiers"
         );
 
         const verifiedVerifiers = response.data.filter(
@@ -35,6 +34,7 @@ function StudentRecruiter() {
   }, []);
 
   const handlePDFUpload = (prn) => {
+    
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "application/pdf";
@@ -48,7 +48,10 @@ function StudentRecruiter() {
         formData.append("prn", prn); // Append PRN to FormData
 
         try {
-          await axios.post("http://10.25.0.32:3000/upload-pdf-student", formData);
+          await axios.post(
+            "http://localhost:3000/upload-pdf-student",
+            formData
+          );
           alert("PDF uploaded successfully!");
         } catch (error) {
           console.error("Error uploading PDF:", error);
@@ -60,6 +63,17 @@ function StudentRecruiter() {
     fileInput.click();
   };
 
+
+  const AppyBtn = async(email)=>{
+    await axios.post("http://localhost:3000/apply",{
+      email:email,
+      prn:prn
+    })
+
+    alert("Applied")
+
+
+  } 
   return (
     <div>
       <Header />
@@ -101,10 +115,42 @@ function StudentRecruiter() {
                   >
                     <td style={{ padding: "10px" }}>{verifier.email}</td>
                     <td style={{ padding: "10px" }}>
-                      <button onClick={() => handlePDFUpload(decoded.prn)}>
+                      <div
+                        style={{
+                          color: "#000",
+                          backgroundColor: "#68cfd9",
+                          margin: "10px 25px",
+                          borderRadius: "8px",
+                          textAlign: "center",
+                          width: "50%",
+                          fontSize: "30px",
+                          userSelect:"none",
+                          cursor:"pointer"
+                        }}
+                        onClick={() => handlePDFUpload(decoded.prn)}
+                      >
                         Upload PDF
-                      </button>
+                      </div>
                     </td>
+                    <div
+                      style={{
+                        color: "#000",
+                        backgroundColor:"#68cfd9",
+                        textAlign: "center",
+                        margin: "20px 25px",
+                        borderRadius: "10px",
+                        width: "50%",
+                        fontSize: "30px",
+                        userSelect:"none",
+                        cursor:"pointer"
+                      }}
+
+                      onClick={()=>{
+                        AppyBtn(verifier.email)
+                      }}
+                    >
+                      Apply
+                    </div>
                   </tr>
                 ))}
               </tbody>

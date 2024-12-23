@@ -84,7 +84,7 @@ function Landingpage() {
 
   const handlesubmit = async () => {
     try {
-      const response = await axios.post("http://10.25.0.32:3000/login", {
+      const response = await axios.post("http://localhost:3000/login", {
         email: email,
         password: password,
       });
