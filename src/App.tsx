@@ -7,7 +7,6 @@ import Landing from './Components/Page/Landingpage.tsx'
 import Admin from "./Components/Page/Admin/admin.tsx";
 import AdminRecutierList from "./Components/Page/Admin/adminVerifierList.tsx";
 import Verifiedstudent from './Components/Page/Admin/deploy-student.tsx'
-import AdminRecruiterList from "./Components/Page/Admin/AdminRecruiter.tsx";
 import Admindeployedstudent from './Components/Page/Admin/deployedstudent.tsx'
 
 import Student1 from "./Components/Page/Student/Student1.tsx";
