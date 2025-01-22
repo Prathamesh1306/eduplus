@@ -147,6 +147,7 @@ function StudentRecruiter() {
 
                       onClick={()=>{
                         AppyBtn(verifier.email)
+                        console.log(verifier.email)
                       }}
                     >
                       Apply

@@ -26,14 +26,23 @@ import Blog from "./Components/Page/Blog.tsx";
 
 import BlockchainComponent from "./Components/Page/BlockchainComponent.tsx";
 
+const Demo=()=>{
+  return(
+    <div>
+      Hello Word
+    </div>
+  )
+}
 
 function App() {
+
   return (
+    // <Demo/>
     <Router>
-      <div>
         <Routes>
 
           <Route path='/' element={<Landing />} />
+          {/* <Route path='/' element={<Demo/>} /> */}
 
           <Route path='/admin-home' element={<Admin />} />
           {/* <Route path='/' element={<div>dsadasd</div> } /> */}
@@ -56,7 +65,6 @@ function App() {
           <Route path="/blog" element={<Blog/>}></Route>
           <Route path="/test" element={<BlockchainComponent/>}></Route>
         </Routes>
-      </div>  
     </Router>
  );
 }
