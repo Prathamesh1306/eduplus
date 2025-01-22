@@ -12,7 +12,7 @@ import { jwtDecode } from "jwt-decode";
 import InvalidRole from "../../InvalidRole";
 
 function Student1() {
-  const [name, setName] = useState<string>();
+  const [name, setName] = useState<string>("");
   const [invalidRole, setInvalidRole] = useState(0);
   const navigate = useNavigate();
 

@@ -370,7 +370,7 @@ function VerifiedStudentList() {
                     disabled={student.deployed || loading}
                   >
                     {student.deployed ? "Deployed" : "Deploy to Blockchain"}
-                    {console.log(student.deployed)}
+                    {/* {console.log(student.deployed)} */}
                   </button>
                 </div>
               ))}

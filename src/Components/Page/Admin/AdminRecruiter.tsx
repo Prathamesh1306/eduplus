@@ -2,7 +2,6 @@ import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/admin-recruiter-list-container.css";
 import Name from "../../compo/name";
-import { useState } from "react";
 
 function AdminrecruiteList() {
   const handleSubmit = () => {

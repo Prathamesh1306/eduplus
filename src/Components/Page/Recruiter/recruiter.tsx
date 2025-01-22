@@ -2,7 +2,6 @@ import "../../css/recruiter.css";
 import card from "../../../assets/card.png";
 import Header from "../../compo/header_recruiter.tsx";
 import Footer from "../../compo/footer";
-import personcard from "../../../assets/personcard.png";
 import { useNavigate } from "react-router-dom";
 import image from "../../../assets/image.png";
 import image1 from "../../../assets/t.webp";

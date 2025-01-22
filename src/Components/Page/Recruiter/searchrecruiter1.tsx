@@ -1,14 +1,12 @@
 import "../../css/searchrecruiter.css";
 import Header from "../../compo/header_recruiter.tsx";
 import Footer from "../../compo/footer";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
 
 function Recruiter() {
-  const navigate = useNavigate();
 
   const [email,setEmail] = useState("")
   useEffect(() => {

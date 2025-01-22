@@ -31,7 +31,7 @@ const AdminRecutierList = () => {
       );
       console.log("Status changed successfully:", response.data);
 
-      setRecrutier((prevRecrutier) =>
+      setRecrutier((prevRecrutier:any) =>
         prevRecrutier.map((verifier) =>
           verifier.email === email
             ? { ...verifier, verify: !verifier.verify }
@@ -75,7 +75,7 @@ const AdminRecutierList = () => {
                 </tr>
               </thead>
               <tbody>
-                {recrutier.map((verifier) => (
+                {recrutier.map((verifier:any) => (
                   <tr
                     key={verifier._id}
                     style={{
