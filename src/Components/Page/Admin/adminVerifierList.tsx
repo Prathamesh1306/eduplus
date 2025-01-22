@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
@@ -7,7 +6,6 @@ import "../../css/admin-student-list-container.css";
 
 const AdminRecutierList = () => {
   const [recrutier, setRecrutier] = useState([]); // State to store verifier data
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVerifier = async () => {

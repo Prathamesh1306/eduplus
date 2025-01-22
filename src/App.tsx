@@ -25,13 +25,6 @@ import Blog from "./Components/Page/Blog.tsx";
 
 import BlockchainComponent from "./Components/Page/BlockchainComponent.tsx";
 
-const Demo=()=>{
-  return(
-    <div>
-      Hello Word
-    </div>
-  )
-}
 
 function App() {
 

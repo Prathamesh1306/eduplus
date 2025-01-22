@@ -5,7 +5,6 @@ import Footer from "../../compo/footer.tsx";
 import Card from "../../compo/card.tsx";
 import studentManagementImage from "../../../assets/Studentmanage.png";
 import deployedStudentsImage from "../../../assets/Deployedstud.png";
-import credentialValidationImage from "../../../assets/Createvalida.png";
 import cardimage from "../../../assets/card.png";
 import verified from "../../../assets/verifiedstudent.png";
 
