@@ -1,4 +1,4 @@
-import { useEffect, useState } from "
+import  { useEffect, useState } from "react"
 import axios from "axios";
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
