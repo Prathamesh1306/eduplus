@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
+import Breadcrumbs from "../../compo/breadcrumbs.tsx";
 
 function Recruiter() {
 
@@ -24,6 +25,7 @@ setEmail(cookie.email)
   return (
     <div className="container">
       <Header role="RECRUITER" />
+      <Breadcrumbs/>
       <div className="hub-section">
         <h1>Verify Academic Credentials with Confidence</h1>
         <p>
