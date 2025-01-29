@@ -27,12 +27,7 @@ function AdminrecruiteList() {
     <div className="admin-recruiter-list-container">
       <Header role="ADMIN" />
       <div className="admin-re-list-main">
-        <div
-          className="admin-recruiter
--list-title"
-        >
-          recruiter Management
-        </div>
+        <div className="admin-recruiter-list-title">recruiter Management</div>
         <div
           className="admin-recruiter
 -list-renderList"
