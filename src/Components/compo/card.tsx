@@ -17,13 +17,13 @@ const Card: React.FC<CardProps> = ({ image, image2, title, description , }) => {
     let path = '';
     switch (title) {
       case 'Verifier List':
-        path = '/admin-recruiter-list';
+        path = '/admin-home/admin-recruiter-list';
         break;
       case 'Freezed student':
-        path = '/verified-students';
+        path = '/admin-home/verified-students';
         break;
       case 'Deployed Students':
-        path = '/admin-deployedstudent';
+        path = '/admin-home/admin-deployedstudent';
         break;
       default:
         break;

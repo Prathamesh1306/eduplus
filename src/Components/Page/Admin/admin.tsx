@@ -10,6 +10,7 @@ import verified from "../../../assets/verifiedstudent.png";
 
 
 import axios from "axios";
+import Breadcrumbs from "../../compo/breadcrumbs.tsx";
 function Admin() {
   const [account, setAccount] = useState<string | null>(null);
 
@@ -61,6 +62,7 @@ function Admin() {
   return (
     <div className="container">
       <Header role="ADMIN" />
+      <Breadcrumbs/>
 
       <div style={{ textAlign: "center", margin: "20px 0" }}>
         <h1

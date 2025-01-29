@@ -2,6 +2,7 @@ import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/admin-recruiter-list-container.css";
 import Name from "../../compo/name";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 function AdminrecruiteList() {
   const handleSubmit = () => {
@@ -25,6 +26,7 @@ function AdminrecruiteList() {
   return (
     <div className="admin-recruiter-list-container">
       <Header role="ADMIN" />
+      <Breadcrumbs/>
       <div className="admin-re-list-main">
         <div className="admin-recruiter-list-title">recruiter Management</div>
         <div
