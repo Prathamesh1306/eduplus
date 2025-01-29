@@ -200,6 +200,7 @@ import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/verified-student.css";
 import abi from "../../../contract/abi.json";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 interface Student {
   prn: string;
@@ -354,6 +355,7 @@ function VerifiedStudentList() {
   return (
     <div className="verified-student-list-container">
       <Header role="Admin" />
+      <Breadcrumbs/>
       <div className="verified-student-list-main">
         <h1 className="verified-student-list-title">Requested Students</h1>
         <div className="verified-student-list-background">

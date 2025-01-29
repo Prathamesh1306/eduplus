@@ -3,6 +3,7 @@ import axios from "axios";
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/deployedstudent.css";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 function Deploystudent() {
   const [deployedStudents, setDeployedStudents] = useState([]);
@@ -57,6 +58,7 @@ function Deploystudent() {
   return (
     <div className="main">
       <Header role="Admin" />
+      <Breadcrumbs/>
       <h1 className="title">Deployed Student</h1>
       <div className="deployed-container">
         {/* Search Input */}

@@ -3,6 +3,7 @@ import axios from "axios";
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
 import "../../css/admin-student-list-container.css";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 const AdminRecutierList = () => {
   const [recrutier, setRecrutier] = useState([]); // State to store verifier data
@@ -46,6 +47,7 @@ const AdminRecutierList = () => {
   return (
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
+      <Breadcrumbs/>
       <div className="admin-student-list-main">
         <div className="admin-student-list-title">Verifier List</div>
         <div

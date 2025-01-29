@@ -13,7 +13,7 @@ const Breadcrumbs = () => {
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
         return (
           <span key={to}>
-            {" > "}
+            {" / "}
             <Link to={to} style={{ textDecoration: "none", color: "#009999" }}>
               {value.replace("-", " ").toUpperCase()}
             </Link>
