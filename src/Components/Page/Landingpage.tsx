@@ -95,7 +95,7 @@ function Landingpage() {
 
       // Redirect based on role
       if (role === "admin") {
-        navigate("/admin-home");
+        navigate("/admin");
       } else if (role === "student") {
         navigate("/student");
       } else if (role === "verifier") {

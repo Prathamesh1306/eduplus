@@ -36,11 +36,11 @@ function App() {
           <Route path='/' element={<Landing />} />
           {/* <Route path='/' element={<Demo/>} /> */}
 
-          <Route path='/admin-home' element={<Admin />} />
+          <Route path='/admin' element={<Admin />} />
           {/* <Route path='/' element={<div>dsadasd</div> } /> */}
-          <Route path='admin-home/admin-recruiter-list' element={<AdminRecutierList />} />
-          <Route path='admin-home/verified-students' element={<Verifiedstudent />} />
-          <Route path='admin-home/admin-deployedstudent' element={<Admindeployedstudent />} />
+          <Route path='admin/admin-recruiter-list' element={<AdminRecutierList />} />
+          <Route path='admin/verified-students' element={<Verifiedstudent />} />
+          <Route path='admin/admin-deployedstudent' element={<Admindeployedstudent />} />
 
           <Route path='/student' element={<Student1 />} />
           <Route path='/student/student-verify' element={<Student2 />} />
