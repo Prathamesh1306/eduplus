@@ -43,7 +43,7 @@ function Header({ role }: HeaderProps) {
               cursor: "pointer",
             }}
             onClick={() => {
-              navigate("/");
+              navigate("/admin-home");
             }}
           />
         </div>
