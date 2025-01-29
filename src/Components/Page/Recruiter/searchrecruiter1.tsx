@@ -1,14 +1,13 @@
 import "../../css/searchrecruiter.css";
 import Header from "../../compo/header_recruiter.tsx";
 import Footer from "../../compo/footer";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
+import Breadcrumbs from "../../compo/breadcrumbs.tsx";
 
 function Recruiter() {
-  const navigate = useNavigate();
 
   const [email,setEmail] = useState("")
   useEffect(() => {
@@ -26,6 +25,7 @@ setEmail(cookie.email)
   return (
     <div className="container">
       <Header role="RECRUITER" />
+      <Breadcrumbs/>
       <div className="hub-section">
         <h1>Verify Academic Credentials with Confidence</h1>
         <p>

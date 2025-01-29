@@ -38,19 +38,20 @@ function App() {
 
           <Route path='/admin-home' element={<Admin />} />
           {/* <Route path='/' element={<div>dsadasd</div> } /> */}
-          <Route path='/admin-recruiter-list' element={<AdminRecutierList />} />
-          <Route path='/verified-students' element={<Verifiedstudent />} />
-          <Route path='/admin-deployedstudent' element={<Admindeployedstudent />} />
+          <Route path='admin-home/admin-recruiter-list' element={<AdminRecutierList />} />
+          <Route path='admin-home/verified-students' element={<Verifiedstudent />} />
+          <Route path='admin-home/admin-deployedstudent' element={<Admindeployedstudent />} />
 
           <Route path='/student' element={<Student1 />} />
-          <Route path='/student-verify' element={<Student2 />} />
-          <Route path="/studentcredential" element={<StudentCredential />} />
-          <Route path="/student-rec" element={<StudentRecruiter/>} />
+          <Route path='/student/student-verify' element={<Student2 />} />
+          <Route path="/student/studentcredential" element={<StudentCredential />} />
+          <Route path="/student/student-rec" element={<StudentRecruiter/>} />
+          
           <Route path="/recruiter" element={<Recruiter />} />
-          <Route path="/searchrecruiter" element={<Recruiter1 />} />
-          <Route path="/searchrecruiter1" element={<Recruiter1a />} />
-          <Route path="/searchrecruiter2" element={<Recruiter1b />} />
-          <Route path="/verifyrecruiter" element={<Recruiter2 />} />
+          <Route path="/recruiter/searchrecruiter" element={<Recruiter1 />} />
+          <Route path="/recruiter/searchrecruiter1" element={<Recruiter1a />} />
+          <Route path="/recruiter/searchrecruiter2" element={<Recruiter1b />} />
+          <Route path="/recruiter/verifyrecruiter" element={<Recruiter2 />} />
 
           <Route  path="/about" element={<About/>}></Route>
           <Route path="/home" element={<Home/>}></Route>

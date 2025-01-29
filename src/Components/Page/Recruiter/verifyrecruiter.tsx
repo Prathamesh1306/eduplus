@@ -134,6 +134,7 @@ import axios from "axios";
 // const contractAddress: string = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627"; // Replace with your contract address
 const contractAddress: string = "0xc85A55b5b79795761793ADF00CFD2aFe16BF850e"; // Replace with your contract address
 import contractABI from "../../../contract/abi.json";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 function Recruiter() {
   const [contract, setContract] = useState<Contract | null>(null);
@@ -230,6 +231,7 @@ function Recruiter() {
   return (
     <div className="container">
       <Header role="RECRUITER" />
+      <Breadcrumbs/>
       <div className="hub-section">
         <h1>Verify Academic Credentials with Confidence</h1>
         <p>

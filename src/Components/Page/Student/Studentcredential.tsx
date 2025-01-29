@@ -268,7 +268,7 @@
 
 // export default Studentcredential;
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import "../../css/studentcredential.css";

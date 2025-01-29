@@ -1,7 +1,6 @@
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import "../../css/studnetverify.css";
-import image from "../../../assets/pana.png";
 import { useEffect, useState } from "react";
 import axios from "axios"; // Ensure axios is imported
 import { useNavigate } from "react-router-dom"; // Ensure this is imported
@@ -10,7 +9,6 @@ import { jwtDecode } from "jwt-decode";
 
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
-  const navigate = useNavigate();
   const cookie = Cookies.get("eduplus");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;

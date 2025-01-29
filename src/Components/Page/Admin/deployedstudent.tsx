@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react"
 import axios from "axios";
 import Header from "../../compo/header_admin";
 import Footer from "../../compo/footer";
@@ -25,19 +25,19 @@ function Deploystudent() {
   }, []);
 
   // Handle search input change
-  const handleSearch = (event) => {
+  const handleSearch = (event:any) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
     // Filter the student list based on the search query
-    const filtered = deployedStudents.filter((student) =>
+    const filtered = deployedStudents.filter((student:any) =>
       student.name.toLowerCase().includes(query)
     );
     setFilteredStudents(filtered);
   };
 
   // Handle View Link Click
-  const handleViewClick = async (prn) => {
+  const handleViewClick = async (prn:any) => {
     setLoading(true);
     try {
       const response = await axios.post("http://localhost:3000/generate-pdf", {
@@ -78,7 +78,7 @@ function Deploystudent() {
         <div className="student-list">
           {loading && <p>Generating PDF... Please wait.</p>}
           {filteredStudents.length > 0 ? (
-            filteredStudents.map((student) => (
+            filteredStudents.map((student:any) => (
               <div key={student.prn} className="student-item">
                 <span className="student-name">{student.name}</span>
                 <button

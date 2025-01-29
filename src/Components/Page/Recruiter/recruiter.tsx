@@ -2,10 +2,10 @@ import "../../css/recruiter.css";
 import card from "../../../assets/card.png";
 import Header from "../../compo/header_recruiter.tsx";
 import Footer from "../../compo/footer";
-import personcard from "../../../assets/personcard.png";
 import { useNavigate } from "react-router-dom";
 import image from "../../../assets/image.png";
 import image1 from "../../../assets/t.webp";
+import Breadcrumbs from "../../compo/breadcrumbs.tsx";
 
 function Recruiter() {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ function Recruiter() {
       }}
     >
       <Header role="RECRUITER" />
+      <Breadcrumbs/>
       <div style={{ textAlign: "center", margin: "20px 0" ,}}>
         <h1
           style={{
@@ -44,7 +45,7 @@ function Recruiter() {
 
             <button
               className="view-button"
-              onClick={() => navigate("/searchrecruiter1 ")}
+              onClick={() => navigate("/recruiter/searchrecruiter1 ")}
             >
               View
             </button>
@@ -63,7 +64,7 @@ function Recruiter() {
 
             <button
               className="view-button1"
-              onClick={() => navigate("/verifyrecruiter")}
+              onClick={() => navigate("/recruiter/verifyrecruiter")}
             >
               View
             </button>
