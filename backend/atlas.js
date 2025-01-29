@@ -16,8 +16,7 @@ app.use(express.json());
 const port = 3000;
 const hostname = "localhost";
 const { MongoClient } = require("mongodb");
-const uri =
-  "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri ="mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 const client = new MongoClient(uri);
 const db = client.db("edu");
