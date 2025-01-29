@@ -6,6 +6,7 @@ import { useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 
 function Studentverify() {
@@ -24,6 +25,7 @@ function Studentverify() {
   return (
     <div>
       <Header />
+      <Breadcrumbs/>
       <div className="mainStatusDiv">
         <h3>STATUS</h3>
         <div className="statusResult">

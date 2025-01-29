@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import InvalidRole from "../../InvalidRole";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 function Student1() {
   const [name, setName] = useState<string>("");
@@ -64,7 +65,7 @@ function Student1() {
     invalidRole ? (
       <div className="container">
         <Header name={name} year="3rd year" role="STUDENT" />
-  
+        <Breadcrumbs/>
         <div style={{ textAlign: "center", margin: "20px 0" }}>
           <h1
             style={{
@@ -95,7 +96,7 @@ function Student1() {
               </p>
               <button
                 className="view-button"
-                onClick={() => navigate("/studentcredential")}
+                onClick={() => navigate("/student/studentcredential")}
               >
                 View
               </button>
@@ -114,7 +115,7 @@ function Student1() {
               <p>Send your credential verifications to recruiters</p>
               <button
                 className="view-button"
-                onClick={() => navigate("/student-rec")}
+                onClick={() => navigate("/student/student-rec")}
               >
                 View
               </button>
@@ -136,7 +137,7 @@ function Student1() {
               </p>
               <button
                 className="view-button1"
-                onClick={() => navigate("/student-verify")}
+                onClick={() => navigate("/student/student-verify")}
               >
                 View
               </button>

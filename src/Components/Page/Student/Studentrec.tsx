@@ -6,6 +6,7 @@ import axios from "axios"; // Ensure axios is imported
 import { useNavigate } from "react-router-dom"; // Ensure this is imported
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
@@ -75,6 +76,7 @@ function StudentRecruiter() {
   return (
     <div>
       <Header />
+      <Breadcrumbs/>
       <div className="admin-student-list-main">
         <div className="admin-student-list-title">Verifier List</div>
         <div

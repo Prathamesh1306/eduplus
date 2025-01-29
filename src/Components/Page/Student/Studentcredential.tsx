@@ -275,6 +275,7 @@ import "../../css/studentcredential.css";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import Breadcrumbs from "../../compo/breadcrumbs";
 
 function Studentcredential() {
   const [error, setError] = useState(""); // Error state
@@ -344,9 +345,13 @@ function Studentcredential() {
   const closeModal = () => setShowModal(false);
 
   return (
-    <div className="student-credential">
+    <div className="student-credential" style={{ justifyContent: "start" }}>
       <Header name={name} year="3rd year" role="STUDENT" />
-
+      <div style={{
+        justifySelf:"start"
+      }}>
+        <Breadcrumbs />
+      </div>
       <div className="credential-content">
         <h2>Student Credentials</h2>
 
@@ -446,25 +451,25 @@ function Studentcredential() {
                 </button> */}
 
                 <button
-  onClick={() => {
-    setShowModal(true);
-    setIsFrozen(true); // Disable the button and update text
-  }}
-  className="deploy-button"
-  disabled={isFrozen} // Disable the button if frozen
-  style={{
-    backgroundColor: isFrozen ? "#f44336" : "#02897a", // Change color when frozen
-    color: "white",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: isFrozen ? "not-allowed" : "pointer",
-    fontWeight: "bold",
-    fontSize: "14px",
-  }}
->
-  {isFrozen ? "Frozen" : "Freeze"}
-</button>
+                  onClick={() => {
+                    setShowModal(true);
+                    setIsFrozen(true); // Disable the button and update text
+                  }}
+                  className="deploy-button"
+                  disabled={isFrozen} // Disable the button if frozen
+                  style={{
+                    backgroundColor: isFrozen ? "#f44336" : "#02897a", // Change color when frozen
+                    color: "white",
+                    padding: "10px 20px",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: isFrozen ? "not-allowed" : "pointer",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                  }}
+                >
+                  {isFrozen ? "Frozen" : "Freeze"}
+                </button>
               </div>
             </div>
             {error && <p className="error-message">{error}</p>}
@@ -474,79 +479,89 @@ function Studentcredential() {
 
       {/* Payment Modal */}
       {showModal && (
-  <div className="modal-overlay">
-    <div className="modal-content" style={{
-      maxWidth: "400px",
-      margin: "50px auto",
-      backgroundColor: "#ffffff",
-      borderRadius: "10px",
-      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
-      padding: "20px",
-      textAlign: "center",
-    }}>
-      <h2 style={{
-        marginBottom: "20px",
-        fontSize: "22px",
-        color: "#333",
-      }}>
-        Confirm Payment
-      </h2>
-      <p style={{
-        fontSize: "16px",
-        color: "#666",
-        marginBottom: "15px",
-      }}>
-        You are about to freeze student PRN: <strong>{prn}</strong>.
-      </p>
-     
-      <p style={{
-        fontSize: "14px",
-        color: "#f44336",
-        fontWeight: "bold",
-        marginBottom: "20px",
-      }}>
-        Warning: Once frozen, the details cannot be changed.
-      </p>
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: "10px",
-      }}>
-        <button
-          onClick={handlePayment}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#02897a",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            fontSize: "14px",
-          }}
-        >
-          Pay Now
-        </button>
-        <button
-          onClick={closeModal}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#f44336",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            fontSize: "14px",
-          }}
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+        <div className="modal-overlay">
+          <div
+            className="modal-content"
+            style={{
+              maxWidth: "400px",
+              margin: "50px auto",
+              backgroundColor: "#ffffff",
+              borderRadius: "10px",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
+              padding: "20px",
+              textAlign: "center",
+            }}
+          >
+            <h2
+              style={{
+                marginBottom: "20px",
+                fontSize: "22px",
+                color: "#333",
+              }}
+            >
+              Confirm Payment
+            </h2>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#666",
+                marginBottom: "15px",
+              }}
+            >
+              You are about to freeze student PRN: <strong>{prn}</strong>.
+            </p>
 
+            <p
+              style={{
+                fontSize: "14px",
+                color: "#f44336",
+                fontWeight: "bold",
+                marginBottom: "20px",
+              }}
+            >
+              Warning: Once frozen, the details cannot be changed.
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <button
+                onClick={handlePayment}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#02897a",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                }}
+              >
+                Pay Now
+              </button>
+              <button
+                onClick={closeModal}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#f44336",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <br />
       {isPaid && ( // Show only if payment is done

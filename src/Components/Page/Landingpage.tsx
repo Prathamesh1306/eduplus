@@ -88,7 +88,7 @@ function Landingpage() {
         email: email,
         password: password,
       });
-      alert("Login Successful!");
+      // alert("Login Successful!");
 
       const { role, token } = response.data;
       Cookies.set("eduplus", token, { expires: 1 });
