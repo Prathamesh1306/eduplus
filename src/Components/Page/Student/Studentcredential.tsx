@@ -286,7 +286,7 @@ function Studentcredential() {
   const [isFrozen, setIsFrozen] = useState(false);
 
   // Decode JWT
-  const cookies = Cookies.get("eduplus");
+  const cookies = Cookies.get("token");
   if (!cookies) {
     setError("JWT token not found in cookies.");
     return null;

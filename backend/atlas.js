@@ -10,7 +10,10 @@ const fs = require("fs");
 const QRCode = require("qrcode");
 const crypto = require("crypto");
 const path = require("path");
-app.use(cors());
+app.use(cors({
+  origin:"http://localhost:5173",
+  credentials: true,
+}));
 const multer = require("multer");
 app.use(express.json());
 const port = 3000;

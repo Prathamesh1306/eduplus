@@ -10,7 +10,7 @@ import Breadcrumbs from "../../compo/breadcrumbs";
 
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
-  const cookie = Cookies.get("eduplus");
+  const cookie = Cookies.get("token");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;
   useEffect(() => {
@@ -33,7 +33,7 @@ function StudentRecruiter() {
   }, []);
 
   const handlePDFUpload = (prn) => {
-    
+
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "application/pdf";
@@ -61,7 +61,6 @@ function StudentRecruiter() {
 
     fileInput.click();
   };
-
 
   const AppyBtn = async(email)=>{
     await axios.post("http://localhost:3000/apply",{
@@ -113,7 +112,7 @@ function StudentRecruiter() {
                       color: "#333",
                     }}
                   >
-                    <td style={{ padding: "10px" }}>{verifier.email}</td>
+                    <td style={{ padding: "10px" }}>{verifier.name}</td>
                     <td style={{ padding: "10px" }}>
                       <div
                         style={{

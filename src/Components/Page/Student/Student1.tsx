@@ -42,7 +42,7 @@ function Student1() {
     try {
 
 
-      const value = Cookies.get("eduplus");
+      const value = Cookies.get("token");
       console.log(value);
 
       const decoded = jwtDecode(value);

@@ -87,11 +87,11 @@ function Landingpage() {
       const response = await axios.post("http://localhost:3000/login", {
         email: email,
         password: password,
-      });
+      }, { withCredentials: true });
       // alert("Login Successful!");
 
       const { role, token } = response.data;
-      Cookies.set("eduplus", token, { expires: 1 });
+      // Cookies.set("eduplus", token, { expires: 1 });
 
       // Redirect based on role
       if (role === "admin") {

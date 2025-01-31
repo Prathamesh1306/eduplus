@@ -9,7 +9,7 @@ interface HeaderProps {
 function Header({ role }: HeaderProps) {
   const navigate = useNavigate();
   const Logout = () => {
-    Cookies.remove("eduplus",{ path: "/" });
+    Cookies.remove("token",{ path: "/" });
     navigate("/");
   };
   return (
