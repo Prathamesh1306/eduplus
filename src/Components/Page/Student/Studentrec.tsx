@@ -14,6 +14,7 @@ function StudentRecruiter() {
   const cookie = Cookies.get("eduplus");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;
+  const email = decoded.email;
   useEffect(() => {
     const fetchVerifier = async () => {
       try {
@@ -62,16 +63,39 @@ function StudentRecruiter() {
     fileInput.click();
   };
 
-  const AppyBtn = async(email)=>{
-    await axios.post("http://localhost:3000/apply",{
-      email:email,
-      prn:prn
-    })
+  const AppyBtn = async ({ email, prn }: any) => {
+    alert(`Email: ${email}, PRN: ${prn}`
+      
+    );
 
-    alert("Applied")
+    try {
+      alert("start applying");
 
+      const payload = { email, prn };
+      console.log("Request Payload:", payload);
 
-  } 
+      const response = await axios.post("http://localhost:3000/apply", payload);
+
+      console.log("Response received:", response);
+      alert("Applied successfully");
+    } catch (error: any) {
+      console.error("Error during API call:", error);
+
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        alert(
+          `Error: ${error.response.data.message || "Something went wrong"}`
+        );
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        alert("Error: No response from the server");
+      } else {
+        console.error("Error message:", error.message);
+        alert("Error: " + error.message);
+      }
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -97,15 +121,23 @@ function StudentRecruiter() {
                 textAlign: "left",
               }}
             >
-              <thead>
-                <tr style={{ backgroundColor: "#026b56", color: "#fff" }}>
-                  <th style={{ padding: "10px" }}>Email</th>
-                  <th style={{ padding: "10px" }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recruiter.map((verifier) => (
-                  <tr
+                <div
+                  style={{
+                    color: "#fff",
+                   display:"flex",
+                   justifyContent:"space-around",
+                   width:"70%"
+
+                  }}
+                >
+                  <div style={{ padding: "10px" }}>Email</div>
+                  <div style={{ padding: "10px" }}>Action</div>
+              </div>
+              <div
+              style={{borderRadius:"10px",backgroundColor:"#e7f6f2"}}
+              >
+                {recruiter.map((verifier: any) => (
+                  <div
                     key={verifier._id}
                     style={{
                       // backgroundColor: verifier.verify ? "#e7f6f2" : "#f6f2e7",
@@ -134,7 +166,8 @@ function StudentRecruiter() {
                         >
                         Upload PDF
                       </div>
-                    </td>
+                    </div>
+                    <div style={{ padding: "10px",width:"80%",justifyItems:"center"}}>
                     <div
                       style={{
                         color: "#000",
@@ -146,12 +179,10 @@ function StudentRecruiter() {
                         userSelect: "none",
                         cursor: "pointer",
                       }}
-
-                      onClick={()=>{
-                        AppyBtn(verifier.email)
-                        console.log(verifier.email)
+                      onClick={() => {
+                        AppyBtn({ email: verifier.email, prn });
                       }}
-                    >
+                      >
                       Apply
                       </div>
                       </div>
