@@ -11,7 +11,7 @@ import { log } from "handlebars";
 
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
-  const cookie = Cookies.get("token");
+  const cookie = Cookies.get("eduplus");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;
   const email= decoded.email;
@@ -23,7 +23,7 @@ function StudentRecruiter() {
         );
 
         const verifiedVerifiers = response.data.filter(
-          (recruiter) => recruiter.verify === true
+          (recruiter:any) => recruiter.verify === true
         );
         setRecruiter(verifiedVerifiers);
       } catch (error) {
@@ -34,14 +34,14 @@ function StudentRecruiter() {
     fetchVerifier();
   }, []);
 
-  const handlePDFUpload = (prn) => {
+  const handlePDFUpload = (prn:any) => {
     
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "application/pdf";
     fileInput.style.display = "none";
 
-    fileInput.onchange = async (event) => {
+    fileInput.onchange = async (event:any) => {
       const file = event.target.files[0];
       if (file) {
         const formData = new FormData();
@@ -65,20 +65,35 @@ function StudentRecruiter() {
   };
 
 
-  const AppyBtn = async({ email,prn}:any)=>{
-    console.log("HOISHdja")
+  const AppyBtn = async ({ email, prn }: any) => {
+    alert(`Email: ${email}, PRN: ${prn}`);
+  
+    try {
+      alert("start applying");
+  
+      const payload = { email, prn };
+      console.log("Request Payload:", payload);
+  
+      const response = await axios.post("http://localhost:3000/apply", payload);
+  
+      console.log("Response received:", response);
+      alert("Applied successfully");
+    } catch (error:any) {
+      console.error("Error during API call:", error);
+  
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        alert(`Error: ${error.response.data.message || 'Something went wrong'}`);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        alert("Error: No response from the server");
+      } else {
+        console.error("Error message:", error.message);
+        alert("Error: " + error.message);
+      }
+    }
+  };
 
-    alert("start")
-    const response = await axios.post("http://localhost:3000/apply",{
-      email,
-      prn
-    })
-    console.log(response)
-    alert("Applied")
-
-
-
-  } 
   return (
     <div>
       <Header />
@@ -93,7 +108,6 @@ function StudentRecruiter() {
             borderRadius: "20px",
             padding: "20px 0px",
             overflowX: "auto",
-            flexDirection: "row",
           }}
         >
           {recruiter.length > 0 ? (
@@ -103,17 +117,16 @@ function StudentRecruiter() {
                 borderCollapse: "collapse",
                 marginTop: "20px",
                 textAlign: "left",
-                flexDirection: "row",
               }}
             >
               <div>
-                <div style={{ backgroundColor: "#026b56", color: "#fff",flexDirection: "row", }}>
+                <div style={{ backgroundColor: "#026b56", color: "#fff" }}>
                   <div style={{ padding: "10px" }}>Email</div>
                   <div style={{ padding: "10px" }}>Action</div>
                 </div>
               </div>
-              <div clas>
-                {recruiter.map((verifier) => (
+              <div>
+                {recruiter.map((verifier:any) => (
                   <div
                     key={verifier._id}
                     style={{
@@ -153,14 +166,8 @@ function StudentRecruiter() {
                         cursor:"pointer"
                       }}
 
-                      onClick={()=>{
-                        AppyBtn(email,prn)
+                      onClick={() => { AppyBtn({ email: verifier.email, prn }) }}
 
-                        // console.log(email);
-                        // console.log(prn);
-                        
-                       
-                      }}
                     >
                       Apply
                     </div>
