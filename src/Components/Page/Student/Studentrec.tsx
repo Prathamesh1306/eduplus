@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom"; // Ensure this is imported
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Breadcrumbs from "../../compo/breadcrumbs";
+import { log } from "handlebars";
 
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
   const cookie = Cookies.get("eduplus");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;
+  const email= decoded.email;
   useEffect(() => {
     const fetchVerifier = async () => {
       try {
@@ -63,16 +65,35 @@ function StudentRecruiter() {
   };
 
 
-  const AppyBtn = async(email)=>{
-    await axios.post("http://localhost:3000/apply",{
-      email:email,
-      prn:prn
-    })
+  const AppyBtn = async ({ email, prn }: any) => {
+    alert(`Email: ${email}, PRN: ${prn}`);
+  
+    try {
+      alert("start applying");
+  
+      const payload = { email, prn };
+      console.log("Request Payload:", payload);
+  
+      const response = await axios.post("http://localhost:3000/apply", payload);
+  
+      console.log("Response received:", response);
+      alert("Applied successfully");
+    } catch (error) {
+      console.error("Error during API call:", error);
+  
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        alert(`Error: ${error.response.data.message || 'Something went wrong'}`);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        alert("Error: No response from the server");
+      } else {
+        console.error("Error message:", error.message);
+        alert("Error: " + error.message);
+      }
+    }
+  };
 
-    alert("Applied")
-
-
-  } 
   return (
     <div>
       <Header />
@@ -90,7 +111,7 @@ function StudentRecruiter() {
           }}
         >
           {recruiter.length > 0 ? (
-            <table
+            <div
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
@@ -98,23 +119,23 @@ function StudentRecruiter() {
                 textAlign: "left",
               }}
             >
-              <thead>
-                <tr style={{ backgroundColor: "#026b56", color: "#fff" }}>
-                  <th style={{ padding: "10px" }}>Email</th>
-                  <th style={{ padding: "10px" }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
+              <div>
+                <div style={{ backgroundColor: "#026b56", color: "#fff" }}>
+                  <div style={{ padding: "10px" }}>Email</div>
+                  <div style={{ padding: "10px" }}>Action</div>
+                </div>
+              </div>
+              <div>
                 {recruiter.map((verifier) => (
-                  <tr
+                  <div
                     key={verifier._id}
                     style={{
                       backgroundColor: verifier.verify ? "#e7f6f2" : "#f6f2e7",
                       color: "#333",
                     }}
                   >
-                    <td style={{ padding: "10px" }}>{verifier.email}</td>
-                    <td style={{ padding: "10px" }}>
+                    <div style={{ padding: "10px" }}>{verifier.email}</div>
+                    <div style={{ padding: "10px" }}>
                       <div
                         style={{
                           color: "#000",
@@ -131,7 +152,7 @@ function StudentRecruiter() {
                       >
                         Upload PDF
                       </div>
-                    </td>
+                    </div>
                     <div
                       style={{
                         color: "#000",
@@ -145,17 +166,15 @@ function StudentRecruiter() {
                         cursor:"pointer"
                       }}
 
-                      onClick={()=>{
-                        AppyBtn(verifier.email)
-                        console.log(verifier.email)
-                      }}
+                      onClick={() => { AppyBtn({ email: verifier.email, prn }) }}
+
                     >
                       Apply
                     </div>
-                  </tr>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           ) : (
             <p>No verifiers found.</p>
           )}

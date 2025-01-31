@@ -127,6 +127,7 @@ function Landingpage() {
   return (
     <div className="landing-page">
       <Header />
+      
       <div
         style={{
           backgroundColor: "#0B7077",
