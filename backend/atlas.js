@@ -1186,11 +1186,11 @@ app.post("/apply", async (req, res) => {
   }
 
   try {
-    let verifier = await verifierModel.findOneAndUpdate(
-      { email },
-      { $setOnInsert: { email, students: [] } },
-      { upsert: true, returnDocument: "after" }
-    );
+    let verifier = await verifierModel.findOne({ email });
+
+    if (!verifier) {
+      return res.status(404).send("Verifier not found.");
+    }
 
     const verifierUpdate = await verifierModel.updateOne(
       { email, "students.prn": { $ne: prn } },
@@ -1338,7 +1338,26 @@ app.get("/get-all-datahashes", async (req, res) => {
     res.status(500).send("Error fetching data hashes");
   }
 });
+app.post("/student-verifiers", async (req, res) => {
+  const { prn } = req.body;
 
+  if (!prn) {
+    return res.status(400).send("PRN is required.");
+  }
+
+  try {
+    const student = await studentModel.findOne({ prn });
+
+    if (!student || !student.verifiers || student.verifiers.length === 0) {
+      return res.status(404).send("No verifiers found for this student.");
+    }
+
+    res.status(200).json(student.verifiers);
+  } catch (error) {
+    console.error("Error in /student-verifiers route:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
 /*app.listen(3000, () => {
       console.log("Working!");
     });
