@@ -210,9 +210,11 @@ interface Student {
 }
 
 // const CONTRACT_ADDRESS = "0xd2a5bC10698FD955D1Fe6cb468a17809A08fd005";
-const CONTRACT_ADDRESS = "0xc85A55b5b79795761793ADF00CFD2aFe16BF850e"; //maddy contract sepolia
+// const CONTRACT_ADDRESS = "0xc85A55b5b79795761793ADF00CFD2aFe16BF850e"; //maddy contract sepolia
 // const CONTRACT_ADDRESS = "0x5f44edf49edf6014d791e327ef57045f99ea83b2";
+const CONTRACT_ADDRESS = "0x5F44EDF49EDF6014d791e327EF57045F99ea83b2"
 const CONTRACT_ABI = abi;
+
 
 function VerifiedStudentList() {
   const [verifiedStudents, setVerifiedStudents] = useState<Student[]>([]);

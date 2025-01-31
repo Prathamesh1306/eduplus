@@ -11,7 +11,7 @@ function Header() {
   const [name, setName] = useState<string>();
   const [role, setRole] = useState<string>();
   useEffect(() => {
-    const value = Cookies.get("eduplus");
+    const value = Cookies.get("token");
     console.log(value);
     const decoded = jwtDecode(value);
     console.log(decoded);
