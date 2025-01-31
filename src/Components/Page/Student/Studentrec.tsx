@@ -14,7 +14,7 @@ function StudentRecruiter() {
   const cookie = Cookies.get("eduplus");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;
-  const email= decoded.email;
+  const email = decoded.email;
   useEffect(() => {
     const fetchVerifier = async () => {
       try {
@@ -23,7 +23,7 @@ function StudentRecruiter() {
         );
 
         const verifiedVerifiers = response.data.filter(
-          (recruiter:any) => recruiter.verify === true
+          (recruiter: any) => recruiter.verify === true
         );
         setRecruiter(verifiedVerifiers);
       } catch (error) {
@@ -34,14 +34,13 @@ function StudentRecruiter() {
     fetchVerifier();
   }, []);
 
-  const handlePDFUpload = (prn:any) => {
-    
+  const handlePDFUpload = (prn: any) => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "application/pdf";
     fileInput.style.display = "none";
 
-    fileInput.onchange = async (event:any) => {
+    fileInput.onchange = async (event: any) => {
       const file = event.target.files[0];
       if (file) {
         const formData = new FormData();
@@ -64,26 +63,27 @@ function StudentRecruiter() {
     fileInput.click();
   };
 
-
   const AppyBtn = async ({ email, prn }: any) => {
     alert(`Email: ${email}, PRN: ${prn}`);
-  
+
     try {
       alert("start applying");
-  
+
       const payload = { email, prn };
       console.log("Request Payload:", payload);
-  
+
       const response = await axios.post("http://localhost:3000/apply", payload);
-  
+
       console.log("Response received:", response);
       alert("Applied successfully");
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Error during API call:", error);
-  
+
       if (error.response) {
         console.error("Error response:", error.response.data);
-        alert(`Error: ${error.response.data.message || 'Something went wrong'}`);
+        alert(
+          `Error: ${error.response.data.message || "Something went wrong"}`
+        );
       } else if (error.request) {
         console.error("No response received:", error.request);
         alert("Error: No response from the server");
@@ -97,7 +97,7 @@ function StudentRecruiter() {
   return (
     <div>
       <Header />
-      <Breadcrumbs/>
+      <Breadcrumbs />
       <div className="admin-student-list-main">
         <div className="admin-student-list-title">Verifier List</div>
         <div
@@ -106,8 +106,9 @@ function StudentRecruiter() {
             width: "80%",
             justifyItems: "center",
             borderRadius: "20px",
-            padding: "20px 0px",
+            padding: "10px 2px 30px 1px",
             overflowX: "auto",
+            flexDirection: "row",
           }}
         >
           {recruiter.length > 0 ? (
@@ -115,61 +116,74 @@ function StudentRecruiter() {
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
-                marginTop: "20px",
                 textAlign: "left",
               }}
             >
-              <div>
-                <div style={{ backgroundColor: "#026b56", color: "#fff" }}>
+                <div
+                  style={{
+                    color: "#fff",
+                   display:"flex",
+                   justifyContent:"space-around",
+                   width:"70%"
+
+                  }}
+                >
                   <div style={{ padding: "10px" }}>Email</div>
                   <div style={{ padding: "10px" }}>Action</div>
-                </div>
               </div>
-              <div>
-                {recruiter.map((verifier:any) => (
+              <div
+              style={{borderRadius:"10px",backgroundColor:"#e7f6f2"}}
+              >
+                {recruiter.map((verifier: any) => (
                   <div
                     key={verifier._id}
                     style={{
-                      backgroundColor: verifier.verify ? "#e7f6f2" : "#f6f2e7",
+                      // backgroundColor: verifier.verify ? "#e7f6f2" : "#f6f2e7",
                       color: "#333",
+                      display:"flex",
+                      
                     }}
                   >
-                    <div style={{ padding: "10px" }}>{verifier.email}</div>
-                    <div style={{ padding: "10px" }}>
+                    <div style={{ padding: "10px" ,width:"30%"}}>{verifier.email}</div>
+                    <div style={{width:"70%" , display:"flex",alignItems:"center",padding:"10px 40px"}}>
+
+                    <div style={{ padding: "10px",width:"80%",justifyItems:"center"}}>
                       <div
                         style={{
                           color: "#000",
                           backgroundColor: "#68cfd9",
-                          margin: "10px 25px",
                           borderRadius: "8px",
                           textAlign: "center",
                           width: "50%",
                           fontSize: "30px",
-                          userSelect:"none",
-                          cursor:"pointer"
+                          userSelect: "none",
+                          cursor: "pointer",
+                          alignSelf:"center",
                         }}
                         onClick={() => handlePDFUpload(decoded.prn)}
-                      >
+                        >
                         Upload PDF
                       </div>
                     </div>
+                    <div style={{ padding: "10px",width:"80%",justifyItems:"center"}}>
                     <div
                       style={{
                         color: "#000",
-                        backgroundColor:"#68cfd9",
+                        backgroundColor: "#68cfd9",
                         textAlign: "center",
-                        margin: "20px 25px",
                         borderRadius: "10px",
                         width: "50%",
                         fontSize: "30px",
-                        userSelect:"none",
-                        cursor:"pointer"
+                        userSelect: "none",
+                        cursor: "pointer",
                       }}
-
-                      onClick={() => { AppyBtn({ email: verifier.email, prn }) }}
-
-                    >
+                      onClick={() => {
+                        AppyBtn({ email: verifier.email, prn });
+                      }}
+                      >
                       Apply
+                      </div>
+                      </div>
                     </div>
                   </div>
                 ))}
