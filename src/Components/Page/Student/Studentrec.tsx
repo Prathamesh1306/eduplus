@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom"; // Ensure this is imported
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Breadcrumbs from "../../compo/breadcrumbs";
+import { log } from "handlebars";
 
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
   const cookie = Cookies.get("token");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;
+  const email= decoded.email;
   useEffect(() => {
     const fetchVerifier = async () => {
       try {
@@ -33,7 +35,7 @@ function StudentRecruiter() {
   }, []);
 
   const handlePDFUpload = (prn) => {
-
+    
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "application/pdf";
@@ -62,13 +64,18 @@ function StudentRecruiter() {
     fileInput.click();
   };
 
-  const AppyBtn = async(email)=>{
-    await axios.post("http://localhost:3000/apply",{
-      email:email,
-      prn:prn
-    })
 
+  const AppyBtn = async({ email,prn}:any)=>{
+    console.log("HOISHdja")
+
+    alert("start")
+    const response = await axios.post("http://localhost:3000/apply",{
+      email,
+      prn
+    })
+    console.log(response)
     alert("Applied")
+
 
 
   } 
@@ -86,34 +93,36 @@ function StudentRecruiter() {
             borderRadius: "20px",
             padding: "20px 0px",
             overflowX: "auto",
+            flexDirection: "row",
           }}
         >
           {recruiter.length > 0 ? (
-            <table
+            <div
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
                 marginTop: "20px",
                 textAlign: "left",
+                flexDirection: "row",
               }}
             >
-              <thead>
-                <tr style={{ backgroundColor: "#026b56", color: "#fff" }}>
-                  <th style={{ padding: "10px" }}>Email</th>
-                  <th style={{ padding: "10px" }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
+              <div>
+                <div style={{ backgroundColor: "#026b56", color: "#fff",flexDirection: "row", }}>
+                  <div style={{ padding: "10px" }}>Email</div>
+                  <div style={{ padding: "10px" }}>Action</div>
+                </div>
+              </div>
+              <div clas>
                 {recruiter.map((verifier) => (
-                  <tr
+                  <div
                     key={verifier._id}
                     style={{
                       backgroundColor: verifier.verify ? "#e7f6f2" : "#f6f2e7",
                       color: "#333",
                     }}
                   >
-                    <td style={{ padding: "10px" }}>{verifier.name}</td>
-                    <td style={{ padding: "10px" }}>
+                    <div style={{ padding: "10px" }}>{verifier.email}</div>
+                    <div style={{ padding: "10px" }}>
                       <div
                         style={{
                           color: "#000",
@@ -130,7 +139,7 @@ function StudentRecruiter() {
                       >
                         Upload PDF
                       </div>
-                    </td>
+                    </div>
                     <div
                       style={{
                         color: "#000",
@@ -145,16 +154,20 @@ function StudentRecruiter() {
                       }}
 
                       onClick={()=>{
-                        AppyBtn(verifier.email)
-                        console.log(verifier.email)
+                        AppyBtn(email,prn)
+
+                        // console.log(email);
+                        // console.log(prn);
+                        
+                       
                       }}
                     >
                       Apply
                     </div>
-                  </tr>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           ) : (
             <p>No verifiers found.</p>
           )}
