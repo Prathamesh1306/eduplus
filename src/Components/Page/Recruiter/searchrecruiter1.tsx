@@ -9,8 +9,8 @@ import Breadcrumbs from "../../compo/breadcrumbs.tsx";
 
 function Recruiter() {
   const [email, setEmail] = useState("");
-  const [responseData, setResponseData] = useState([]);
-
+  const [responseData, setResponseData] = useState("");
+  const [toggleNotFound,setToggleNotFound ]=useState(false);
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
@@ -18,11 +18,15 @@ function Recruiter() {
       setEmail(cookie.email);
     }
   }, []);
-
+  
   useEffect(() => {
+    console.log(email)
+    console.log("token")
     if (email) {
       const fetchData = async () => {
         try {
+          setToggleNotFound(true);
+          console.log(response)
           const response = await axios.post(
             "http://localhost:3000/verifier-students",
             {
@@ -30,8 +34,9 @@ function Recruiter() {
             }
           );
           setResponseData(response.data); // Store the response data
-          console.log(response)
+          console.log(response);
         } catch (error) {
+          setToggleNotFound(false);
           console.error("Error fetching data:", error);
           setResponseData("Error fetching data");
         }
@@ -55,16 +60,24 @@ function Recruiter() {
       <div className="form-container">
         <form className="credential-form">
           <h2>Verification Response:</h2>
-          {/* <pre>{responseData ? JSON.stringify(responseData, null, 2) : "Loading..."}</pre> */}
-          {responseData?.map((item, index) => (
-            <div key={item.prn} style={{color:"#000000"}}>{item.prn}</div>
-            // <div key={item.name} style={{color:"#000000"}}>{item.name}</div>
-          ))}
-          {/* {console.log(responseData)} */}
+          {toggleNotFound ? (
+  responseData?.length > 0 ? (
+    responseData.map((item) => (
+      <div key={item.prn} style={{ color: "#000000" }}>
+        {item.prn}
+      </div>
+    ))
+  ) : (
+    <div>No data found</div>
+  )
+) : (
+  <div>Not found</div>
+)}
+
         </form>
       </div>
 
-      <Footer />  
+      <Footer />
     </div>
   );
 }
