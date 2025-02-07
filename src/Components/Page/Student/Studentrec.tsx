@@ -11,7 +11,7 @@ import { log } from "handlebars";
 
 function StudentRecruiter() {
   const [recruiter, setRecruiter] = useState([]); // State to store verifier data
-  const cookie = Cookies.get("eduplus");
+  const cookie = Cookies.get("token");
   const decoded = jwtDecode(cookie);
   const prn = decoded.prn;
   const email = decoded.email;
