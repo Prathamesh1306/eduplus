@@ -268,7 +268,7 @@
 
 // export default Studentcredential;
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../compo/header";
 import Footer from "../../compo/footer";
 import "../../css/studentcredential.css";
@@ -326,6 +326,27 @@ function Studentcredential() {
     }
   };
 
+  useEffect(() => {
+    const checkPaymentStatus = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/check-payment",
+          {
+            prn: prn,
+          }
+        );
+
+        if (response.data.paymentStatus) {
+          setIsFrozen(true); // Disable the button if payment is done
+        }
+      } catch (error) {
+        console.error("Error checking payment status:", error);
+      }
+    };
+
+    checkPaymentStatus();
+  }, [prn]);
+
   // Handle modal payment confirmation
   const handlePayment = async () => {
     try {
@@ -347,9 +368,11 @@ function Studentcredential() {
   return (
     <div className="student-credential" style={{ justifyContent: "start" }}>
       <Header name={name} year="3rd year" role="STUDENT" />
-      <div style={{
-        justifySelf:"start"
-      }}>
+      <div
+        style={{
+          justifySelf: "start",
+        }}
+      >
         <Breadcrumbs />
       </div>
       <div className="credential-content">
@@ -448,6 +471,27 @@ function Studentcredential() {
                   className="deploy-button"
                 >
                   Freeze
+                </button> */}
+
+                {/* <button
+                  onClick={() => {
+                    setShowModal(true);
+                    setIsFrozen(true); // Disable the button and update text
+                  }}
+                  className="deploy-button"
+                  disabled={isFrozen} // Disable the button if frozen
+                  style={{
+                    backgroundColor: isFrozen ? "#f44336" : "#02897a", // Change color when frozen
+                    color: "white",
+                    padding: "10px 20px",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: isFrozen ? "not-allowed" : "pointer",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                  }}
+                >
+                  {isFrozen ? "Frozen" : "Freeze"}
                 </button> */}
 
                 <button

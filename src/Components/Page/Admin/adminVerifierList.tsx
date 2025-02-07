@@ -44,6 +44,25 @@ const AdminRecutierList = () => {
     }
   };
 
+
+  useEffect(()=>{
+
+    const fetchStatus = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/get-all-verifiers"
+        );
+        console.log("This is response", response.data);
+        setRecrutier(response.data);
+      } catch (error) {
+        console.error("Error fetching verifiers:", error);
+      }
+    };
+
+    fetchStatus();
+
+  })
+
   return (
     <div className="admin-student-list-container">
       <Header role="ADMIN" />
@@ -67,10 +86,11 @@ const AdminRecutierList = () => {
                 borderCollapse: "collapse",
                 marginTop: "20px",
                 textAlign: "left",
+                fontFamily:"sans-serif"
               }}
             >
               <thead>
-                <tr style={{ backgroundColor: "#026b56", color: "#fff" }}>
+                <tr style={{ backgroundColor: "rgb(2, 137, 120)", color: "#fff" }}>
                   <th style={{ padding: "10px" }}>Email</th>
                   {/* <th style={{ padding: "10px" }}>Status</th> */}
                   <th style={{ padding: "10px" }}>Action</th>
@@ -81,10 +101,11 @@ const AdminRecutierList = () => {
                   <tr
                     key={verifier._id}
                     style={{
-                      backgroundColor: verifier.verify ? "#e7f6f2" : "#f6f2e7",
-                      color: "#333",
+                      backgroundColor: "#084c4d",
+                      color: "#fff", 
                     }}
                   >
+                  
                     <td style={{ padding: "10px" }}>{verifier.email}</td>
                     {/* <td style={{ padding: "10px" }}>
                       <span

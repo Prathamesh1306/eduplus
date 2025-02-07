@@ -30,6 +30,7 @@ function Recruiter() {
             }
           );
           setResponseData(response.data); // Store the response data
+          console.log(response)
         } catch (error) {
           console.error("Error fetching data:", error);
           setResponseData("Error fetching data");
@@ -57,6 +58,7 @@ function Recruiter() {
           {/* <pre>{responseData ? JSON.stringify(responseData, null, 2) : "Loading..."}</pre> */}
           {responseData?.map((item, index) => (
             <div key={item.prn} style={{color:"#000000"}}>{item.prn}</div>
+            // <div key={item.name} style={{color:"#000000"}}>{item.name}</div>
           ))}
           {/* {console.log(responseData)} */}
         </form>
