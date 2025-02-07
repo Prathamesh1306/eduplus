@@ -26,7 +26,6 @@ function Recruiter() {
       const fetchData = async () => {
         try {
           setToggleNotFound(true);
-          console.log(response)
           const response = await axios.post(
             "http://localhost:3000/verifier-students",
             {
@@ -34,7 +33,7 @@ function Recruiter() {
             }
           );
           setResponseData(response.data); // Store the response data
-          console.log(response);
+          console.log(response.data);
         } catch (error) {
           setToggleNotFound(false);
           console.error("Error fetching data:", error);
@@ -62,9 +61,15 @@ function Recruiter() {
           <h2>Verification Response:</h2>
           {toggleNotFound ? (
   responseData?.length > 0 ? (
-    responseData.map((item) => (
+    responseData?.map((item) => (
+      <div className="">
+
       <div key={item.prn} style={{ color: "#000000" }}>
         {item.prn}
+      </div>
+      <div key={item.prn} style={{ color: "#000000" }}>
+      {item.name}
+      </div>
       </div>
     ))
   ) : (
