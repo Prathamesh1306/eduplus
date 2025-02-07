@@ -1256,14 +1256,24 @@ app.post("/verifier-students", async (req, res) => {
   const { email } = req.body;
 
   try {
-    // Fetch the verifier's students using the email
     const verifier = await verifierModel.findOne({ email });
 
     if (!verifier || !verifier.students || verifier.students.length === 0) {
       return res.status(404).send("No students found for this verifier.");
     }
 
-    res.status(200).json(verifier.students);
+    const prns = verifier.students.map((student) => student.prn);
+
+    const students = await studentModel
+      .find({ prn: { $in: prns } }, { projection: { prn: 1, name: 1 } })
+      .toArray();
+
+    const studentList = students.map((student) => ({
+      prn: student.prn,
+      name: student.name,
+    }));
+
+    res.status(200).json(studentList);
   } catch (error) {
     console.error("Error in /verifier-students route:", error);
     res.status(500).send("Internal server error.");
