@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
+import Logo from "../../assets/logo.svg";
+import Logo2 from "../../assets/vishwakram transparent.png";
 import Header from "../compo/header-landingpage";
 import Footer from "../compo/footer";
 import Cookies from "js-cookie";
@@ -84,10 +86,14 @@ function Landingpage() {
 
   const handlesubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/login", {
-        email: email,
-        password: password,
-      }, { withCredentials: true });
+      const response = await axios.post(
+        "http://localhost:3000/login",
+        {
+          email: email,
+          password: password,
+        },
+        { withCredentials: true }
+      );
       // alert("Login Successful!");
 
       const { role, token } = response.data;
@@ -125,229 +131,255 @@ function Landingpage() {
   };
 
   return (
-    <div className="landing-page">
-      <Header />
-      
+    <div
+      className="landing-page"
+      style={{ paddingTop: 20, height: "100vh", alignContent: "center" }}
+    >
       <div
+        className=""
         style={{
-          backgroundColor: "#0B7077",
-          marginTop: 20,
-          width: "30%",
-          paddingTop: 30,
-          paddingBottom: 30,
-          paddingLeft: 40,
-          paddingRight: 40,
-          borderRadius: 15,
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          marginLeft: "auto",
-          marginRight: "auto",
+          backgroundColor: "#D2E6E4",
+          width: "45%",
+          justifySelf: "center",
+          padding: "15px 15px",
+          borderRadius: "20px",
         }}
       >
         <div
-          id={isSignUp ? "sign-up" : "sign-in"}
-          style={{ color: "#ffffff", fontSize: 24, fontWeight: "bold" }}
-        >
-          {isSignUp ? "Sign Up as Verifier" : "Sign In"}
-        </div>
-
-        {isSignUp ? (
-          <>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: 20,
-                width: "100%",
-                backgroundColor: "#fff",
-                borderRadius: 5,
-                padding: 10,
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faUser}
-                style={{ marginRight: 15, color: "#0B7077" }}
-              />
-              <input
-                type="text"
-                placeholder="Enter Username"
-                value={username}
-                onChange={handleUsernameChange}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  width: "100%",
-                  padding: 10,
-                  fontSize: 16,
-                  borderRadius: 5,
-                }}
-              />
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: 20,
-                width: "100%",
-                backgroundColor: "#fff",
-                borderRadius: 5,
-                padding: 10,
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faEnvelope}
-                style={{ marginRight: 15, color: "#0B7077" }}
-              />
-              <input
-                type="email"
-                placeholder="Enter Email"
-                value={email}
-                onChange={handleEmailChange}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  width: "100%",
-                  padding: 10,
-                  fontSize: 16,
-                  borderRadius: 5,
-                }}
-              />
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: 20,
-                width: "100%",
-                backgroundColor: "#fff",
-                borderRadius: 5,
-                padding: 10,
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faLock}
-                style={{ marginRight: 15, color: "#0B7077" }}
-              />
-              <input
-                type="password"
-                placeholder="Enter Password"
-                value={password}
-                onChange={handlePasswordChange}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  width: "100%",
-                  padding: 10,
-                  fontSize: 16,
-                  borderRadius: 5,
-                }}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: 20,
-                width: "100%",
-                backgroundColor: "#fff",
-                borderRadius: 5,
-                padding: 10,
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faEnvelope}
-                style={{ marginRight: 15, color: "#0B7077" }}
-              />
-              <input
-                type="email"
-                placeholder="Enter Email"
-                value={email}
-                onChange={handleEmailChange}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  width: "100%",
-                  padding: 10,
-                  fontSize: 16,
-                  borderRadius: 5,
-                }}
-              />
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: 20,
-                width: "100%",
-                backgroundColor: "#fff",
-                borderRadius: 5,
-                padding: 10,
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faLock}
-                style={{ marginRight: 15, color: "#0B7077" }}
-              />
-              <input
-                type="password"
-                placeholder="Enter Password"
-                value={password}
-                onChange={handlePasswordChange}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  width: "100%",
-                  padding: 10,
-                  fontSize: 16,
-                  borderRadius: 5,
-                }}
-              />
-            </div>
-          </>
-        )}
-
-        <div
-          onClick={isSignUp ? handlesubmitsignup : handlesubmit}
           style={{
-            color: "#000",
-            backgroundColor: "#D2E6E4",
-            padding: "10px 20px",
-            marginTop: 20,
+            backgroundColor: "#0B7077",
+            width: "50%",
+            paddingTop: 30,
+            paddingBottom: 30,
+            paddingLeft: 40,
+            paddingRight: 40,
             borderRadius: 15,
-            textAlign: "center",
-            width: "100%",
-            cursor: "pointer",
-            fontSize: 18,
-            fontWeight: "bold",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {isSignUp ? "Sign Up" : "Sign In"}
-        </div>
+          <div
+            id={isSignUp ? "sign-up" : "sign-in"}
+            style={{ color: "#ffffff", fontSize: 24, fontWeight: "bold" }}
+          >
+            {isSignUp ? "Sign Up as Verifier" : "Sign In"}
+          </div>
 
+          {isSignUp ? (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: 20,
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  borderRadius: 5,
+                  padding: 10,
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faUser}
+                  style={{ marginRight: 15, color: "#0B7077" }}
+                />
+                <input
+                  type="text"
+                  placeholder="Enter Username"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    width: "100%",
+                    padding: 10,
+                    fontSize: 16,
+                    borderRadius: 5,
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: 20,
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  borderRadius: 5,
+                  padding: 10,
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faEnvelope}
+                  style={{ marginRight: 15, color: "#0B7077" }}
+                />
+                <input
+                  type="email"
+                  placeholder="Enter Email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    width: "100%",
+                    padding: 10,
+                    fontSize: 16,
+                    borderRadius: 5,
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: 20,
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  borderRadius: 5,
+                  padding: 10,
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faLock}
+                  style={{ marginRight: 15, color: "#0B7077" }}
+                />
+                <input
+                  type="password"
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    width: "100%",
+                    padding: 10,
+                    fontSize: 16,
+                    borderRadius: 5,
+                  }}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: 20,
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  borderRadius: 5,
+                  padding: 10,
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faEnvelope}
+                  style={{ marginRight: 15, color: "#0B7077" }}
+                />
+                <input
+                  type="email"
+                  placeholder="Enter Email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    width: "100%",
+                    padding: 10,
+                    fontSize: 16,
+                    borderRadius: 5,
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: 20,
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  borderRadius: 5,
+                  padding: 10,
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faLock}
+                  style={{ marginRight: 15, color: "#0B7077" }}
+                />
+                <input
+                  type="password"
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    width: "100%",
+                    padding: 10,
+                    fontSize: 16,
+                    borderRadius: 5,
+                  }}
+                />
+              </div>
+            </>
+          )}
+
+          <div
+            onClick={isSignUp ? handlesubmitsignup : handlesubmit}
+            style={{
+              color: "#000",
+              backgroundColor: "#D2E6E4",
+              padding: "10px 20px",
+              marginTop: 20,
+              borderRadius: 15,
+              textAlign: "center",
+              width: "100%",
+              cursor: "pointer",
+              fontSize: 18,
+              fontWeight: "bold",
+            }}
+          >
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </div>
+
+          <div
+            onClick={toggleSignUp}
+            style={{
+              color: "#D2E6E4",
+              marginTop: 10,
+              cursor: "pointer",
+              textDecoration: "underline",
+              fontSize: 16,
+            }}
+          >
+            {isSignUp
+              ? "Already have an account? Sign In"
+              : " Sign Up as Verifier"}
+          </div>
+        </div>
         <div
-          onClick={toggleSignUp}
+          className=""
           style={{
-            color: "#D2E6E4",
-            marginTop: 10,
-            cursor: "pointer",
-            textDecoration: "underline",
-            fontSize: 16,
+            width: "50%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {isSignUp
-            ? "Already have an account? Sign In"
-            : " Sign Up as Verifier"}
+          <img
+            src={Logo}
+            alt=""
+            style={{ width: "300px", marginBottom: "20px" }}
+          />
+          <img src={Logo2} alt="" style={{ width: "300px" }} />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

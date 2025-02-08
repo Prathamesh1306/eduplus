@@ -10,7 +10,7 @@ import Breadcrumbs from "../../compo/breadcrumbs.tsx";
 function Recruiter() {
   const [email, setEmail] = useState("");
   const [responseData, setResponseData] = useState("");
-  const [toggleNotFound,setToggleNotFound ]=useState(false);
+  const [toggleNotFound, setToggleNotFound] = useState(false);
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
@@ -18,10 +18,10 @@ function Recruiter() {
       setEmail(cookie.email);
     }
   }, []);
-  
+
   useEffect(() => {
-    console.log(email)
-    console.log("token")
+    console.log(email);
+    console.log("token");
     if (email) {
       const fetchData = async () => {
         try {
@@ -59,26 +59,40 @@ function Recruiter() {
       <div className="form-container">
         <form className="credential-form">
           <h2>Verification Response:</h2>
+          <div
+            className=""
+            style={{
+              color: "#000",
+              justifyContent: "space-around",
+              display: "flex",
+              fontWeight: "bold",
+              fontSize: "20px",
+            }}
+          >
+            <div className="">Name</div>
+            <div className="">PRN</div>
+          </div>
           {toggleNotFound ? (
-  responseData?.length > 0 ? (
-    responseData?.map((item) => (
-      <div className="">
-
-      <div key={item.prn} style={{ color: "#000000" }}>
-        {item.prn}
-      </div>
-      <div key={item.prn} style={{ color: "#000000" }}>
-      {item.name}
-      </div>
-      </div>
-    ))
-  ) : (
-    <div>No data found</div>
-  )
-) : (
-  <div>Not found</div>
-)}
-
+            responseData?.length > 0 ? (
+              responseData?.map((item:any) => (
+                <div
+                  className=""
+                  style={{ justifyContent: "space-around", display: "flex" }}
+                >
+                  <div key={item.prn} style={{ color: "#000000" }}>
+                    {item.name}
+                  </div>
+                  <div key={item.prn} style={{ color: "#000000" }}>
+                    {item.prn}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>No data found</div>
+            )
+          ) : (
+            <div>Not found</div>
+          )}
         </form>
       </div>
 
