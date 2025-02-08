@@ -133,23 +133,39 @@ function Landingpage() {
   return (
     <div
       className="landing-page"
-      style={{ paddingTop: 20, height: "100vh", alignContent: "center" }}
+      style={{
+        height: "100vh",
+        alignContent: "center",
+        backgroundImage:
+          "url('https://img.freepik.com/free-photo/blue-gradient-abstract-background-empty-room-with-space-your-text-picture_1258-66841.jpg')",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+      }}
     >
+      <div
+        className=""
+        style={{ textAlign: "center", fontSize: "35px", fontWeight: "bold" }}
+      >
+        Blockchain Based Academic Credentials
+      </div>
       <div
         className=""
         style={{
           display: "flex",
           backgroundColor: "#D2E6E4",
-          width: "45%",
+          width: "70%",
           justifySelf: "center",
           padding: "15px 15px",
           borderRadius: "20px",
+          marginTop: 20,
+          marginBottom: 150,
         }}
       >
         <div
           style={{
             backgroundColor: "#0B7077",
-            width: "50%",
+            width: "45%",
             paddingTop: 30,
             paddingBottom: 30,
             paddingLeft: 40,
