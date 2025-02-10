@@ -9,6 +9,8 @@ import Breadcrumbs from "../../compo/breadcrumbs.tsx";
 
 function Recruiter() {
   const [email, setEmail] = useState("");
+  const [prn, setPrn] = useState();
+  const [pdfUrl, setPdfUrl] = useState("");
   const [responseData, setResponseData] = useState("");
   const [toggleNotFound, setToggleNotFound] = useState(false);
   useEffect(() => {
@@ -16,6 +18,12 @@ function Recruiter() {
     if (token) {
       const cookie = jwtDecode(token);
       setEmail(cookie.email);
+      setPrn(cookie.prn);
+      console.log("Hekko world");
+
+      console.log(cookie.email);
+      console.log(cookie.user);
+      console.log(cookie.role);
     }
   }, []);
 
@@ -40,9 +48,22 @@ function Recruiter() {
           setResponseData("Error fetching data");
         }
       };
+
       fetchData();
     }
   }, [email]); // Runs when 'email' is updated
+
+  const fetchPdf = (prn: string) => {
+    try {
+      setPdfUrl(`http://localhost:3000/download-pdf-verifier?prn=${prn}`);
+      window.open(
+        `http://localhost:3000/download-pdf-verifier?prn=${prn}`,
+        "_blank"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="container">
@@ -71,19 +92,30 @@ function Recruiter() {
           >
             <div className="">Name</div>
             <div className="">PRN</div>
+            <div className="">pdf</div>
           </div>
           {toggleNotFound ? (
             responseData?.length > 0 ? (
-              responseData?.map((item:any) => (
+              responseData?.map((item: any) => (
                 <div
+                  key={item.prn}
                   className=""
                   style={{ justifyContent: "space-around", display: "flex" }}
                 >
-                  <div key={item.prn} style={{ color: "#000000" }}>
-                    {item.name}
-                  </div>
-                  <div key={item.prn} style={{ color: "#000000" }}>
-                    {item.prn}
+                  <div style={{ color: "#000000" }}>{item.name}</div>
+                  <div style={{ color: "#000000" }}>{item.prn}</div>
+                  <div
+                    className=""
+                    style={{
+                      backgroundColor: "#159879",
+                      color: "#000",
+                      borderRadius: "10px",
+                      padding: "1px 5px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => fetchPdf(item.prn)}
+                  >
+                    Download PDF
                   </div>
                 </div>
               ))

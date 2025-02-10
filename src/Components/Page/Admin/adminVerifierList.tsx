@@ -33,7 +33,7 @@ const AdminRecutierList = () => {
       console.log("Status changed successfully:", response.data);
 
       setRecrutier((prevRecrutier:any) =>
-        prevRecrutier.map((verifier) =>
+        prevRecrutier.map((verifier:any) =>
           verifier.email === email
             ? { ...verifier, verify: !verifier.verify }
             : verifier
@@ -106,7 +106,7 @@ const AdminRecutierList = () => {
                     }}
                   >
                   
-                    <td style={{ padding: "10px" }}>{verifier.email}</td>
+                    <td style={{ padding: "10px" ,fontFamily:"cursive"}}>{verifier.email}</td>
                     {/* <td style={{ padding: "10px" }}>
                       <span
                         style={{
