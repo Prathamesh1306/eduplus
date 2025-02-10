@@ -1439,7 +1439,25 @@ app.post("/student-verification-status", async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 });
+app.post("/freeze-status", async (req, res) => {
+  const { prn } = req.body;
+  if (!prn) {
+    return res.status(400).json({ error: "PRN is required." });
+  }
+  try {
+    const student = await studentModel.findOne({ prn });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found." });
+    }
 
+    res.status(200).json({
+      freezeStatus: student.status,
+    });
+  } catch (error) {
+    console.error("Error retrieving freeze status:", error);
+    res.status(500).json({ error: "Failed to retrieve freeze status." });
+  }
+});
 /*app.listen(3000, () => {
       console.log("Working!");
     });
