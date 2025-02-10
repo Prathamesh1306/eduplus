@@ -1388,6 +1388,58 @@ app.post("/student-verifiers", async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 });
+app.post("/student-verification-status", async (req, res) => {
+  const { prn } = req.body;
+
+  if (!prn) {
+    return res.status(400).send("PRN is required.");
+  }
+
+  try {
+
+    const student = await studentModel.findOne({ prn });
+    if (!student || !student.verifiers || student.verifiers.length === 0) {
+      return res.status(404).send("No verifiers found for this student.");
+    }
+
+   
+    const verifiersList = await Promise.all(
+      student.verifiers.map(async (verifierEntry) => {
+     
+        const verifierEmail =
+          typeof verifierEntry === "string"
+            ? verifierEntry
+            : verifierEntry.email;
+
+        const verifierRecord = await verifierModel.findOne(
+          { email: verifierEmail },
+          { students: { $elemMatch: { prn } } }
+        );
+
+        let status = "Not found";
+        if (
+          verifierRecord &&
+          verifierRecord.students &&
+          verifierRecord.students.length > 0 &&
+          verifierRecord.students[0].status !== undefined
+        ) {
+          status = verifierRecord.students[0].status;
+        }
+
+        return {
+          email: verifierEmail,
+          status,
+        };
+      })
+    );
+
+    res.status(200).json(verifiersList);
+  } catch (error) {
+    console.error("Error in /student-verification-status route:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
+
 /*app.listen(3000, () => {
       console.log("Working!");
     });
