@@ -338,6 +338,7 @@ function Studentcredential() {
 
         if (response.data.paymentStatus) {
           setIsFrozen(true); // Disable the button if payment is done
+          setIsPaid(true); 
         }
       } catch (error) {
         console.error("Error checking payment status:", error);

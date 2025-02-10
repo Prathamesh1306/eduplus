@@ -10,16 +10,19 @@ const fs = require("fs");
 const QRCode = require("qrcode");
 const crypto = require("crypto");
 const path = require("path");
-app.use(cors({
-  origin:"http://localhost:5173",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 const multer = require("multer");
 app.use(express.json());
 const port = 3000;
 const hostname = "localhost";
 const { MongoClient } = require("mongodb");
-const uri ="mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri =
+  "mongodb+srv://mmn:W6vZGtD7Mek6lCN4@cluster0.0z7r0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 const client = new MongoClient(uri);
 const db = client.db("edu");
@@ -47,27 +50,34 @@ app.post("/change-verifier", async (req, res) => {
   try {
     // Extract email from request body
     const { email } = req.body;
-
     if (!email) {
       return res.status(400).send("Verifier email is required.");
     }
 
-    // Find the verifier by email
-    const verifier = await verifierModel.findOne({ email });
+    // Find the verifier in authModel (assuming verifier users are stored here)
+    const verifier = await authModel.findOne({ email, role: "verifier" });
     if (!verifier) {
       return res.status(404).send("Verifier not found.");
     }
 
-    // Toggle the `verify` status
-    const updatedVerifier = await verifierModel.updateOne(
-      { email }, // Filter by email
-      { $set: { verify: !verifier.verify } } // Toggle the `verify` status
+    // Toggle the verified status.
+    // Here we assume the field is named "verified" in the authModel.
+    const newVerifiedStatus = !verifier.verify;
+
+    // Update the document with the new verified status.
+    const updatedResult = await authModel.updateOne(
+      { email },
+      { $set: { verify: newVerifiedStatus } }
+    );
+    const updatedResult1 = await verifierModel.updateOne(
+      { email },
+      { $set: { verify: newVerifiedStatus } }
     );
 
     res
       .status(200)
       .send(
-        `Verifier status updated to ${!verifier.verify ? "true" : "false"}.`
+        `Verifier status updated to ${newVerifiedStatus ? "true" : "false"}.`
       );
   } catch (error) {
     console.error("Error updating verifier status:", error);
@@ -91,12 +101,12 @@ app.post("/update-transaction", async (req, res) => {
       { returnDocument: "after" }
     );
 
-    if (!student.value) {
+    if (!student) {
       return res.status(404).send("Student not found.");
     }
 
     // Save the transaction
-    // await Transaction.insertOne({ prn, transactionHash });
+    await Transaction.insertOne({ prn, transactionHash });
 
     res.status(200).send("Transaction saved and student status updated.");
   } catch (error) {
@@ -200,18 +210,30 @@ app.get("/", (req, res) => {
 //route1(Adding new data if few, in case needed in future)
 // app.post("/add", isLoggedin, isAdmin, async (req, res) => {
 app.post("/add", async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password } = req.body;
   try {
     const existingUser = await authModel.findOne({ email });
     if (existingUser) return res.status(400).send("User Already Exists!");
     const role = "verifier";
+
     const createdUser = await authModel.insertOne({
       username,
       email,
       password,
       role,
+      verified: false,
+    });
+    const existingVerifier = await verifierModel.findOne({
+      email: email,
     });
 
+    if (!existingVerifier) {
+      await verifierModel.insertOne({
+        email: email,
+        verify: false, // Default value for verify field
+        students: [], // Initialize students array as empty
+      });
+    }
     const token = jwt.sign(
       {
         email: email,
@@ -236,6 +258,7 @@ app.post("/login", async (req, res) => {
   try {
     const user = await authModel.findOne({ email });
     const student = await studentModel.findOne({ email });
+
     if (!user) {
       return res.status(404).send("No User Found!");
     }
@@ -243,6 +266,13 @@ app.post("/login", async (req, res) => {
     if (password !== user.password) {
       return res.status(401).send("Invalid Credentials");
     }
+
+    // If the user's role is "verifier", check that their account is verified by admin.
+    if (user.role === "verifier" && !user.verify) {
+      return res.status(403).send("Account not verified by admin.");
+    }
+
+    // Create a JWT token differently depending on whether a student document exists.
     if (student) {
       const token = jwt.sign(
         {
@@ -260,9 +290,11 @@ app.post("/login", async (req, res) => {
         secure: true,
         sameSite: "lax",
       });
-      res
-        .status(200)
-        .send({ message: "Logged In Successfully", role: user.role, token });
+      res.status(200).send({
+        message: "Logged In Successfully",
+        role: user.role,
+        token,
+      });
     } else {
       const token = jwt.sign(
         {
@@ -279,34 +311,22 @@ app.post("/login", async (req, res) => {
         secure: true,
         sameSite: "lax",
       });
-      res
-        .status(200)
-        .send({ message: "Logged In Successfully", role: user.role, token });
+      res.status(200).send({
+        message: "Logged In Successfully",
+        role: user.role,
+        token,
+      });
     }
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).send("Internal Server Error");
   }
-  console.log("login succesful");
-});
-app.get("/get-verifier", async (req, res) => {
-  try {
-    const verifier = await authModel.find({ role: "verifier" }).toArray();
-
-    if (!verifier || verifier.length === 0) {
-      return res.status(404).send("No verifier");
-    }
-
-    res.status(200).json(verifier);
-  } catch (error) {
-    console.error("Error fetching verifier:", error);
-    res.status(500).send("Internal Server Error");
-  }
+  console.log("login successful");
 });
 
 app.get("/get-not-verifier", async (req, res) => {
   try {
-    const verifier = await verifierModel.find({ verify: false }).toArray();
+    const verifier = await authModelModel.find({ verify: false }).toArray();
 
     if (!verifier || verifier.length === 0) {
       return res.status(404).send("No verifier");
@@ -1366,6 +1386,76 @@ app.post("/student-verifiers", async (req, res) => {
   } catch (error) {
     console.error("Error in /student-verifiers route:", error);
     res.status(500).send("Internal server error.");
+  }
+});
+app.post("/student-verification-status", async (req, res) => {
+  const { prn } = req.body;
+
+  if (!prn) {
+    return res.status(400).send("PRN is required.");
+  }
+
+  try {
+
+    const student = await studentModel.findOne({ prn });
+    if (!student || !student.verifiers || student.verifiers.length === 0) {
+      return res.status(404).send("No verifiers found for this student.");
+    }
+
+   
+    const verifiersList = await Promise.all(
+      student.verifiers.map(async (verifierEntry) => {
+     
+        const verifierEmail =
+          typeof verifierEntry === "string"
+            ? verifierEntry
+            : verifierEntry.email;
+
+        const verifierRecord = await verifierModel.findOne(
+          { email: verifierEmail },
+          { students: { $elemMatch: { prn } } }
+        );
+
+        let status = "Not found";
+        if (
+          verifierRecord &&
+          verifierRecord.students &&
+          verifierRecord.students.length > 0 &&
+          verifierRecord.students[0].status !== undefined
+        ) {
+          status = verifierRecord.students[0].status;
+        }
+
+        return {
+          email: verifierEmail,
+          status,
+        };
+      })
+    );
+
+    res.status(200).json(verifiersList);
+  } catch (error) {
+    console.error("Error in /student-verification-status route:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
+app.post("/freeze-status", async (req, res) => {
+  const { prn } = req.body;
+  if (!prn) {
+    return res.status(400).json({ error: "PRN is required." });
+  }
+  try {
+    const student = await studentModel.findOne({ prn });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found." });
+    }
+
+    res.status(200).json({
+      freezeStatus: student.status,
+    });
+  } catch (error) {
+    console.error("Error retrieving freeze status:", error);
+    res.status(500).json({ error: "Failed to retrieve freeze status." });
   }
 });
 /*app.listen(3000, () => {
