@@ -1311,7 +1311,7 @@ app.post("/upload-pdf-student", upload.single("pdf"), async (req, res) => {
   }
 });
 
-app.post("/download-pdf-verifier", (req, res) => {
+app.get("/download-pdf-verifier", (req, res) => {
   const { prn } = req.body;
   const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
   res.download(filePath, `user${prn}.pdf`, (err) => {
