@@ -132,7 +132,7 @@ import Footer from "../../compo/footer";
 import axios from "axios";
 
 // const contractAddress: string = "0xf116A59bbB31e86a9a403a8057761C8A8eEbc627"; // Replace with your contract address
-const contractAddress: string = "0xc85A55b5b79795761793ADF00CFD2aFe16BF850e"; // Replace with your contract address
+const contractAddress: string = "0x839f84c3fdfd3da50b58986832bd50695d417dea41a69978d1bfe2809ea54fe4"; // Replace with your contract address
 import contractABI from "../../../contract/abi.json";
 import Breadcrumbs from "../../compo/breadcrumbs";
 
