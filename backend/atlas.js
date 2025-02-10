@@ -91,7 +91,7 @@ app.post("/update-transaction", async (req, res) => {
       { returnDocument: "after" }
     );
 
-    if (!student.value) {
+    if (!student) {
       return res.status(404).send("Student not found.");
     }
 
