@@ -1332,14 +1332,19 @@ app.post("/upload-pdf-student", upload.single("pdf"), async (req, res) => {
 });
 
 app.get("/download-pdf-verifier", (req, res) => {
-  const { prn } = req.body;
+  const prn = req.query.prn;
+  if (!prn) {
+    return res.status(400).send("PRN is required.");
+  }
+
   const filePath = path.join(__dirname, `uploads/student_${prn}.pdf`);
   res.download(filePath, `user${prn}.pdf`, (err) => {
     if (err) {
-      res.status(500).send("Error downloading PDF");
+      return res.status(500).send("Error downloading PDF");
     }
   });
 });
+
 
 app.get("/download-pdf/:prn", (req, res) => {
   const { prn } = req.params;
